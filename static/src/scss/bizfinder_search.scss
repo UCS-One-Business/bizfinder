@@ -1,0 +1,52 @@
+// Hide the dirty-state save indicator and per-record cog menu on the
+// Bizfinder search wizard. The wizard's <header> buttons (which the
+// custom controller moves into the breadcrumb) are the action surface.
+//
+// Scoped via body:has(...) because these elements live in the control
+// panel, which is a sibling of the form's container.
+body:has(.o_form_view.o_bizfinder_search_form) {
+    .o_form_status_indicator,
+    .o_cp_action_menus {
+        display: none !important;
+    }
+
+    // The custom js_class controller reparents .o_form_statusbar into
+    // the breadcrumb. Style it so it sits inline with the title rather
+    // than carrying its default statusbar chrome.
+    .o_control_panel .o_breadcrumb {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+    // Pull the "Create leads from selected" row down so it sits in the
+    // same visual band as the list's auto-rendered pager (top-right of
+    // the list widget). Negative margin overlaps the pager row; the
+    // list pager keeps its own right-aligned position.
+    .o_form_view.o_bizfinder_search_form .o_bizfinder_results_actions {
+        position: relative;
+        z-index: 1;
+        margin-bottom: -2.25rem;
+        min-height: 2rem;
+    }
+
+    .o_control_panel .o_breadcrumb .o_form_statusbar {
+        // Sit to the LEFT of the "Prospect" title (the JS controller
+        // prepends us into the breadcrumb).
+        margin: 0;
+        padding: 0;
+        background: transparent !important;
+        border: none !important;
+        min-height: auto;
+        order: -1;
+
+        // Buttons keep their own colors but drop the statusbar pill
+        // wrapper styling.
+        > .o_statusbar_buttons,
+        > .btn-group,
+        > * {
+            background: transparent !important;
+            border: none !important;
+        }
+    }
+}

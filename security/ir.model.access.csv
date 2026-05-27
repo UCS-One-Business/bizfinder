@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_bizfinder_search_user,bizfinder.search user,model_bizfinder_search,sales_team.group_sale_salesman,1,1,1,1
+access_bizfinder_result_line_user,bizfinder.result.line user,model_bizfinder_result_line,sales_team.group_sale_salesman,1,1,1,1
+access_bizfinder_region_user,bizfinder.region user,model_bizfinder_region,sales_team.group_sale_salesman,1,0,0,0
+access_bizfinder_region_admin,bizfinder.region admin,model_bizfinder_region,base.group_system,1,1,1,1

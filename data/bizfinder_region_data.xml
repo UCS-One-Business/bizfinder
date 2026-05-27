@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+  <record id="region_se_01" model="bizfinder.region"><field name="code">1</field><field name="name">Stockholm</field></record>
+  <record id="region_se_03" model="bizfinder.region"><field name="code">3</field><field name="name">Uppsala</field></record>
+  <record id="region_se_04" model="bizfinder.region"><field name="code">4</field><field name="name">Södermanland</field></record>
+  <record id="region_se_05" model="bizfinder.region"><field name="code">5</field><field name="name">Östergötland</field></record>
+  <record id="region_se_06" model="bizfinder.region"><field name="code">6</field><field name="name">Jönköping</field></record>
+  <record id="region_se_07" model="bizfinder.region"><field name="code">7</field><field name="name">Kronoberg</field></record>
+  <record id="region_se_08" model="bizfinder.region"><field name="code">8</field><field name="name">Kalmar</field></record>
+  <record id="region_se_09" model="bizfinder.region"><field name="code">9</field><field name="name">Gotland</field></record>
+  <record id="region_se_10" model="bizfinder.region"><field name="code">10</field><field name="name">Blekinge</field></record>
+  <record id="region_se_12" model="bizfinder.region"><field name="code">12</field><field name="name">Skåne</field></record>
+  <record id="region_se_13" model="bizfinder.region"><field name="code">13</field><field name="name">Halland</field></record>
+  <record id="region_se_14" model="bizfinder.region"><field name="code">14</field><field name="name">Västra Götaland</field></record>
+  <record id="region_se_17" model="bizfinder.region"><field name="code">17</field><field name="name">Värmland</field></record>
+  <record id="region_se_18" model="bizfinder.region"><field name="code">18</field><field name="name">Örebro</field></record>
+  <record id="region_se_19" model="bizfinder.region"><field name="code">19</field><field name="name">Västmanland</field></record>
+  <record id="region_se_20" model="bizfinder.region"><field name="code">20</field><field name="name">Dalarna</field></record>
+  <record id="region_se_21" model="bizfinder.region"><field name="code">21</field><field name="name">Gävleborg</field></record>
+  <record id="region_se_22" model="bizfinder.region"><field name="code">22</field><field name="name">Västernorrland</field></record>
+  <record id="region_se_23" model="bizfinder.region"><field name="code">23</field><field name="name">Jämtland</field></record>
+  <record id="region_se_24" model="bizfinder.region"><field name="code">24</field><field name="name">Västerbotten</field></record>
+  <record id="region_se_25" model="bizfinder.region"><field name="code">25</field><field name="name">Norrbotten</field></record>
+</odoo>

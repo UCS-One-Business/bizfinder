@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <record id="res_config_settings_view_form_bizfinder" model="ir.ui.view">
+    <field name="name">res.config.settings.view.form.bizfinder</field>
+    <field name="model">res.config.settings</field>
+    <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//form" position="inside">
+        <app data-string="Bizfinder" string="Bizfinder" name="bizfinder" groups="sales_team.group_sale_manager">
+          <block title="Bizfinder API" name="bizfinder_api">
+            <setting id="bizfinder_api_url_setting" string="API URL">
+              <field name="bizfinder_api_url"/>
+            </setting>
+            <setting id="bizfinder_api_key_setting" string="API Key">
+              <field name="bizfinder_api_key" password="True"/>
+            </setting>
+          </block>
+        </app>
+      </xpath>
+    </field>
+  </record>
+</odoo>
