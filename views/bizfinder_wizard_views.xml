@@ -242,6 +242,19 @@
                 <button name="action_create_leads"
                         string="Create lead"
                         type="object" class="btn-primary"/>
+                <span class="text-muted small ms-3">
+                  Selected reveals:
+                  <field name="selected_reveal_count" readonly="1" class="d-inline-block oe_inline"/>
+                </span>
+                <span class="text-muted small ms-3">
+                  Estimate:
+                  <field name="estimated_reveal_total" readonly="1" class="d-inline-block oe_inline"/>
+                  <field name="billing_currency" readonly="1" class="d-inline-block oe_inline"/>
+                </span>
+                <span class="text-muted small ms-3">
+                  Price/reveal:
+                  <field name="price_per_reveal" readonly="1" class="d-inline-block oe_inline"/>
+                </span>
               </div>
               <field name="result_line_ids" nolabel="1">
                 <list editable="top" create="false" delete="false">
@@ -294,7 +307,6 @@
     <field name="name">Prospect</field>
     <field name="path">prospect</field>
     <field name="model_id" ref="model_bizfinder_search"/>
-    <field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
     <field name="state">code</field>
     <field name="code">action = model.action_open_search()</field>
   </record>

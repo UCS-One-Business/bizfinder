@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <record id="view_bizfinder_usage_form" model="ir.ui.view">
+    <field name="name">bizfinder.usage.form</field>
+    <field name="model">bizfinder.usage</field>
+    <field name="arch" type="xml">
+      <form string="Bizfinder Usage" create="false" edit="true" delete="false" duplicate="false">
+        <header>
+          <button name="action_refresh" string="Refresh" type="object" class="btn-primary"/>
+        </header>
+        <sheet>
+          <group>
+            <group string="Period">
+              <field name="date_from"/>
+              <field name="date_to"/>
+              <field name="client_id"/>
+            </group>
+            <group string="Usage">
+              <field name="reveals"/>
+              <field name="currency"/>
+              <field name="amount"/>
+            </group>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="action_bizfinder_usage_open" model="ir.actions.server">
+    <field name="name">Bizfinder Usage</field>
+    <field name="path">bizfinder-usage</field>
+    <field name="model_id" ref="model_bizfinder_usage"/>
+    <field name="state">code</field>
+    <field name="code">action = model.action_open_usage()</field>
+  </record>
+</odoo>

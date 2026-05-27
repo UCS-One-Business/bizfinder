@@ -3,3 +3,5 @@ access_bizfinder_search_user,bizfinder.search user,model_bizfinder_search,sales_
 access_bizfinder_result_line_user,bizfinder.result.line user,model_bizfinder_result_line,sales_team.group_sale_salesman,1,1,1,1
 access_bizfinder_region_user,bizfinder.region user,model_bizfinder_region,sales_team.group_sale_salesman,1,0,0,0
 access_bizfinder_region_admin,bizfinder.region admin,model_bizfinder_region,base.group_system,1,1,1,1
+access_bizfinder_usage_manager,bizfinder.usage manager,model_bizfinder_usage,sales_team.group_sale_manager,1,1,1,1
+access_bizfinder_reveal_confirm_user,bizfinder.reveal.confirm user,model_bizfinder_reveal_confirm,sales_team.group_sale_salesman,1,1,1,1

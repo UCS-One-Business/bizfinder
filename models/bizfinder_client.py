@@ -4,7 +4,7 @@ import logging
 
 import requests
 
-from odoo import api, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
@@ -70,6 +70,23 @@ class BizfinderClient(models.AbstractModel):
     @api.model
     def get_segments(self) -> list[dict]:
         r = self._request('GET', "/api/insight/segments", timeout=_TIMEOUT)
+        self._check(r)
+        return r.json()
+
+    @api.model
+    def get_billing_pricing(self) -> dict:
+        r = self._request('GET', "/api/billing/pricing", timeout=_TIMEOUT)
+        self._check(r)
+        return r.json()
+
+    @api.model
+    def get_billing_usage(self, date_from, date_to) -> dict:
+        r = self._request(
+            'GET',
+            "/api/billing/usage",
+            params={'from': fields.Date.to_string(date_from), 'to': fields.Date.to_string(date_to)},
+            timeout=_TIMEOUT,
+        )
         self._check(r)
         return r.json()
 

@@ -13,6 +13,10 @@ service and turns prospects into `crm.lead` records.
    **Preview count** to see hits, then **Search** to load results.
 4. Tick rows and **Create leads from selected**.
 
+The results toolbar shows the selected reveal count and estimated cost before
+lead creation. Sales managers can review actual billed usage from
+**CRM → Bizfinder Usage**; totals come from the API reveal log.
+
 ## Filter codes
 
 | Field | Examples |

@@ -16,7 +16,9 @@ prospects into crm.lead records.
     'data': [
         'security/ir.model.access.csv',
         'data/bizfinder_region_data.xml',
+        'views/bizfinder_confirm_views.xml',
         'views/bizfinder_settings_views.xml',
+        'views/bizfinder_usage_views.xml',
         'views/bizfinder_wizard_views.xml',
         'views/bizfinder_menus.xml',
     ],

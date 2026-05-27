@@ -200,12 +200,29 @@ class BizfinderSearch(models.TransientModel):
     hit_count = fields.Integer(string='Total matches', readonly=True)
     returned_count = fields.Integer(string='Returned', readonly=True)
     duplicate_count = fields.Integer(string='Already in CRM', readonly=True)
+    selected_reveal_count = fields.Integer(
+        string='Selected reveals',
+        compute='_compute_billing_estimate',
+    )
+    billing_currency = fields.Char(string='Currency', readonly=True)
+    price_per_reveal = fields.Float(string='Price per reveal', readonly=True)
+    estimated_reveal_total = fields.Float(
+        string='Estimated cost',
+        compute='_compute_billing_estimate',
+    )
 
     result_line_ids = fields.One2many(
         'bizfinder.result.line',
         'wizard_id',
         string='Results',
     )
+
+    @api.depends('result_line_ids.selected', 'price_per_reveal')
+    def _compute_billing_estimate(self):
+        for rec in self:
+            selected = rec.result_line_ids.filtered(lambda line: line.selected)
+            rec.selected_reveal_count = len(selected)
+            rec.estimated_reveal_total = rec.selected_reveal_count * rec.price_per_reveal
 
     # --------------------------------------------------------------- helpers
 
@@ -482,6 +499,7 @@ class BizfinderSearch(models.TransientModel):
     def action_search(self):
         self.ensure_one()
         client = self.env['bizfinder.client']
+        self._refresh_billing_pricing(client)
         values = self._build_values()
         # Fetch the true total alongside the result page so the user sees
         # both "what was returned" and "what's available".
@@ -547,6 +565,12 @@ class BizfinderSearch(models.TransientModel):
         self.hit_count = total
         self.returned_count = len(rows)
         self.duplicate_count = duplicates
+
+    def _refresh_billing_pricing(self, client=None):
+        client = client or self.env['bizfinder.client']
+        pricing = client.get_billing_pricing()
+        self.price_per_reveal = float(pricing.get('pricePerReveal') or 0.0)
+        self.billing_currency = pricing.get('currency') or ''
 
     @staticmethod
     def _format_notes(data: dict) -> str:
@@ -680,9 +704,27 @@ class BizfinderSearch(models.TransientModel):
         if not selected:
             raise UserError(_("All selected prospects already exist in CRM."))
 
+        client = self.env['bizfinder.client']
+        self._refresh_billing_pricing(client)
+        if not self.env.context.get('bizfinder_billing_confirmed'):
+            confirm = self.env['bizfinder.reveal.confirm'].create({
+                'wizard_id': self.id,
+                'reveal_count': len(org_numbers),
+                'price_per_reveal': self.price_per_reveal,
+                'currency': self.billing_currency,
+            })
+            return {
+                'type': 'ir.actions.act_window',
+                'name': _('Confirm billable reveals'),
+                'res_model': 'bizfinder.reveal.confirm',
+                'res_id': confirm.id,
+                'view_mode': 'form',
+                'views': [(False, 'form')],
+                'target': 'new',
+            }
+
         # Reveal full contact info server-side. This is the metered call —
         # one reveal_log row gets written per org_number on the API side.
-        client = self.env['bizfinder.client']
         revealed = {r.get('organisationNumber'): r for r in client.reveal(org_numbers)}
 
         Lead = self.env['crm.lead']
@@ -796,3 +838,26 @@ class BizfinderResultLine(models.TransientModel):
     registration_date = fields.Date(string='Registered', readonly=True)
     company_formed_date = fields.Date(string='Formed', readonly=True)
     status_date = fields.Date(string='Status date', readonly=True)
+
+
+class BizfinderRevealConfirm(models.TransientModel):
+    _name = 'bizfinder.reveal.confirm'
+    _description = 'Bizfinder Reveal Billing Confirmation'
+
+    wizard_id = fields.Many2one('bizfinder.search', required=True, ondelete='cascade')
+    reveal_count = fields.Integer(string='Billable reveals', readonly=True)
+    price_per_reveal = fields.Float(string='Price per reveal', readonly=True)
+    currency = fields.Char(readonly=True)
+    estimated_total = fields.Float(
+        string='Estimated total',
+        compute='_compute_estimated_total',
+    )
+
+    @api.depends('reveal_count', 'price_per_reveal')
+    def _compute_estimated_total(self):
+        for rec in self:
+            rec.estimated_total = rec.reveal_count * rec.price_per_reveal
+
+    def action_confirm(self):
+        self.ensure_one()
+        return self.wizard_id.with_context(bizfinder_billing_confirmed=True).action_create_leads()
