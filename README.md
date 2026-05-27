@@ -6,8 +6,9 @@ service and turns prospects into `crm.lead` records.
 ## Setup
 
 1. Configure the FastAPI service in **Settings → Bizfinder**:
-   - API URL (default `http://bizfinder_api:8000` for compose stack)
-   - API Key issued by the Bizfinder service
+   - API URL for your Bizfinder service
+   - Access Token issued by the Bizfinder service for this customer/company
+   - Use **Test connection** to verify the token before running searches
 2. Open **CRM → New Prospect Search**.
 3. Fill in filters (comma-separated codes, see field tooltips), hit
    **Preview count** to see hits, then **Search** to load results.
@@ -16,6 +17,13 @@ service and turns prospects into `crm.lead` records.
 The results toolbar shows the selected reveal count and estimated cost before
 lead creation. Sales managers can review actual billed usage from
 **CRM → Bizfinder Usage**; totals come from the API reveal log.
+
+The module stores credentials per Odoo company. Hosted deployments may inject
+`BIZFINDER_API_URL` and `BIZFINDER_ACCESS_TOKEN` as environment variables
+instead; company settings take precedence when present. Do not ship upstream
+provider secrets in the addon or customer database. The Odoo token should be a
+revocable tenant token for your `bizfinder_api`, while the service keeps any
+Creditsafe credentials server-side.
 
 ## Filter codes
 

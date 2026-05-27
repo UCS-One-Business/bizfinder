@@ -23,14 +23,15 @@ class BizfinderClient(models.AbstractModel):
 
     @api.model
     def _creds(self) -> tuple[str, dict]:
-        url, api_key = self.env['res.config.settings'].get_bizfinder_credentials()
+        url, access_token = self.env['res.config.settings'].get_bizfinder_credentials()
         if not url:
             raise UserError("Bizfinder API URL is not configured.")
-        if not api_key:
-            raise UserError("Bizfinder API key is not configured.")
+        if not access_token:
+            raise UserError("Bizfinder access token is not configured.")
         headers = {
-            'Authorization': f'Bearer {api_key}',
+            'Authorization': f'Bearer {access_token}',
             'X-Odoo-Db': self.env.cr.dbname,
+            'X-Odoo-Company-Id': str(self.env.company.id),
             'X-Odoo-User-Id': str(self.env.user.id),
             'X-Odoo-User-Login': self.env.user.login or '',
         }
@@ -59,7 +60,8 @@ class BizfinderClient(models.AbstractModel):
     @api.model
     def validate(self) -> bool:
         r = self._request('GET', "/api/insight/validatelogin", timeout=_TIMEOUT)
-        return r.ok
+        self._check(r)
+        return True
 
     @api.model
     def get_filters(self) -> list[dict]:
@@ -107,6 +109,106 @@ class BizfinderClient(models.AbstractModel):
         )
         self._check(r)
         return r.json()
+
+    @api.model
+    def get_communities(self) -> list[dict]:
+        r = self._request('GET', "/api/insight/communities", timeout=_TIMEOUT)
+        self._check(r)
+        return r.json()
+
+    @api.model
+    def get_sni(self) -> list[dict]:
+        r = self._request('GET', "/api/insight/sni", timeout=_TIMEOUT)
+        self._check(r)
+        return r.json()
+
+    @api.model
+    def get_buckets(self) -> dict:
+        r = self._request('GET', "/api/insight/buckets", timeout=_TIMEOUT)
+        self._check(r)
+        return r.json()
+
+    @api.model
+    def sync_catalogues(self) -> dict:
+        """Idempotent pull of the kommun / SNI / bucket / legal-form
+        catalogues from the API into the local lookup models. Safe to
+        call repeatedly — uses code/key as the natural key."""
+        result = {'communities': 0, 'industries': 0, 'buckets': 0, 'legal_forms': 0}
+
+        Community = self.env['bizfinder.community'].sudo()
+        Region = self.env['bizfinder.region'].sudo()
+        existing_comm = {c.kommunkod: c for c in Community.search([])}
+        region_by_code = {r.code: r.id for r in Region.search([])}
+        # Dedupe by composite kommunkod defensively. The API endpoint
+        # already DISTINCT ON (region, community), but an older
+        # container could still ship duplicates and the unique(kommunkod)
+        # constraint would crash the whole sync if so.
+        by_kommunkod: dict[int, dict] = {}
+        for entry in self.get_communities():
+            kommunkod = int(entry['kommunkod'])
+            by_kommunkod.setdefault(kommunkod, {
+                'kommunkod': kommunkod,
+                'community_code': int(entry.get('communityCode') or (kommunkod % 100)),
+                'name': entry.get('name') or str(kommunkod),
+                'region_id': region_by_code.get(entry.get('regionCode')) or False,
+            })
+        for kommunkod, vals in by_kommunkod.items():
+            if kommunkod in existing_comm:
+                existing_comm[kommunkod].write(vals)
+            else:
+                Community.create(vals)
+            result['communities'] += 1
+
+        # Industries are the primary user-facing picker; each entry maps
+        # 1:1 to an SNI 2-digit group sourced from the API so the
+        # catalogue stays in sync without manual XML curation.
+        sni_payload = self.get_sni()
+        Industry = self.env['bizfinder.industry'].sudo()
+        existing_industry = {i.sni_prefixes: i for i in Industry.search([])}
+        result.setdefault('industries', 0)
+        for seq, entry in enumerate(sni_payload, start=1):
+            code = str(entry['code'])
+            name = entry.get('name') or code
+            # Show as "62 Datakonsulter" so the user has the SNI prefix
+            # alongside the friendly name.
+            vals = {
+                'name': f"{code} {name}",
+                'sequence': seq * 10,
+                'sni_prefixes': code,
+            }
+            industry = existing_industry.get(code)
+            if industry:
+                industry.write(vals)
+            else:
+                Industry.create(vals)
+            result['industries'] += 1
+
+        buckets = self.get_buckets()
+        Bucket = self.env['bizfinder.bucket'].sudo()
+        existing_buckets = {(b.kind, b.key): b for b in Bucket.search([])}
+        for kind, key_list in (('employees', buckets.get('employees') or []),
+                               ('turnover', buckets.get('turnover') or [])):
+            for seq, key in enumerate(key_list, start=1):
+                vals = {'kind': kind, 'key': key, 'sequence': seq * 10}
+                bucket = existing_buckets.get((kind, key))
+                if bucket:
+                    bucket.write(vals)
+                else:
+                    Bucket.create(vals)
+                result['buckets'] += 1
+
+        Legal = self.env['bizfinder.legal.form'].sudo()
+        existing_legal = {l.code: l for l in Legal.search([])}
+        for seq, entry in enumerate(buckets.get('legalForms') or [], start=1):
+            code = str(entry['code'])
+            vals = {'code': code, 'name': entry.get('name') or code, 'sequence': seq * 10}
+            if code in existing_legal:
+                existing_legal[code].write(vals)
+            else:
+                Legal.create(vals)
+            result['legal_forms'] += 1
+
+        return result
 
     @api.model
     def reveal(self, org_numbers: list[str]) -> list[dict]:

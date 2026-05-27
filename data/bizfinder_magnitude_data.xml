@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="0">
+  <!-- Employee magnitude bands. Cuts follow the EU SME definition where
+       practical, mapping to the closest API NBR_EMPLOYEES_INTERVAL keys. -->
+  <record id="magnitude_employees_micro" model="bizfinder.magnitude">
+    <field name="name">Micro (0–9)</field>
+    <field name="kind">employees</field>
+    <field name="sequence">10</field>
+    <field name="bucket_keys">0 anställda,1-4 anställda,5-9 anställda</field>
+  </record>
+  <record id="magnitude_employees_small" model="bizfinder.magnitude">
+    <field name="name">Small (10–49)</field>
+    <field name="kind">employees</field>
+    <field name="sequence">20</field>
+    <field name="bucket_keys">10-19 anställda,20-49 anställda</field>
+  </record>
+  <record id="magnitude_employees_medium" model="bizfinder.magnitude">
+    <field name="name">Medium (50–199)</field>
+    <field name="kind">employees</field>
+    <field name="sequence">30</field>
+    <field name="bucket_keys">50-99 anställda,100-199 anställda</field>
+  </record>
+  <record id="magnitude_employees_large" model="bizfinder.magnitude">
+    <field name="name">Large (200–999)</field>
+    <field name="kind">employees</field>
+    <field name="sequence">40</field>
+    <field name="bucket_keys">200-499 anställda,500-999 anställda</field>
+  </record>
+  <record id="magnitude_employees_enterprise" model="bizfinder.magnitude">
+    <field name="name">Enterprise (1000+)</field>
+    <field name="kind">employees</field>
+    <field name="sequence">50</field>
+    <field name="bucket_keys">1000-1499 anställda,1500-1999 anställda,2000-2999 anställda,3000-3999 anställda,4000-4999 anställda,5000-9999 anställda,10000- anställda</field>
+  </record>
+
+  <!-- Net-sales magnitudes mapped onto TURNOVER_INTERVAL bands. Net sales
+       and turnover are technically distinct columns; we use turnover as
+       the discrete proxy because the API only exposes it as buckets. -->
+  <record id="magnitude_net_sales_under_1m" model="bizfinder.magnitude">
+    <field name="name">&lt; 1 Mkr</field>
+    <field name="kind">net_sales</field>
+    <field name="sequence">10</field>
+    <field name="bucket_keys">&lt; 1 tkr,1 - 49 tkr,50 - 99 tkr,100 - 149 tkr,150 - 199 tkr,200 - 299 tkr,300 - 399 tkr,400 - 499 tkr,500 - 749 tkr,750 - 999 tkr</field>
+  </record>
+  <record id="magnitude_net_sales_1_10m" model="bizfinder.magnitude">
+    <field name="name">1–10 Mkr</field>
+    <field name="kind">net_sales</field>
+    <field name="sequence">20</field>
+    <field name="bucket_keys">1000 - 2499 tkr,2500 - 4999 tkr,5000 - 9999 tkr</field>
+  </record>
+  <record id="magnitude_net_sales_10_100m" model="bizfinder.magnitude">
+    <field name="name">10–100 Mkr</field>
+    <field name="kind">net_sales</field>
+    <field name="sequence">30</field>
+    <field name="bucket_keys">10000 - 19999 tkr,20000 - 49999 tkr,50000 - 99999 tkr</field>
+  </record>
+  <record id="magnitude_net_sales_100m_1b" model="bizfinder.magnitude">
+    <field name="name">100 Mkr – 1 Mdr</field>
+    <field name="kind">net_sales</field>
+    <field name="sequence">40</field>
+    <field name="bucket_keys">100000 - 499999 tkr,500000 - 999999 tkr</field>
+  </record>
+  <record id="magnitude_net_sales_over_1b" model="bizfinder.magnitude">
+    <field name="name">&gt; 1 Mdr</field>
+    <field name="kind">net_sales</field>
+    <field name="sequence">50</field>
+    <field name="bucket_keys">1000000 - 4999999 tkr</field>
+  </record>
+</odoo>

@@ -11,11 +11,12 @@ prospects into crm.lead records.
     'author': 'UCS OneDo AB',
     'website': 'https://www.ucsonedo.se',
     'category': 'Sales/CRM',
-    'version': '19.0.1.0.11',
+    'version': '19.0.1.0.16',
     'depends': ['base', 'web', 'crm'],
     'data': [
         'security/ir.model.access.csv',
         'data/bizfinder_region_data.xml',
+        'data/bizfinder_magnitude_data.xml',
         'views/bizfinder_confirm_views.xml',
         'views/bizfinder_settings_views.xml',
         'views/bizfinder_usage_views.xml',

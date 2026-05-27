@@ -11,49 +11,40 @@
           <button name="action_search" string="Search" type="object" class="btn-primary"/>
         </header>
         <sheet>
-          <!-- Preset segment (left) + regions filter (right) on one row.
-               Each block stacks label-on-top, field-below. The description
-               sits in a fixed-height muted region so the layout doesn't
-               reflow as the user cycles through presets.
+          <!-- Preset segment sits full-width across the top; the
+               description below has a fixed-height muted region so the
+               layout doesn't reflow as the user cycles through presets.
                force_save="1" on preset_description: the value is set by
                the preset_key onchange but the field is view-readonly, so
                without it the JS form would drop the change before save. -->
-          <div class="row align-items-start mb-3">
-            <div class="col-12 col-lg-6">
-              <label for="preset_key" string="Preset segment" class="o_form_label fw-bold d-block mb-1"/>
-              <field name="preset_key" nolabel="1" class="d-block mb-2"/>
-              <div class="text-muted small"
-                   style="min-height: 4.5em; line-height: 1.4;">
-                <field name="preset_description" nolabel="1" readonly="1" force_save="1"
-                       placeholder="Pick a preset to auto-fill filters, or open Advanced for manual setup."/>
-              </div>
-            </div>
-            <div class="col-12 col-lg-6">
-              <label for="region_ids" string="Regions" class="o_form_label fw-bold d-block mb-1"/>
-              <field name="region_ids" widget="many2many_tags" nolabel="1" class="d-block"
-                     placeholder="Pick one or more counties..."/>
+          <div class="mb-3">
+            <label for="preset_key" string="Preset segment" class="o_form_label fw-bold d-block mb-1"/>
+            <field name="preset_key" nolabel="1" class="d-block mb-2"/>
+            <div class="text-muted small"
+                 style="min-height: 3em; line-height: 1.4;">
+              <field name="preset_description" nolabel="1" readonly="1" force_save="1"
+                     placeholder="Pick a preset to auto-fill filters, or open Advanced for manual setup."/>
             </div>
           </div>
 
-          <group string="Find companies" name="quick_search">
+          <group name="quick_search">
             <group>
-              <field name="industry_preset"/>
-              <field name="post_community_names"
-                     placeholder="Linköping, Norrköping..."/>
+              <field name="region_ids" widget="many2many_tags"
+                     placeholder="Pick one or more counties..."/>
+              <field name="post_community_ids" widget="many2many_tags"
+                     options="{'no_create': True, 'no_quick_create': True}"
+                     placeholder="Start typing a kommun..."/>
+              <field name="industry_ids" widget="many2many_tags"
+                     options="{'no_create': True, 'no_quick_create': True}"
+                     placeholder="Pick one or more industries..."/>
             </group>
             <group>
-              <label for="net_sales_min" string="Net sales (tkr)"/>
-              <div class="o_row">
-                <field name="net_sales_min" placeholder="Min"/>
-                <span> – </span>
-                <field name="net_sales_max" placeholder="Max"/>
-              </div>
-              <label for="employees_min" string="Employees"/>
-              <div class="o_row">
-                <field name="employees_min" placeholder="Min"/>
-                <span> – </span>
-                <field name="employees_max" placeholder="Max"/>
-              </div>
+              <field name="net_sales_magnitude_ids" widget="many2many_tags"
+                     options="{'no_create': True, 'no_quick_create': True}"
+                     placeholder="Pick net-sales bands..."/>
+              <field name="employee_magnitude_ids" widget="many2many_tags"
+                     options="{'no_create': True, 'no_quick_create': True}"
+                     placeholder="Pick employee bands..."/>
             </group>
           </group>
 
@@ -74,161 +65,221 @@
 
           <details class="mt-3">
             <summary class="btn btn-link p-0" style="cursor: pointer;">Advanced filters</summary>
-            <div class="row mt-2">
-            <div class="col-12 col-xl-4">
-              <group string="Company" name="filter_company">
-                <field name="sni_prefixes"/>
-                <field name="legal_forms"/>
-                <field name="turnover_buckets"/>
-                <field name="employee_buckets"/>
-                <field name="units_min"/>
-                <field name="units_max"/>
+            <!-- Each <group string="..."> below contains two inner <group>s
+                 so Odoo renders the fields in two side-by-side columns
+                 instead of stacking everything on the left. -->
+            <!-- Company: tag pickers + the YES/NO compliance toggles
+                 collapsed into one section since they all describe
+                 "what kind of company is this". -->
+            <group string="Company" name="filter_company">
+              <group>
+                <field name="legal_form_ids" widget="many2many_tags"
+                       options="{'no_create': True, 'no_quick_create': True}"
+                       placeholder="AB, EF..."/>
+                <field name="turnover_bucket_ids" widget="many2many_tags"
+                       options="{'no_create': True, 'no_quick_create': True}"
+                       placeholder="Fine-grained turnover bands..."/>
+                <field name="employee_bucket_ids" widget="many2many_tags"
+                       options="{'no_create': True, 'no_quick_create': True}"
+                       placeholder="Fine-grained employee bands..."/>
               </group>
-            </div>
-            <div class="col-12 col-xl-4">
-              <group string="Location" name="filter_location">
-                <field name="post_community_codes"/>
-                <field name="registered_community_codes"/>
-                <field name="visiting_region_ids" widget="many2many_tags"/>
-                <field name="visiting_community_codes"/>
-                <field name="post_zip_prefixes"/>
-                <field name="registered_zip_prefixes"/>
-                <field name="visiting_zip_prefixes"/>
-              </group>
-            </div>
-            <div class="col-12 col-xl-4">
-              <group string="Status and recency" name="filter_status">
+              <group>
                 <field name="f_tax"/>
                 <field name="moms"/>
                 <field name="accountant_reservation"/>
                 <field name="accountant_obligation"/>
-                <field name="registered_max_months" string="Max age (mo)"/>
-                <field name="registered_min_months" string="Min age (mo)"/>
-                <field name="formed_max_months"/>
-                <field name="formed_min_months"/>
-                <field name="status_changed_max_months"/>
-                <field name="status_changed_min_months"/>
-                <field name="reservation_max_months"/>
-                <field name="reservation_min_months"/>
               </group>
-            </div>
-            <div class="col-12 col-xl-6">
-              <group string="Financials (latest year)" name="filter_financials">
-                <label for="net_operating_income_min" string="Operating income (tkr)"/>
+            </group>
+
+            <group string="Location" name="filter_location">
+              <group>
+                <field name="registered_community_ids" widget="many2many_tags"
+                       options="{'no_create': True, 'no_quick_create': True}"
+                       placeholder="Registered kommun..."/>
+                <field name="visiting_region_ids" widget="many2many_tags"/>
+                <field name="visiting_community_ids" widget="many2many_tags"
+                       options="{'no_create': True, 'no_quick_create': True}"
+                       placeholder="Visiting kommun..."/>
+              </group>
+              <group>
+                <field name="post_zip_prefixes" placeholder="58, 591, 60..."/>
+                <field name="registered_zip_prefixes" placeholder="58, 591, 60..."/>
+                <field name="visiting_zip_prefixes" placeholder="58, 591, 60..."/>
+              </group>
+            </group>
+
+            <!-- Dates: all month-based ranges live here as a single
+                 "how recent / how old" block. Placeholders are the API
+                 bounds so the user can see the legal value range. -->
+            <group string="Dates &amp; age (months)" name="filter_dates">
+              <group>
+                <label for="registered_min_months" string="Registered"/>
                 <div class="o_row">
-                  <field name="net_operating_income_min"/>
+                  <field name="registered_min_months" placeholder="0"/>
                   <span> – </span>
-                  <field name="net_operating_income_max"/>
+                  <field name="registered_max_months" placeholder="240"/>
                 </div>
-                <label for="operating_result_min" string="Operating result (tkr)"/>
+                <label for="formed_min_months" string="Formed"/>
                 <div class="o_row">
-                  <field name="operating_result_min"/>
+                  <field name="formed_min_months" placeholder="0"/>
                   <span> – </span>
-                  <field name="operating_result_max"/>
-                </div>
-                <label for="profit_after_fin_min" string="Profit after financials (tkr)"/>
-                <div class="o_row">
-                  <field name="profit_after_fin_min"/>
-                  <span> – </span>
-                  <field name="profit_after_fin_max"/>
-                </div>
-                <label for="net_profit_loss_min" string="Net profit/loss (tkr)"/>
-                <div class="o_row">
-                  <field name="net_profit_loss_min"/>
-                  <span> – </span>
-                  <field name="net_profit_loss_max"/>
-                </div>
-                <label for="growth_pct_min" string="Growth %"/>
-                <div class="o_row">
-                  <field name="growth_pct_min"/>
-                  <span> – </span>
-                  <field name="growth_pct_max"/>
-                </div>
-                <label for="headcount_change_min" string="Headcount growth %"/>
-                <div class="o_row">
-                  <field name="headcount_change_min"/>
-                  <span> – </span>
-                  <field name="headcount_change_max"/>
-                </div>
-                <label for="solidity_pct_min" string="Solidity %"/>
-                <div class="o_row">
-                  <field name="solidity_pct_min"/>
-                  <span> – </span>
-                  <field name="solidity_pct_max"/>
-                </div>
-                <label for="operating_margin_min" string="Operating margin %"/>
-                <div class="o_row">
-                  <field name="operating_margin_min"/>
-                  <span> – </span>
-                  <field name="operating_margin_max"/>
-                </div>
-                <label for="profit_margin_min" string="Profit margin %"/>
-                <div class="o_row">
-                  <field name="profit_margin_min"/>
-                  <span> – </span>
-                  <field name="profit_margin_max"/>
-                </div>
-                <label for="quick_ratio_min" string="Quick ratio %"/>
-                <div class="o_row">
-                  <field name="quick_ratio_min"/>
-                  <span> – </span>
-                  <field name="quick_ratio_max"/>
+                  <field name="formed_max_months" placeholder="600"/>
                 </div>
               </group>
-            </div>
-            <div class="col-12 col-xl-6">
-              <group string="Financial scale" name="filter_financial_scale">
-                <label for="cash_min" string="Cash and bank (tkr)"/>
+              <group>
+                <label for="status_changed_min_months" string="Status changed"/>
                 <div class="o_row">
-                  <field name="cash_min"/>
+                  <field name="status_changed_min_months" placeholder="0"/>
                   <span> – </span>
-                  <field name="cash_max"/>
+                  <field name="status_changed_max_months" placeholder="240"/>
                 </div>
-                <label for="turnover_per_employee_min" string="Turnover/employee (tkr)"/>
+                <label for="reservation_min_months" string="Auditor reservation"/>
                 <div class="o_row">
-                  <field name="turnover_per_employee_min"/>
+                  <field name="reservation_min_months" placeholder="0"/>
                   <span> – </span>
-                  <field name="turnover_per_employee_max"/>
+                  <field name="reservation_max_months" placeholder="240"/>
                 </div>
-                <label for="assets_min" string="Assets (tkr)"/>
+              </group>
+            </group>
+
+            <!-- Financials (tkr): every monetary range in one section,
+                 split P&amp;L on the left and balance sheet on the right.
+                 Placeholders mirror the API range_min / range_max so the
+                 user can see the allowed value envelope per field. -->
+            <group string="Financials (tkr)" name="filter_financials">
+              <group>
+                <label for="net_sales_min" string="Net sales"/>
                 <div class="o_row">
-                  <field name="assets_min"/>
+                  <field name="net_sales_min" placeholder="-10 000 000"/>
                   <span> – </span>
-                  <field name="assets_max"/>
+                  <field name="net_sales_max" placeholder="100 000 000"/>
                 </div>
-                <label for="equity_min" string="Equity (tkr)"/>
+                <label for="net_operating_income_min" string="Operating income"/>
                 <div class="o_row">
-                  <field name="equity_min"/>
+                  <field name="net_operating_income_min" placeholder="-10 000 000"/>
                   <span> – </span>
-                  <field name="equity_max"/>
+                  <field name="net_operating_income_max" placeholder="100 000 000"/>
                 </div>
-                <label for="current_liabilities_min" string="Current liabilities (tkr)"/>
+                <label for="operating_result_min" string="Operating result"/>
                 <div class="o_row">
-                  <field name="current_liabilities_min"/>
+                  <field name="operating_result_min" placeholder="-10 000 000"/>
                   <span> – </span>
-                  <field name="current_liabilities_max"/>
+                  <field name="operating_result_max" placeholder="100 000 000"/>
                 </div>
-                <label for="long_term_debts_min" string="Long-term debts (tkr)"/>
+                <label for="profit_after_fin_min" string="Profit after fin."/>
                 <div class="o_row">
-                  <field name="long_term_debts_min"/>
+                  <field name="profit_after_fin_min" placeholder="-10 000 000"/>
                   <span> – </span>
-                  <field name="long_term_debts_max"/>
+                  <field name="profit_after_fin_max" placeholder="100 000 000"/>
+                </div>
+                <label for="net_profit_loss_min" string="Net profit/loss"/>
+                <div class="o_row">
+                  <field name="net_profit_loss_min" placeholder="-10 000 000"/>
+                  <span> – </span>
+                  <field name="net_profit_loss_max" placeholder="100 000 000"/>
+                </div>
+                <label for="dividend_min" string="Dividend"/>
+                <div class="o_row">
+                  <field name="dividend_min" placeholder="0"/>
+                  <span> – </span>
+                  <field name="dividend_max" placeholder="100 000 000"/>
+                </div>
+                <label for="employees_min" string="Employees (exact)"/>
+                <div class="o_row">
+                  <field name="employees_min" placeholder="0"/>
+                  <span> – </span>
+                  <field name="employees_max" placeholder="100 000"/>
+                </div>
+              </group>
+              <group>
+                <label for="cash_min" string="Cash and bank"/>
+                <div class="o_row">
+                  <field name="cash_min" placeholder="0"/>
+                  <span> – </span>
+                  <field name="cash_max" placeholder="10 000 000"/>
+                </div>
+                <label for="assets_min" string="Assets"/>
+                <div class="o_row">
+                  <field name="assets_min" placeholder="0"/>
+                  <span> – </span>
+                  <field name="assets_max" placeholder="100 000 000"/>
+                </div>
+                <label for="equity_min" string="Equity"/>
+                <div class="o_row">
+                  <field name="equity_min" placeholder="-10 000 000"/>
+                  <span> – </span>
+                  <field name="equity_max" placeholder="100 000 000"/>
+                </div>
+                <label for="current_liabilities_min" string="Current liabilities"/>
+                <div class="o_row">
+                  <field name="current_liabilities_min" placeholder="0"/>
+                  <span> – </span>
+                  <field name="current_liabilities_max" placeholder="100 000 000"/>
+                </div>
+                <label for="long_term_debts_min" string="Long-term debts"/>
+                <div class="o_row">
+                  <field name="long_term_debts_min" placeholder="0"/>
+                  <span> – </span>
+                  <field name="long_term_debts_max" placeholder="100 000 000"/>
+                </div>
+                <label for="turnover_per_employee_min" string="Turnover / employee"/>
+                <div class="o_row">
+                  <field name="turnover_per_employee_min" placeholder="0"/>
+                  <span> – </span>
+                  <field name="turnover_per_employee_max" placeholder="100 000"/>
                 </div>
                 <label for="account_months_min" string="Account months"/>
                 <div class="o_row">
-                  <field name="account_months_min"/>
+                  <field name="account_months_min" placeholder="0"/>
                   <span> – </span>
-                  <field name="account_months_max"/>
-                </div>
-                <label for="dividend_min" string="Dividend (tkr)"/>
-                <div class="o_row">
-                  <field name="dividend_min"/>
-                  <span> – </span>
-                  <field name="dividend_max"/>
+                  <field name="account_months_max" placeholder="24"/>
                 </div>
               </group>
-            </div>
-          </div>
+            </group>
+
+            <!-- Ratios: every percent-based range in one section. -->
+            <group string="Ratios (%)" name="filter_ratios">
+              <group>
+                <label for="growth_pct_min" string="Growth"/>
+                <div class="o_row">
+                  <field name="growth_pct_min" placeholder="-100"/>
+                  <span> – </span>
+                  <field name="growth_pct_max" placeholder="500"/>
+                </div>
+                <label for="headcount_change_min" string="Headcount growth"/>
+                <div class="o_row">
+                  <field name="headcount_change_min" placeholder="-100"/>
+                  <span> – </span>
+                  <field name="headcount_change_max" placeholder="500"/>
+                </div>
+                <label for="solidity_pct_min" string="Solidity"/>
+                <div class="o_row">
+                  <field name="solidity_pct_min" placeholder="-100"/>
+                  <span> – </span>
+                  <field name="solidity_pct_max" placeholder="100"/>
+                </div>
+              </group>
+              <group>
+                <label for="operating_margin_min" string="Operating margin"/>
+                <div class="o_row">
+                  <field name="operating_margin_min" placeholder="-100"/>
+                  <span> – </span>
+                  <field name="operating_margin_max" placeholder="100"/>
+                </div>
+                <label for="profit_margin_min" string="Profit margin"/>
+                <div class="o_row">
+                  <field name="profit_margin_min" placeholder="-100"/>
+                  <span> – </span>
+                  <field name="profit_margin_max" placeholder="100"/>
+                </div>
+                <label for="quick_ratio_min" string="Quick ratio"/>
+                <div class="o_row">
+                  <field name="quick_ratio_min" placeholder="0"/>
+                  <span> – </span>
+                  <field name="quick_ratio_max" placeholder="1000"/>
+                </div>
+              </group>
+            </group>
           </details>
 
           <notebook>

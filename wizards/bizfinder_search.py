@@ -29,33 +29,6 @@ PRESET_OPTIONS = [
     ('equity_rich', 'Equity-rich AB'),
 ]
 
-INDUSTRY_PRESET_OPTIONS = [
-    ('accounting', 'Accounting agencies'),
-    ('it_consulting', 'IT consulting'),
-    ('construction', 'Construction'),
-    ('technical_consulting', 'Technical consulting'),
-    ('management_consulting', 'Management consulting'),
-    ('staffing', 'Staffing'),
-    ('real_estate', 'Real estate'),
-    ('healthcare', 'Healthcare'),
-    ('retail', 'Retail'),
-    ('restaurants', 'Restaurants'),
-]
-
-INDUSTRY_PRESET_SNI_PREFIXES = {
-    'accounting': ['692'],
-    'it_consulting': ['62'],
-    'construction': ['41', '43'],
-    'technical_consulting': ['71'],
-    'management_consulting': ['70'],
-    'staffing': ['78'],
-    'real_estate': ['68'],
-    'healthcare': ['86'],
-    'retail': ['47'],
-    'restaurants': ['56'],
-}
-
-
 class BizfinderSearch(models.TransientModel):
     _name = 'bizfinder.search'
     _description = 'Bizfinder Search Wizard'
@@ -80,26 +53,42 @@ class BizfinderSearch(models.TransientModel):
         string='Regions',
         help="Pick one or more Swedish counties (län) to limit the search.",
     )
-    industry_preset = fields.Selection(
-        INDUSTRY_PRESET_OPTIONS,
-        string='Industry',
-        help="Common SNI groups for fast prospect searches.",
+    industry_ids = fields.Many2many(
+        'bizfinder.industry',
+        'bizfinder_search_industry_rel',
+        'wizard_id', 'industry_id',
+        string='Industries',
+        help="Curated industry shortcuts. Each expands to its SNI prefixes.",
     )
-    sni_prefixes = fields.Char(
-        string='SNI prefixes',
-        help="Comma-separated SNI prefixes (e.g. 62,70,692).",
+    employee_magnitude_ids = fields.Many2many(
+        'bizfinder.magnitude',
+        'bizfinder_search_employee_magnitude_rel',
+        'wizard_id', 'magnitude_id',
+        string='Employees',
+        domain="[('kind', '=', 'employees')]",
+        help="Coarse employee bands. Each expands to its API bucket keys.",
     )
-    post_community_names = fields.Char(
-        string='Municipalities / towns',
-        help="Comma-separated municipality names for the postal address, e.g. Linköping.",
+    net_sales_magnitude_ids = fields.Many2many(
+        'bizfinder.magnitude',
+        'bizfinder_search_net_sales_magnitude_rel',
+        'wizard_id', 'magnitude_id',
+        string='Net sales',
+        domain="[('kind', '=', 'net_sales')]",
+        help="Coarse turnover bands (proxy for net sales). Each expands "
+             "to its TURNOVER_INTERVAL keys.",
     )
-    post_community_codes = fields.Char(
-        string='Postal municipality codes',
-        help="Comma-separated kommun codes for the postal address.",
+    post_community_ids = fields.Many2many(
+        'bizfinder.community',
+        'bizfinder_search_post_community_rel',
+        'wizard_id', 'community_id',
+        string='Municipalities (postal)',
+        help="Postal-address kommun. Start typing to filter.",
     )
-    registered_community_codes = fields.Char(
-        string='Registered municipality codes',
-        help="Comma-separated kommun codes for the registered address.",
+    registered_community_ids = fields.Many2many(
+        'bizfinder.community',
+        'bizfinder_search_registered_community_rel',
+        'wizard_id', 'community_id',
+        string='Municipalities (registered)',
     )
     visiting_region_ids = fields.Many2many(
         'bizfinder.region',
@@ -109,20 +98,47 @@ class BizfinderSearch(models.TransientModel):
         string='Visiting regions',
         help="Pick one or more Swedish counties (län) for the visiting address.",
     )
-    visiting_community_codes = fields.Char(
-        string='Visiting municipality codes',
-        help="Comma-separated kommun codes for the visiting address.",
+    visiting_community_ids = fields.Many2many(
+        'bizfinder.community',
+        'bizfinder_search_visiting_community_rel',
+        'wizard_id', 'community_id',
+        string='Municipalities (visiting)',
     )
-    post_zip_prefixes = fields.Char(string='Postal ZIP prefixes')
-    registered_zip_prefixes = fields.Char(string='Registered ZIP prefixes')
-    visiting_zip_prefixes = fields.Char(string='Visiting ZIP prefixes')
-    legal_forms = fields.Char(
+    # Zip prefixes stay as char tags rendered with widget="char_tags" /
+    # comma input. Each chip is a 1–5 digit prefix; we don't model these
+    # as a lookup because they're a derived range, not an enumeration.
+    post_zip_prefixes = fields.Char(string='Postal ZIP prefixes',
+        help="Comma-separated ZIP-code prefixes (1–5 digits).")
+    registered_zip_prefixes = fields.Char(string='Registered ZIP prefixes',
+        help="Comma-separated ZIP-code prefixes (1–5 digits).")
+    visiting_zip_prefixes = fields.Char(string='Visiting ZIP prefixes',
+        help="Comma-separated ZIP-code prefixes (1–5 digits).")
+    legal_form_ids = fields.Many2many(
+        'bizfinder.legal.form',
+        'bizfinder_search_legal_form_rel',
+        'wizard_id', 'legal_form_id',
         string='Legal forms',
-        default='AB',
-        help="Comma-separated legal-form codes (AB, EF, HB/KB, OVR).",
+        default=lambda self: self._default_legal_form_ids(),
     )
-    turnover_buckets = fields.Char(string='Turnover buckets')
-    employee_buckets = fields.Char(string='Employee buckets')
+    turnover_bucket_ids = fields.Many2many(
+        'bizfinder.bucket',
+        'bizfinder_search_turnover_bucket_rel',
+        'wizard_id', 'bucket_id',
+        string='Turnover buckets',
+        domain="[('kind', '=', 'turnover')]",
+    )
+    employee_bucket_ids = fields.Many2many(
+        'bizfinder.bucket',
+        'bizfinder_search_employee_bucket_rel',
+        'wizard_id', 'bucket_id',
+        string='Employee buckets',
+        domain="[('kind', '=', 'employees')]",
+    )
+
+    @api.model
+    def _default_legal_form_ids(self):
+        ab = self.env['bizfinder.legal.form'].search([('code', '=', 'AB')], limit=1)
+        return [(6, 0, ab.ids)] if ab else False
 
     f_tax = fields.Selection(
         [('any', 'Any'), ('YES', 'F-tax registered'), ('NO', 'No F-tax')],
@@ -146,9 +162,6 @@ class BizfinderSearch(models.TransientModel):
     status_changed_min_months = fields.Char(string='Status changed at least (months)')
     reservation_max_months = fields.Char(string='Auditor reservation within (months)')
     reservation_min_months = fields.Char(string='Auditor reservation at least (months)')
-    units_min = fields.Char(string='Min units')
-    units_max = fields.Char(string='Max units')
-
     net_sales_min = fields.Char(string='Min net sales (tkr)')
     net_sales_max = fields.Char(string='Max net sales (tkr)')
     net_operating_income_min = fields.Char(string='Min operating income (tkr)')
@@ -270,36 +283,44 @@ class BizfinderSearch(models.TransientModel):
         if self.region_ids:
             values.append({'filterCategory': 'POST_REGION_CODE',
                            'SelectOption': self.region_ids.mapped('code')})
-        if names := self._split_csv(self.post_community_names):
-            values.append({'filterCategory': 'POST_COMMUNITY_NAME', 'SelectOption': names})
-        if codes := self._split_csv(self.post_community_codes):
-            values.append({'filterCategory': 'POST_COMMUNITY_CODE', 'SelectOption': codes})
-        if codes := self._split_csv(self.registered_community_codes):
-            values.append({'filterCategory': 'REGISTERED_COMMUNITY_CODE', 'SelectOption': codes})
+        if self.post_community_ids:
+            values.append({'filterCategory': 'POST_KOMMUNKOD',
+                           'SelectOption': self.post_community_ids.mapped('kommunkod')})
+        if self.registered_community_ids:
+            values.append({'filterCategory': 'REGISTERED_KOMMUNKOD',
+                           'SelectOption': self.registered_community_ids.mapped('kommunkod')})
         if self.visiting_region_ids:
             values.append({'filterCategory': 'VISITING_REGION_CODE',
                            'SelectOption': self.visiting_region_ids.mapped('code')})
-        if codes := self._split_csv(self.visiting_community_codes):
-            values.append({'filterCategory': 'VISITING_COMMUNITY_CODE', 'SelectOption': codes})
+        if self.visiting_community_ids:
+            values.append({'filterCategory': 'VISITING_KOMMUNKOD',
+                           'SelectOption': self.visiting_community_ids.mapped('kommunkod')})
         if prefixes := self._split_csv(self.post_zip_prefixes):
             values.append({'filterCategory': 'POST_ZIP_PREFIX', 'SelectOption': prefixes})
         if prefixes := self._split_csv(self.registered_zip_prefixes):
             values.append({'filterCategory': 'REGISTERED_ZIP_PREFIX', 'SelectOption': prefixes})
         if prefixes := self._split_csv(self.visiting_zip_prefixes):
             values.append({'filterCategory': 'VISITING_ZIP_PREFIX', 'SelectOption': prefixes})
-        snis = []
-        if self.industry_preset:
-            snis.extend(INDUSTRY_PRESET_SNI_PREFIXES.get(self.industry_preset, []))
-        snis.extend(self._split_csv(self.sni_prefixes))
-        if snis:
+        if snis := self.industry_ids.expand_prefixes():
             snis = list(dict.fromkeys(snis))
             values.append({'filterCategory': 'SNI_PREFIX', 'SelectOption': snis})
-        if legals := self._split_csv(self.legal_forms):
-            values.append({'filterCategory': 'LEGALGROUP_CODE', 'SelectOption': legals})
-        if buckets := self._split_csv(self.turnover_buckets):
-            values.append({'filterCategory': 'TURNOVER_INTERVAL', 'SelectOption': buckets})
-        if buckets := self._split_csv(self.employee_buckets):
-            values.append({'filterCategory': 'NBR_EMPLOYEES_INTERVAL', 'SelectOption': buckets})
+        if self.legal_form_ids:
+            values.append({'filterCategory': 'LEGALGROUP_CODE',
+                           'SelectOption': self.legal_form_ids.mapped('code')})
+        turnover_keys = list(dict.fromkeys(
+            self.net_sales_magnitude_ids.expand_keys()
+            + self.turnover_bucket_ids.mapped('key')
+        ))
+        if turnover_keys:
+            values.append({'filterCategory': 'TURNOVER_INTERVAL',
+                           'SelectOption': turnover_keys})
+        employee_keys = list(dict.fromkeys(
+            self.employee_magnitude_ids.expand_keys()
+            + self.employee_bucket_ids.mapped('key')
+        ))
+        if employee_keys:
+            values.append({'filterCategory': 'NBR_EMPLOYEES_INTERVAL',
+                           'SelectOption': employee_keys})
         if self.f_tax and self.f_tax != 'any':
             values.append({'filterCategory': 'F_TAX', 'SelectOption': [self.f_tax]})
         if self.moms and self.moms != 'any':
@@ -323,7 +344,6 @@ class BizfinderSearch(models.TransientModel):
         ]:
             self._append_range(values, key, lo, hi, 'range_int')
         for key, lo, hi, kind in [
-            ('NUMBER_OF_UNITS', 'units_min', 'units_max', 'range_int'),
             ('NET_SALES', 'net_sales_min', 'net_sales_max', 'range_float'),
             ('NET_OPERATING_INCOME', 'net_operating_income_min',
              'net_operating_income_max', 'range_float'),
@@ -354,19 +374,18 @@ class BizfinderSearch(models.TransientModel):
     # --------------------------------------------------------------- preset
 
     _filter_to_field_map: dict = {
-        'POST_REGION_CODE': ('region_ids', 'm2m_codes'),
-        'POST_COMMUNITY_NAME': ('post_community_names', 'csv'),
-        'POST_COMMUNITY_CODE': ('post_community_codes', 'csv'),
-        'REGISTERED_COMMUNITY_CODE': ('registered_community_codes', 'csv'),
-        'VISITING_REGION_CODE': ('visiting_region_ids', 'm2m_codes'),
-        'VISITING_COMMUNITY_CODE': ('visiting_community_codes', 'csv'),
+        'POST_REGION_CODE': ('region_ids', 'm2m_region'),
+        'POST_KOMMUNKOD': ('post_community_ids', 'm2m_community'),
+        'REGISTERED_KOMMUNKOD': ('registered_community_ids', 'm2m_community'),
+        'VISITING_REGION_CODE': ('visiting_region_ids', 'm2m_region'),
+        'VISITING_KOMMUNKOD': ('visiting_community_ids', 'm2m_community'),
         'POST_ZIP_PREFIX': ('post_zip_prefixes', 'csv'),
         'REGISTERED_ZIP_PREFIX': ('registered_zip_prefixes', 'csv'),
         'VISITING_ZIP_PREFIX': ('visiting_zip_prefixes', 'csv'),
-        'SNI_PREFIX': ('sni_prefixes', 'csv'),
-        'LEGALGROUP_CODE': ('legal_forms', 'csv'),
-        'TURNOVER_INTERVAL': ('turnover_buckets', 'csv'),
-        'NBR_EMPLOYEES_INTERVAL': ('employee_buckets', 'csv'),
+        'SNI_PREFIX': ('industry_ids', 'm2m_industry_by_sni'),
+        'LEGALGROUP_CODE': ('legal_form_ids', 'm2m_legal_form'),
+        'TURNOVER_INTERVAL': ('turnover_bucket_ids', 'm2m_turnover_bucket'),
+        'NBR_EMPLOYEES_INTERVAL': ('employee_bucket_ids', 'm2m_employee_bucket'),
         'F_TAX': ('f_tax', 'select'),
         'MOMS': ('moms', 'select'),
         'ACCOUNTANT_RESERVATION': ('accountant_reservation', 'select'),
@@ -377,7 +396,6 @@ class BizfinderSearch(models.TransientModel):
             ('status_changed_min_months', 'status_changed_max_months'), 'range_int'),
         'ACCOUNTANT_RESERVATION_WITHIN_MONTHS': (
             ('reservation_min_months', 'reservation_max_months'), 'range_int'),
-        'NUMBER_OF_UNITS': (('units_min', 'units_max'), 'range_int'),
         'NET_SALES': (('net_sales_min', 'net_sales_max'), 'range_float'),
         'NET_OPERATING_INCOME': (
             ('net_operating_income_min', 'net_operating_income_max'), 'range_float'),
@@ -403,14 +421,20 @@ class BizfinderSearch(models.TransientModel):
         'DIVIDEND': (('dividend_min', 'dividend_max'), 'range_float'),
     }
 
-    @staticmethod
-    def _zero(kind: str):
+    _M2M_KINDS = frozenset({
+        'm2m_region', 'm2m_community', 'm2m_industry_by_sni',
+        'm2m_legal_form', 'm2m_turnover_bucket', 'm2m_employee_bucket',
+    })
+
+    @classmethod
+    def _zero(cls, kind: str):
+        if kind in cls._M2M_KINDS:
+            return [(5, 0, 0)]
         return {
             'csv': '',
             'select': 'any',
             'range_int': '',
             'range_float': '',
-            'm2m_codes': [(5, 0, 0)],
         }[kind]
 
     def _reset_filters(self) -> dict:
@@ -423,7 +447,11 @@ class BizfinderSearch(models.TransientModel):
                     vals[f] = zero
             else:
                 vals[target] = zero
-        vals['industry_preset'] = False
+        # Clear local-only shortcut fields too, so a preset switch wipes
+        # the previous preset's auto-fill cleanly.
+        vals['industry_ids'] = [(5, 0, 0)]
+        vals['employee_magnitude_ids'] = [(5, 0, 0)]
+        vals['net_sales_magnitude_ids'] = [(5, 0, 0)]
         return vals
 
     @api.model
@@ -465,12 +493,49 @@ class BizfinderSearch(models.TransientModel):
             if kind == 'csv':
                 opts = f.get('SelectOption') or []
                 vals[target] = ','.join(str(o) for o in opts)
-            elif kind == 'm2m_codes':
+            elif kind == 'm2m_region':
                 opts = f.get('SelectOption') or []
                 if not opts:
                     continue
-                regions = self.env['bizfinder.region'].search([('code', 'in', list(opts))])
+                codes = [int(o) for o in opts]
+                regions = self.env['bizfinder.region'].search([('code', 'in', codes)])
                 vals[target] = [(6, 0, regions.ids)]
+            elif kind == 'm2m_community':
+                opts = f.get('SelectOption') or []
+                if not opts:
+                    continue
+                codes = [int(o) for o in opts]
+                comms = self.env['bizfinder.community'].search([('kommunkod', 'in', codes)])
+                vals[target] = [(6, 0, comms.ids)]
+            elif kind == 'm2m_industry_by_sni':
+                # Preset gave us raw SNI prefixes; resolve them to the
+                # curated industry rows whose sni_prefixes CSV contains
+                # any of them. Exact-match on prefix string.
+                opts = [str(o) for o in (f.get('SelectOption') or []) if str(o)]
+                if not opts:
+                    continue
+                industries = self.env['bizfinder.industry'].search([])
+                wanted = set(opts)
+                matched = industries.filtered(
+                    lambda i: wanted.intersection(set(i.expand_prefixes()))
+                )
+                vals[target] = [(6, 0, matched.ids)]
+            elif kind == 'm2m_legal_form':
+                opts = f.get('SelectOption') or []
+                if not opts:
+                    continue
+                codes = [str(o) for o in opts]
+                lfs = self.env['bizfinder.legal.form'].search([('code', 'in', codes)])
+                vals[target] = [(6, 0, lfs.ids)]
+            elif kind in ('m2m_turnover_bucket', 'm2m_employee_bucket'):
+                opts = f.get('SelectOption') or []
+                if not opts:
+                    continue
+                bk = 'turnover' if kind == 'm2m_turnover_bucket' else 'employees'
+                keys = [str(o) for o in opts]
+                buckets = self.env['bizfinder.bucket'].search(
+                    [('kind', '=', bk), ('key', 'in', keys)])
+                vals[target] = [(6, 0, buckets.ids)]
             elif kind == 'select':
                 opts = f.get('SelectOption') or []
                 vals[target] = str(opts[0]) if opts else 'any'

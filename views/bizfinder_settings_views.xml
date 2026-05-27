@@ -11,8 +11,17 @@
             <setting id="bizfinder_api_url_setting" string="API URL">
               <field name="bizfinder_api_url"/>
             </setting>
-            <setting id="bizfinder_api_key_setting" string="API Key">
-              <field name="bizfinder_api_key" password="True"/>
+            <setting id="bizfinder_access_token_setting" string="Access Token">
+              <field name="bizfinder_access_token" password="True"/>
+            </setting>
+            <setting id="bizfinder_test_connection_setting" string="Connection">
+              <button name="action_bizfinder_test_connection"
+                      string="Test connection" type="object" class="btn-secondary"/>
+            </setting>
+            <setting id="bizfinder_sync_setting" string="Catalogues"
+                     help="Refresh kommun, SNI, bucket and legal-form lookup tables from the API.">
+              <button name="action_bizfinder_sync_catalogues"
+                      string="Refresh catalogues" type="object" class="btn-primary"/>
             </setting>
           </block>
         </app>

@@ -30,8 +30,63 @@ class BizfinderSearchFormController extends FormController {
                 breadcrumb.insertBefore(statusbar, breadcrumb.firstChild);
             }
         };
+        const syncSelectAllCheckbox = () => {
+            const form = document.querySelector(".o_form_view.o_bizfinder_search_form");
+            const list = form?.querySelector("[name='result_line_ids']");
+            if (!list) {
+                return;
+            }
+            const selectedHeader = list.querySelector(
+                "thead th[data-name='selected'], thead th[name='selected']"
+            );
+            if (!selectedHeader) {
+                return;
+            }
+            let selectAll = selectedHeader.querySelector(".o_bizfinder_select_all");
+            if (!selectAll) {
+                selectAll = document.createElement("input");
+                selectAll.type = "checkbox";
+                selectAll.className = "form-check-input o_bizfinder_select_all";
+                selectAll.title = "Select all";
+                selectAll.setAttribute("aria-label", "Select all results");
+                selectAll.addEventListener("click", (ev) => ev.stopPropagation());
+                selectAll.addEventListener("change", () => {
+                    for (const checkbox of list.querySelectorAll(
+                        "tbody td[data-name='selected'] input[type='checkbox'], tbody td[name='selected'] input[type='checkbox']"
+                    )) {
+                        if (checkbox.checked !== selectAll.checked) {
+                            checkbox.click();
+                        }
+                    }
+                });
+                selectedHeader.textContent = "";
+                selectedHeader.appendChild(selectAll);
+            }
+
+            if (!list.dataset.bizfinderSelectAllBound) {
+                list.dataset.bizfinderSelectAllBound = "1";
+                list.addEventListener("change", (ev) => {
+                    if (ev.target.closest("tbody td[data-name='selected'], tbody td[name='selected']")) {
+                        syncSelectAllCheckbox();
+                    }
+                });
+            }
+
+            const rowCheckboxes = [
+                ...list.querySelectorAll(
+                    "tbody td[data-name='selected'] input[type='checkbox'], tbody td[name='selected'] input[type='checkbox']"
+                ),
+            ];
+            const checkedCount = rowCheckboxes.filter((checkbox) => checkbox.checked).length;
+            selectAll.checked = rowCheckboxes.length > 0 && checkedCount === rowCheckboxes.length;
+            selectAll.indeterminate = checkedCount > 0 && checkedCount < rowCheckboxes.length;
+        };
         onMounted(moveStatusbarIntoBreadcrumb);
-        onPatched(moveStatusbarIntoBreadcrumb);
+        onMounted(syncSelectAllCheckbox);
+        onPatched(() => {
+            moveStatusbarIntoBreadcrumb();
+            syncSelectAllCheckbox();
+        });
     }
 }
 
