@@ -72,10 +72,10 @@ class BizfinderSearch(models.TransientModel):
         'bizfinder.magnitude',
         'bizfinder_search_net_sales_magnitude_rel',
         'wizard_id', 'magnitude_id',
-        string='Net sales',
+        string='Turnover',
         domain="[('kind', '=', 'net_sales')]",
-        help="Coarse turnover bands (proxy for net sales). Each expands "
-             "to its TURNOVER_INTERVAL keys.",
+        help="Coarse turnover bands. Each expands to its "
+             "TURNOVER_INTERVAL keys.",
     )
     post_community_ids = fields.Many2many(
         'bizfinder.community',
@@ -84,55 +84,31 @@ class BizfinderSearch(models.TransientModel):
         string='Municipalities (postal)',
         help="Postal-address kommun. Start typing to filter.",
     )
-    registered_community_ids = fields.Many2many(
+    # Combined "alternative address" kommun picker — matches if either
+    # the registered or the visiting community matches. Replaces the
+    # separate registered/visiting pickers since users don't usually
+    # care which alternative address the company filed under.
+    alt_community_ids = fields.Many2many(
         'bizfinder.community',
-        'bizfinder_search_registered_community_rel',
+        'bizfinder_search_alt_community_rel',
         'wizard_id', 'community_id',
-        string='Municipalities (registered)',
+        string='Kommun',
+        help="Matches registered OR visiting address kommun.",
     )
-    visiting_region_ids = fields.Many2many(
-        'bizfinder.region',
-        'bizfinder_search_visiting_region_rel',
-        'wizard_id',
-        'region_id',
-        string='Visiting regions',
-        help="Pick one or more Swedish counties (län) for the visiting address.",
+    # Single ZIP prefix input that the wizard sends as a ZIP_ANY filter
+    # — the API ORs it across post/registered/visiting zipcode columns
+    # so users don't have to pick which address kind they care about.
+    zip_prefixes = fields.Char(
+        string='Postkoder',
+        help="Comma-separated postnummer-prefix (1–5 digits). "
+             "Matches if any of postal/registered/visiting postnummer starts with one of them.",
     )
-    visiting_community_ids = fields.Many2many(
-        'bizfinder.community',
-        'bizfinder_search_visiting_community_rel',
-        'wizard_id', 'community_id',
-        string='Municipalities (visiting)',
-    )
-    # Zip prefixes stay as char tags rendered with widget="char_tags" /
-    # comma input. Each chip is a 1–5 digit prefix; we don't model these
-    # as a lookup because they're a derived range, not an enumeration.
-    post_zip_prefixes = fields.Char(string='Postal ZIP prefixes',
-        help="Comma-separated ZIP-code prefixes (1–5 digits).")
-    registered_zip_prefixes = fields.Char(string='Registered ZIP prefixes',
-        help="Comma-separated ZIP-code prefixes (1–5 digits).")
-    visiting_zip_prefixes = fields.Char(string='Visiting ZIP prefixes',
-        help="Comma-separated ZIP-code prefixes (1–5 digits).")
     legal_form_ids = fields.Many2many(
         'bizfinder.legal.form',
         'bizfinder_search_legal_form_rel',
         'wizard_id', 'legal_form_id',
         string='Legal forms',
         default=lambda self: self._default_legal_form_ids(),
-    )
-    turnover_bucket_ids = fields.Many2many(
-        'bizfinder.bucket',
-        'bizfinder_search_turnover_bucket_rel',
-        'wizard_id', 'bucket_id',
-        string='Turnover buckets',
-        domain="[('kind', '=', 'turnover')]",
-    )
-    employee_bucket_ids = fields.Many2many(
-        'bizfinder.bucket',
-        'bizfinder_search_employee_bucket_rel',
-        'wizard_id', 'bucket_id',
-        string='Employee buckets',
-        domain="[('kind', '=', 'employees')]",
     )
 
     @api.model
@@ -150,61 +126,85 @@ class BizfinderSearch(models.TransientModel):
         [('any', 'Any'), ('YES', 'Has reservation'), ('NO', 'No reservation')],
         default='any', string='Auditor reservation')
 
-    registered_max_months = fields.Char(
-        string='Registered within (months)',
-        help='Filter to companies registered no more than this many months ago.')
-    registered_min_months = fields.Char(
-        string='Registered at least (months)',
-        help='Filter to companies registered at least this many months ago.')
-    formed_max_months = fields.Char(string='Formed within (months)')
-    formed_min_months = fields.Char(string='Formed at least (months)')
-    status_changed_max_months = fields.Char(string='Status changed within (months)')
-    status_changed_min_months = fields.Char(string='Status changed at least (months)')
-    reservation_max_months = fields.Char(string='Auditor reservation within (months)')
-    reservation_min_months = fields.Char(string='Auditor reservation at least (months)')
-    net_sales_min = fields.Char(string='Min net sales (tkr)')
-    net_sales_max = fields.Char(string='Max net sales (tkr)')
-    net_operating_income_min = fields.Char(string='Min operating income (tkr)')
-    net_operating_income_max = fields.Char(string='Max operating income (tkr)')
-    operating_result_min = fields.Char(string='Min operating result (tkr)')
-    operating_result_max = fields.Char(string='Max operating result (tkr)')
-    profit_after_fin_min = fields.Char(string='Min profit after financials (tkr)')
-    profit_after_fin_max = fields.Char(string='Max profit after financials (tkr)')
-    net_profit_loss_min = fields.Char(string='Min net profit/loss (tkr)')
-    net_profit_loss_max = fields.Char(string='Max net profit/loss (tkr)')
-    growth_pct_min = fields.Char(string='Min growth %')
-    growth_pct_max = fields.Char(string='Max growth %')
-    headcount_change_min = fields.Char(string='Min headcount growth %')
-    headcount_change_max = fields.Char(string='Max headcount growth %')
-    solidity_pct_min = fields.Char(string='Min solidity %')
-    solidity_pct_max = fields.Char(string='Max solidity %')
-    operating_margin_min = fields.Char(string='Min operating margin %')
-    operating_margin_max = fields.Char(string='Max operating margin %')
-    profit_margin_min = fields.Char(string='Min profit margin %')
-    profit_margin_max = fields.Char(string='Max profit margin %')
-    quick_ratio_min = fields.Char(string='Min quick ratio %')
-    quick_ratio_max = fields.Char(string='Max quick ratio %')
-    turnover_per_employee_min = fields.Char(string='Min turnover/employee (tkr)')
-    turnover_per_employee_max = fields.Char(string='Max turnover/employee (tkr)')
-    employees_min = fields.Char(string='Min employees (exact)')
-    employees_max = fields.Char(string='Max employees (exact)')
-    cash_min = fields.Char(string='Min cash & bank (tkr)')
-    cash_max = fields.Char(string='Max cash & bank (tkr)')
-    assets_min = fields.Char(string='Min assets (tkr)')
-    assets_max = fields.Char(string='Max assets (tkr)')
-    equity_min = fields.Char(string='Min equity (tkr)')
-    equity_max = fields.Char(string='Max equity (tkr)')
-    current_liabilities_min = fields.Char(string='Min current liabilities (tkr)')
-    current_liabilities_max = fields.Char(string='Max current liabilities (tkr)')
-    long_term_debts_min = fields.Char(string='Min long-term debts (tkr)')
-    long_term_debts_max = fields.Char(string='Max long-term debts (tkr)')
-    account_months_min = fields.Char(string='Min account months')
-    account_months_max = fields.Char(string='Max account months')
+    # Date-range filters use real Date pickers so users get a calendar
+    # widget and ISO parsing for free. Each range maps to a *_DATE API
+    # filter (registration_date / status_date / date_accountant_reservation).
+    # ``from`` defaults to 1900-01-01 so the envelope safely covers every
+    # company in the dataset; ``to`` defaults to today.
+    DATE_FLOOR = '1900-01-01'
+
+    registration_date_from = fields.Date(
+        string='Registered from',
+        default=lambda self: self.DATE_FLOOR,
+    )
+    registration_date_to = fields.Date(
+        string='Registered to',
+        default=lambda self: fields.Date.context_today(self),
+    )
+    status_date_from = fields.Date(
+        string='Status changed from',
+        default=lambda self: self.DATE_FLOOR,
+    )
+    status_date_to = fields.Date(
+        string='Status changed to',
+        default=lambda self: fields.Date.context_today(self),
+    )
+    reservation_date_from = fields.Date(
+        string='Auditor reservation from',
+        default=lambda self: self.DATE_FLOOR,
+    )
+    reservation_date_to = fields.Date(
+        string='Auditor reservation to',
+        default=lambda self: fields.Date.context_today(self),
+    )
+
+    # Numeric ranges pre-fill with the API bounds so the user sees the
+    # full envelope and edits down, instead of staring at placeholder text.
+    # Leaving an input empty drops the corresponding min/max from the
+    # filter payload (see _is_set in _build_values).
+    net_sales_min = fields.Char(string='Min turnover (tkr)', default='-10 000 000')
+    net_sales_max = fields.Char(string='Max turnover (tkr)', default='100 000 000')
+    net_operating_income_min = fields.Char(string='Min operating income (tkr)', default='-10 000 000')
+    net_operating_income_max = fields.Char(string='Max operating income (tkr)', default='100 000 000')
+    operating_result_min = fields.Char(string='Min operating result (tkr)', default='-10 000 000')
+    operating_result_max = fields.Char(string='Max operating result (tkr)', default='100 000 000')
+    profit_after_fin_min = fields.Char(string='Min profit after financials (tkr)', default='-10 000 000')
+    profit_after_fin_max = fields.Char(string='Max profit after financials (tkr)', default='100 000 000')
+    net_profit_loss_min = fields.Char(string='Min net profit/loss (tkr)', default='-10 000 000')
+    net_profit_loss_max = fields.Char(string='Max net profit/loss (tkr)', default='100 000 000')
+    growth_pct_min = fields.Char(string='Min growth %', default='-100')
+    growth_pct_max = fields.Char(string='Max growth %', default='500')
+    headcount_change_min = fields.Char(string='Min headcount growth %', default='-100')
+    headcount_change_max = fields.Char(string='Max headcount growth %', default='500')
+    solidity_pct_min = fields.Char(string='Min solidity %', default='-100')
+    solidity_pct_max = fields.Char(string='Max solidity %', default='100')
+    operating_margin_min = fields.Char(string='Min operating margin %', default='-100')
+    operating_margin_max = fields.Char(string='Max operating margin %', default='100')
+    profit_margin_min = fields.Char(string='Min profit margin %', default='-100')
+    profit_margin_max = fields.Char(string='Max profit margin %', default='100')
+    quick_ratio_min = fields.Char(string='Min quick ratio %', default='0')
+    quick_ratio_max = fields.Char(string='Max quick ratio %', default='1000')
+    turnover_per_employee_min = fields.Char(string='Min turnover/employee (tkr)', default='0')
+    turnover_per_employee_max = fields.Char(string='Max turnover/employee (tkr)', default='100 000')
+    employees_min = fields.Char(string='Min employees (exact)', default='0')
+    employees_max = fields.Char(string='Max employees (exact)', default='100 000')
+    cash_min = fields.Char(string='Min cash & bank (tkr)', default='0')
+    cash_max = fields.Char(string='Max cash & bank (tkr)', default='10 000 000')
+    assets_min = fields.Char(string='Min assets (tkr)', default='0')
+    assets_max = fields.Char(string='Max assets (tkr)', default='100 000 000')
+    equity_min = fields.Char(string='Min equity (tkr)', default='-10 000 000')
+    equity_max = fields.Char(string='Max equity (tkr)', default='100 000 000')
+    current_liabilities_min = fields.Char(string='Min current liabilities (tkr)', default='0')
+    current_liabilities_max = fields.Char(string='Max current liabilities (tkr)', default='100 000 000')
+    long_term_debts_min = fields.Char(string='Min long-term debts (tkr)', default='0')
+    long_term_debts_max = fields.Char(string='Max long-term debts (tkr)', default='100 000 000')
+    account_months_min = fields.Char(string='Min account months', default='0')
+    account_months_max = fields.Char(string='Max account months', default='24')
     accountant_obligation = fields.Selection(
         [('any', 'Any'), ('YES', 'Auditor required'), ('NO', 'No auditor required')],
         default='any', string='Auditor obligation')
-    dividend_min = fields.Char(string='Min dividend (tkr)')
-    dividend_max = fields.Char(string='Max dividend (tkr)')
+    dividend_min = fields.Char(string='Min dividend (tkr)', default='0')
+    dividend_max = fields.Char(string='Max dividend (tkr)', default='100 000 000')
 
     # Page size for prospect previews. Hardcoded so users don't tune it
     # per-search and so billing assumptions stay stable.
@@ -252,7 +252,9 @@ class BizfinderSearch(models.TransientModel):
     def _range_value(self, field_name: str, value, kind: str):
         if not self._is_set(value):
             return None
-        raw = str(value).strip().replace(',', '.')
+        # Strip thin / regular spaces too — defaults like "10 000 000"
+        # are easier to read but would otherwise blow up int()/float().
+        raw = str(value).strip().replace(',', '.').replace(' ', '').replace(' ', '')
         try:
             if kind == 'range_int':
                 parsed = int(raw)
@@ -286,39 +288,21 @@ class BizfinderSearch(models.TransientModel):
         if self.post_community_ids:
             values.append({'filterCategory': 'POST_KOMMUNKOD',
                            'SelectOption': self.post_community_ids.mapped('kommunkod')})
-        if self.registered_community_ids:
-            values.append({'filterCategory': 'REGISTERED_KOMMUNKOD',
-                           'SelectOption': self.registered_community_ids.mapped('kommunkod')})
-        if self.visiting_region_ids:
-            values.append({'filterCategory': 'VISITING_REGION_CODE',
-                           'SelectOption': self.visiting_region_ids.mapped('code')})
-        if self.visiting_community_ids:
-            values.append({'filterCategory': 'VISITING_KOMMUNKOD',
-                           'SelectOption': self.visiting_community_ids.mapped('kommunkod')})
-        if prefixes := self._split_csv(self.post_zip_prefixes):
-            values.append({'filterCategory': 'POST_ZIP_PREFIX', 'SelectOption': prefixes})
-        if prefixes := self._split_csv(self.registered_zip_prefixes):
-            values.append({'filterCategory': 'REGISTERED_ZIP_PREFIX', 'SelectOption': prefixes})
-        if prefixes := self._split_csv(self.visiting_zip_prefixes):
-            values.append({'filterCategory': 'VISITING_ZIP_PREFIX', 'SelectOption': prefixes})
+        if self.alt_community_ids:
+            values.append({'filterCategory': 'ALT_KOMMUNKOD',
+                           'SelectOption': self.alt_community_ids.mapped('kommunkod')})
+        if prefixes := self._split_csv(self.zip_prefixes):
+            values.append({'filterCategory': 'ZIP_ANY', 'SelectOption': prefixes})
         if snis := self.industry_ids.expand_prefixes():
             snis = list(dict.fromkeys(snis))
             values.append({'filterCategory': 'SNI_PREFIX', 'SelectOption': snis})
         if self.legal_form_ids:
             values.append({'filterCategory': 'LEGALGROUP_CODE',
                            'SelectOption': self.legal_form_ids.mapped('code')})
-        turnover_keys = list(dict.fromkeys(
-            self.net_sales_magnitude_ids.expand_keys()
-            + self.turnover_bucket_ids.mapped('key')
-        ))
-        if turnover_keys:
+        if turnover_keys := list(dict.fromkeys(self.net_sales_magnitude_ids.expand_keys())):
             values.append({'filterCategory': 'TURNOVER_INTERVAL',
                            'SelectOption': turnover_keys})
-        employee_keys = list(dict.fromkeys(
-            self.employee_magnitude_ids.expand_keys()
-            + self.employee_bucket_ids.mapped('key')
-        ))
-        if employee_keys:
+        if employee_keys := list(dict.fromkeys(self.employee_magnitude_ids.expand_keys())):
             values.append({'filterCategory': 'NBR_EMPLOYEES_INTERVAL',
                            'SelectOption': employee_keys})
         if self.f_tax and self.f_tax != 'any':
@@ -331,18 +315,20 @@ class BizfinderSearch(models.TransientModel):
         if self.accountant_obligation and self.accountant_obligation != 'any':
             values.append({'filterCategory': 'ACCOUNTANT_OBLIGATION',
                            'SelectOption': [self.accountant_obligation]})
-        self._append_range(
-            values, 'REGISTERED_WITHIN_MONTHS',
-            'registered_min_months', 'registered_max_months', 'range_int',
-        )
-        for key, lo, hi in [
-            ('FORMED_WITHIN_MONTHS', 'formed_min_months', 'formed_max_months'),
-            ('STATUS_CHANGED_WITHIN_MONTHS', 'status_changed_min_months',
-             'status_changed_max_months'),
-            ('ACCOUNTANT_RESERVATION_WITHIN_MONTHS', 'reservation_min_months',
-             'reservation_max_months'),
+        for key, lo_f, hi_f in [
+            ('REGISTERED_DATE', 'registration_date_from', 'registration_date_to'),
+            ('STATUS_CHANGED_DATE', 'status_date_from', 'status_date_to'),
+            ('RESERVATION_DATE', 'reservation_date_from', 'reservation_date_to'),
         ]:
-            self._append_range(values, key, lo, hi, 'range_int')
+            lo, hi = self[lo_f], self[hi_f]
+            if not lo and not hi:
+                continue
+            r = {}
+            if lo:
+                r['min'] = fields.Date.to_string(lo)
+            if hi:
+                r['max'] = fields.Date.to_string(hi)
+            values.append({'filterCategory': key, 'SelectRange': r})
         for key, lo, hi, kind in [
             ('NET_SALES', 'net_sales_min', 'net_sales_max', 'range_float'),
             ('NET_OPERATING_INCOME', 'net_operating_income_min',
@@ -376,26 +362,45 @@ class BizfinderSearch(models.TransientModel):
     _filter_to_field_map: dict = {
         'POST_REGION_CODE': ('region_ids', 'm2m_region'),
         'POST_KOMMUNKOD': ('post_community_ids', 'm2m_community'),
-        'REGISTERED_KOMMUNKOD': ('registered_community_ids', 'm2m_community'),
-        'VISITING_REGION_CODE': ('visiting_region_ids', 'm2m_region'),
-        'VISITING_KOMMUNKOD': ('visiting_community_ids', 'm2m_community'),
-        'POST_ZIP_PREFIX': ('post_zip_prefixes', 'csv'),
-        'REGISTERED_ZIP_PREFIX': ('registered_zip_prefixes', 'csv'),
-        'VISITING_ZIP_PREFIX': ('visiting_zip_prefixes', 'csv'),
+        # Old per-address picker preset entries now funnel into the
+        # unified alt_community_ids; VISITING_REGION_CODE is dropped
+        # since no current preset uses it.
+        'REGISTERED_KOMMUNKOD': ('alt_community_ids', 'm2m_community'),
+        'VISITING_KOMMUNKOD': ('alt_community_ids', 'm2m_community'),
+        'ALT_KOMMUNKOD': ('alt_community_ids', 'm2m_community'),
+        # All three legacy ZIP prefix categories funnel into the single
+        # zip_prefixes field, so a preset that targeted a specific
+        # address kind still populates the consolidated input.
+        'POST_ZIP_PREFIX': ('zip_prefixes', 'csv'),
+        'REGISTERED_ZIP_PREFIX': ('zip_prefixes', 'csv'),
+        'VISITING_ZIP_PREFIX': ('zip_prefixes', 'csv'),
+        'ZIP_ANY': ('zip_prefixes', 'csv'),
         'SNI_PREFIX': ('industry_ids', 'm2m_industry_by_sni'),
         'LEGALGROUP_CODE': ('legal_form_ids', 'm2m_legal_form'),
-        'TURNOVER_INTERVAL': ('turnover_bucket_ids', 'm2m_turnover_bucket'),
-        'NBR_EMPLOYEES_INTERVAL': ('employee_bucket_ids', 'm2m_employee_bucket'),
+        # Magnitudes are now the single tag picker for both buckets;
+        # presets that reference raw API bucket keys are resolved by
+        # matching against magnitude.bucket_keys CSV membership.
+        'TURNOVER_INTERVAL': ('net_sales_magnitude_ids', 'm2m_magnitude_by_key'),
+        'NBR_EMPLOYEES_INTERVAL': ('employee_magnitude_ids', 'm2m_magnitude_by_key'),
         'F_TAX': ('f_tax', 'select'),
         'MOMS': ('moms', 'select'),
         'ACCOUNTANT_RESERVATION': ('accountant_reservation', 'select'),
         'ACCOUNTANT_OBLIGATION': ('accountant_obligation', 'select'),
-        'REGISTERED_WITHIN_MONTHS': (('registered_min_months', 'registered_max_months'), 'range_int'),
-        'FORMED_WITHIN_MONTHS': (('formed_min_months', 'formed_max_months'), 'range_int'),
+        # Old API filter categories that use "months ago" semantics map
+        # to the new Date pickers via a months-to-date conversion when
+        # a preset references them.
+        'REGISTERED_WITHIN_MONTHS': (
+            ('registration_date_from', 'registration_date_to'), 'range_months_to_date'),
+        'REGISTERED_DATE': (
+            ('registration_date_from', 'registration_date_to'), 'range_date'),
         'STATUS_CHANGED_WITHIN_MONTHS': (
-            ('status_changed_min_months', 'status_changed_max_months'), 'range_int'),
+            ('status_date_from', 'status_date_to'), 'range_months_to_date'),
+        'STATUS_CHANGED_DATE': (
+            ('status_date_from', 'status_date_to'), 'range_date'),
         'ACCOUNTANT_RESERVATION_WITHIN_MONTHS': (
-            ('reservation_min_months', 'reservation_max_months'), 'range_int'),
+            ('reservation_date_from', 'reservation_date_to'), 'range_months_to_date'),
+        'RESERVATION_DATE': (
+            ('reservation_date_from', 'reservation_date_to'), 'range_date'),
         'NET_SALES': (('net_sales_min', 'net_sales_max'), 'range_float'),
         'NET_OPERATING_INCOME': (
             ('net_operating_income_min', 'net_operating_income_max'), 'range_float'),
@@ -423,7 +428,7 @@ class BizfinderSearch(models.TransientModel):
 
     _M2M_KINDS = frozenset({
         'm2m_region', 'm2m_community', 'm2m_industry_by_sni',
-        'm2m_legal_form', 'm2m_turnover_bucket', 'm2m_employee_bucket',
+        'm2m_legal_form', 'm2m_magnitude_by_key',
     })
 
     @classmethod
@@ -435,6 +440,10 @@ class BizfinderSearch(models.TransientModel):
             'select': 'any',
             'range_int': '',
             'range_float': '',
+            # Date-typed targets clear to False so the date widget reads
+            # as empty rather than today's date.
+            'range_date': False,
+            'range_months_to_date': False,
         }[kind]
 
     def _reset_filters(self) -> dict:
@@ -527,15 +536,22 @@ class BizfinderSearch(models.TransientModel):
                 codes = [str(o) for o in opts]
                 lfs = self.env['bizfinder.legal.form'].search([('code', 'in', codes)])
                 vals[target] = [(6, 0, lfs.ids)]
-            elif kind in ('m2m_turnover_bucket', 'm2m_employee_bucket'):
-                opts = f.get('SelectOption') or []
+            elif kind == 'm2m_magnitude_by_key':
+                # Preset gives us raw API bucket keys; resolve to the
+                # magnitude rows whose bucket_keys CSV contains any of
+                # them. Field target tells us which magnitude kind.
+                opts = [str(o) for o in (f.get('SelectOption') or []) if str(o)]
                 if not opts:
                     continue
-                bk = 'turnover' if kind == 'm2m_turnover_bucket' else 'employees'
-                keys = [str(o) for o in opts]
-                buckets = self.env['bizfinder.bucket'].search(
-                    [('kind', '=', bk), ('key', 'in', keys)])
-                vals[target] = [(6, 0, buckets.ids)]
+                mag_kind = ('employees' if target == 'employee_magnitude_ids'
+                            else 'net_sales')
+                magnitudes = self.env['bizfinder.magnitude'].search(
+                    [('kind', '=', mag_kind)])
+                wanted = set(opts)
+                matched = magnitudes.filtered(
+                    lambda m: wanted.intersection(set(m.expand_keys()))
+                )
+                vals[target] = [(6, 0, matched.ids)]
             elif kind == 'select':
                 opts = f.get('SelectOption') or []
                 vals[target] = str(opts[0]) if opts else 'any'
@@ -546,6 +562,29 @@ class BizfinderSearch(models.TransientModel):
                     vals[lo_field] = str(int(rng['min']) if kind == 'range_int' else rng['min'])
                 if rng.get('max') is not None:
                     vals[hi_field] = str(int(rng['max']) if kind == 'range_int' else rng['max'])
+            elif kind == 'range_date':
+                # Preset gave ISO date strings; pass them straight to the
+                # Date target fields.
+                rng = f.get('SelectRange') or {}
+                lo_field, hi_field = target
+                if rng.get('min'):
+                    vals[lo_field] = rng['min']
+                if rng.get('max'):
+                    vals[hi_field] = rng['max']
+            elif kind == 'range_months_to_date':
+                # Legacy *_WITHIN_MONTHS preset values mean "this many
+                # months ago"; convert to absolute dates so the new Date
+                # pickers light up correctly.
+                from dateutil.relativedelta import relativedelta
+                today = fields.Date.context_today(self)
+                rng = f.get('SelectRange') or {}
+                lo_field, hi_field = target
+                # max=N months -> "no older than N months ago" -> date_from
+                if rng.get('max') is not None:
+                    vals[lo_field] = today - relativedelta(months=int(rng['max']))
+                # min=N months -> "at least N months ago" -> date_to
+                if rng.get('min') is not None:
+                    vals[hi_field] = today - relativedelta(months=int(rng['min']))
         return vals
 
     @api.onchange('preset_key')

@@ -9,8 +9,6 @@ access_bizfinder_community_user,bizfinder.community user,model_bizfinder_communi
 access_bizfinder_community_admin,bizfinder.community admin,model_bizfinder_community,base.group_system,1,1,1,1
 access_bizfinder_legal_form_user,bizfinder.legal.form user,model_bizfinder_legal_form,sales_team.group_sale_salesman,1,0,0,0
 access_bizfinder_legal_form_admin,bizfinder.legal.form admin,model_bizfinder_legal_form,base.group_system,1,1,1,1
-access_bizfinder_bucket_user,bizfinder.bucket user,model_bizfinder_bucket,sales_team.group_sale_salesman,1,0,0,0
-access_bizfinder_bucket_admin,bizfinder.bucket admin,model_bizfinder_bucket,base.group_system,1,1,1,1
 access_bizfinder_magnitude_user,bizfinder.magnitude user,model_bizfinder_magnitude,sales_team.group_sale_salesman,1,0,0,0
 access_bizfinder_magnitude_admin,bizfinder.magnitude admin,model_bizfinder_magnitude,base.group_system,1,1,1,1
 access_bizfinder_industry_user,bizfinder.industry user,model_bizfinder_industry,sales_team.group_sale_salesman,1,0,0,0

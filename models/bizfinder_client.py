@@ -133,7 +133,7 @@ class BizfinderClient(models.AbstractModel):
         """Idempotent pull of the kommun / SNI / bucket / legal-form
         catalogues from the API into the local lookup models. Safe to
         call repeatedly — uses code/key as the natural key."""
-        result = {'communities': 0, 'industries': 0, 'buckets': 0, 'legal_forms': 0}
+        result = {'communities': 0, 'industries': 0, 'legal_forms': 0}
 
         Community = self.env['bizfinder.community'].sudo()
         Region = self.env['bizfinder.region'].sudo()
@@ -183,19 +183,10 @@ class BizfinderClient(models.AbstractModel):
                 Industry.create(vals)
             result['industries'] += 1
 
+        # Buckets endpoint is still called only for its legalForms list;
+        # the employee/turnover bucket strings themselves live inside
+        # bizfinder.magnitude.bucket_keys (seeded statically via XML).
         buckets = self.get_buckets()
-        Bucket = self.env['bizfinder.bucket'].sudo()
-        existing_buckets = {(b.kind, b.key): b for b in Bucket.search([])}
-        for kind, key_list in (('employees', buckets.get('employees') or []),
-                               ('turnover', buckets.get('turnover') or [])):
-            for seq, key in enumerate(key_list, start=1):
-                vals = {'kind': kind, 'key': key, 'sequence': seq * 10}
-                bucket = existing_buckets.get((kind, key))
-                if bucket:
-                    bucket.write(vals)
-                else:
-                    Bucket.create(vals)
-                result['buckets'] += 1
 
         Legal = self.env['bizfinder.legal.form'].sudo()
         existing_legal = {l.code: l for l in Legal.search([])}
