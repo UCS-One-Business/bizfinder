@@ -156,15 +156,13 @@ class BizfinderSearch(models.TransientModel):
         self.preset_id = False
 
     def action_manage_presets(self):
-        """Open the preset list to add / edit / delete presets."""
+        """Open the preset list to add / edit / delete presets. Returns the
+        stored act_window (fully resolved, with `views`) — a bare dict without
+        `views` makes the web client's action preprocessing crash on
+        `action.views.map`."""
         self.ensure_one()
-        return {
-            'type': 'ir.actions.act_window',
-            'name': _('Presets'),
-            'res_model': 'bizfinder.preset',
-            'view_mode': 'list,form',
-            'target': 'current',
-        }
+        return self.env['ir.actions.act_window']._for_xml_id(
+            'bizfinder.action_bizfinder_preset')
 
     # --------------------------------------------------------------- selection
 
@@ -248,6 +246,22 @@ class BizfinderSearch(models.TransientModel):
         self.hit_count = total
         self.returned_count = len(rows)
         self.duplicate_count = duplicates
+
+        if not rows:
+            if total:
+                message = _("The companies that matched are already in your CRM.")
+            else:
+                message = _("No companies matched your filters. Try widening them.")
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _("No results"),
+                    'message': message,
+                    'type': 'warning',
+                    'sticky': False,
+                },
+            }
 
     def _refresh_billing_pricing(self, client=None):
         client = client or self.env['bizfinder.client']

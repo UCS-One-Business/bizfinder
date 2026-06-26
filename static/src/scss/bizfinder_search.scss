@@ -50,3 +50,12 @@ body:has(.o_form_view.o_bizfinder_search_form) {
         }
     }
 }
+
+// Reserve a stable height on the quick-search tag pickers so adding or
+// removing the first tag doesn't bounce the rows below it.
+.o_form_view.o_bizfinder_search_form {
+    .o_field_many2many_tags {
+        min-height: 2rem;
+        align-content: center;
+    }
+}
