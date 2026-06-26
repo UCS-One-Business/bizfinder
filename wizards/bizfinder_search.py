@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import json
 import logging
 from markupsafe import escape
 
@@ -9,32 +8,13 @@ from odoo.exceptions import AccessError, UserError
 
 _logger = logging.getLogger(__name__)
 
-# Mirrors the keys returned by /api/insight/segments. Kept here as a
-# Selection so users get a typed dropdown; the values themselves come from
-# the server when "Apply preset" is clicked.
-PRESET_OPTIONS = [
-    ('hot_growth', 'Up-and-coming SMEs'),
-    ('newborns', 'Newly formed AB'),
-    ('stable_profitable', 'Stable & profitable'),
-    ('cash_rich_smb', 'Cash-rich SMEs'),
-    ('mid_market_ab', 'Mid-market AB'),
-    ('past_first_year', 'Past first year'),
-    ('distressed_operating', 'Distressed but operating'),
-    ('recovery_candidates', 'Recovery candidates'),
-    ('it_growers', 'IT consulting growers'),
-    ('construction_sme', 'Construction SMEs'),
-    ('scaleups', 'Scaleups'),
-    ('high_dividend', 'Dividend payers'),
-    ('multi_unit_ops', 'Multi-location operations'),
-    ('enterprise_candidates', 'Enterprise candidates'),
-    ('equity_rich', 'Equity-rich AB'),
-]
 
 class BizfinderSearch(models.TransientModel):
     _name = 'bizfinder.search'
+    _inherit = 'bizfinder.filter.mixin'
     _description = 'Bizfinder Search Wizard'
 
-    @api.depends('preset_key')
+    @api.depends('preset_id')
     def _compute_display_name(self):
         # Override the framework-default "<model>,<id>" / "New" so the
         # breadcrumb reads as a real page name regardless of save state.
@@ -42,19 +22,11 @@ class BizfinderSearch(models.TransientModel):
             rec.display_name = "Prospect"
 
     # ------------------------------------------------------------------- preset
-    preset_key = fields.Selection(PRESET_OPTIONS, string='Preset segment')
-    # User-owned presets saved from the wizard (see bizfinder.preset). Picking
-    # one applies its stored filters, exactly like an API segment.
-    saved_preset_id = fields.Many2one(
-        'bizfinder.preset',
-        string='Saved preset',
-    )
-    # Not readonly at the Python level: the value is populated by the
-    # preset_key onchange and must survive the implicit save that runs
-    # before header buttons fire. Readonly-in-view keeps users from typing.
-    preset_description = fields.Text(string='Preset description')
+    preset_id = fields.Many2one('bizfinder.preset', string='Preset')
+    preset_description = fields.Text(
+        related='preset_id.description', string='Preset description', readonly=True)
 
-    # ------------------------------------------------------------------- filters
+    # ------------------------------------------------- m2m filters (own tables)
     region_ids = fields.Many2many(
         'bizfinder.region',
         string='Regions',
@@ -62,15 +34,13 @@ class BizfinderSearch(models.TransientModel):
     )
     industry_ids = fields.Many2many(
         'bizfinder.industry',
-        'bizfinder_search_industry_rel',
-        'wizard_id', 'industry_id',
+        'bizfinder_search_industry_rel', 'wizard_id', 'industry_id',
         string='Industries',
         help="Curated industry shortcuts. Each expands to its SNI prefixes.",
     )
     employee_magnitude_ids = fields.Many2many(
         'bizfinder.magnitude',
-        'bizfinder_search_employee_magnitude_rel',
-        'wizard_id', 'magnitude_id',
+        'bizfinder_search_employee_magnitude_rel', 'wizard_id', 'magnitude_id',
         string='Employees',
         domain="[('kind', '=', 'employees')]",
         help="Find companies by how many people they employ. Pick one or "
@@ -79,8 +49,7 @@ class BizfinderSearch(models.TransientModel):
     )
     net_sales_magnitude_ids = fields.Many2many(
         'bizfinder.magnitude',
-        'bizfinder_search_net_sales_magnitude_rel',
-        'wizard_id', 'magnitude_id',
+        'bizfinder_search_net_sales_magnitude_rel', 'wizard_id', 'magnitude_id',
         string='Turnover',
         domain="[('kind', '=', 'net_sales')]",
         help="Find companies by their yearly revenue. Pick one or more "
@@ -89,107 +58,22 @@ class BizfinderSearch(models.TransientModel):
     )
     post_community_ids = fields.Many2many(
         'bizfinder.community',
-        'bizfinder_search_post_community_rel',
-        'wizard_id', 'community_id',
+        'bizfinder_search_post_community_rel', 'wizard_id', 'community_id',
         string='Municipalities (postal)',
         help="Postal-address kommun. Start typing to filter.",
     )
-    # Combined "alternative address" kommun picker — matches if either
-    # the registered or the visiting community matches. Replaces the
-    # separate registered/visiting pickers since users don't usually
-    # care which alternative address the company filed under.
     alt_community_ids = fields.Many2many(
         'bizfinder.community',
-        'bizfinder_search_alt_community_rel',
-        'wizard_id', 'community_id',
+        'bizfinder_search_alt_community_rel', 'wizard_id', 'community_id',
         string='Kommun',
         help="Matches registered OR visiting address kommun.",
     )
-    # Single ZIP prefix input that the wizard sends as a ZIP_ANY filter
-    # — the API ORs it across post/registered/visiting zipcode columns
-    # so users don't have to pick which address kind they care about.
-    zip_prefixes = fields.Char(
-        string='Postkoder',
-        help="Comma-separated postnummer-prefix (1–5 digits). "
-             "Matches if any of postal/registered/visiting postnummer starts with one of them.",
-    )
     legal_form_ids = fields.Many2many(
         'bizfinder.legal.form',
-        'bizfinder_search_legal_form_rel',
-        'wizard_id', 'legal_form_id',
+        'bizfinder_search_legal_form_rel', 'wizard_id', 'legal_form_id',
         string='Legal forms',
         default=lambda self: self._default_legal_form_ids(),
     )
-
-    @api.model
-    def _default_legal_form_ids(self):
-        ab = self.env['bizfinder.legal.form'].search([('code', '=', 'AB')], limit=1)
-        return [(6, 0, ab.ids)] if ab else False
-
-    f_tax = fields.Selection(
-        [('any', 'Any'), ('YES', 'F-tax registered'), ('NO', 'No F-tax')],
-        default='any', string='F-tax')
-    moms = fields.Selection(
-        [('any', 'Any'), ('YES', 'VAT registered'), ('NO', 'No VAT')],
-        default='any', string='VAT (Moms)')
-    accountant_reservation = fields.Selection(
-        [('any', 'Any'), ('YES', 'Has reservation'), ('NO', 'No reservation')],
-        default='any', string='Auditor reservation')
-
-    # Date-range filters use real Date pickers so users get a calendar
-    # widget and ISO parsing for free. Each range maps to a *_DATE API
-    # filter (registration_date / status_date / date_accountant_reservation).
-    # ``from`` defaults to 1900-01-01 so the envelope safely covers every
-    # company in the dataset; ``to`` defaults to today.
-    DATE_FLOOR = '1900-01-01'
-
-    registration_date_from = fields.Date(
-        string='Registered from',
-        default=lambda self: self.DATE_FLOOR,
-    )
-    registration_date_to = fields.Date(
-        string='Registered to',
-        default=lambda self: fields.Date.context_today(self),
-    )
-    status_date_from = fields.Date(
-        string='Status changed from',
-        default=lambda self: self.DATE_FLOOR,
-    )
-    status_date_to = fields.Date(
-        string='Status changed to',
-        default=lambda self: fields.Date.context_today(self),
-    )
-    reservation_date_from = fields.Date(
-        string='Auditor reservation from',
-        default=lambda self: self.DATE_FLOOR,
-    )
-    reservation_date_to = fields.Date(
-        string='Auditor reservation to',
-        default=lambda self: fields.Date.context_today(self),
-    )
-
-    # Numeric ranges pre-fill with the API bounds so the user sees the
-    # full envelope and edits down, instead of staring at placeholder text.
-    # Leaving an input empty drops the corresponding min/max from the
-    # filter payload (see _is_set in _build_values).
-    # Trimmed to the handful of ranges sales actually filters on: turnover,
-    # bottom-line profit, headcount, growth and solidity. The API still
-    # accepts the other ranges, but they cluttered the form without earning
-    # their place; presets that reference dropped categories are ignored
-    # (see _resolve_filters_to_vals) rather than crashing.
-    net_sales_min = fields.Char(string='Min turnover (tkr)', default='-10 000 000')
-    net_sales_max = fields.Char(string='Max turnover (tkr)', default='100 000 000')
-    net_profit_loss_min = fields.Char(string='Min net profit/loss (tkr)', default='-10 000 000')
-    net_profit_loss_max = fields.Char(string='Max net profit/loss (tkr)', default='100 000 000')
-    growth_pct_min = fields.Char(string='Min growth %', default='-100')
-    growth_pct_max = fields.Char(string='Max growth %', default='500')
-    solidity_pct_min = fields.Char(string='Min solidity %', default='-100')
-    solidity_pct_max = fields.Char(string='Max solidity %', default='100')
-    employees_min = fields.Char(string='Min employees (exact)', default='0')
-    employees_max = fields.Char(string='Max employees (exact)', default='100 000')
-    accountant_obligation = fields.Selection(
-        [('any', 'Any'), ('YES', 'Auditor required'), ('NO', 'No auditor required')],
-        default='any', string='Auditor obligation')
 
     # Page size for prospect previews. Hardcoded so users don't tune it
     # per-search and so billing assumptions stay stable.
@@ -222,195 +106,78 @@ class BizfinderSearch(models.TransientModel):
             rec.selected_reveal_count = len(selected)
             rec.estimated_reveal_total = rec.selected_reveal_count * rec.price_per_reveal
 
-    # --------------------------------------------------------------- helpers
+    # ------------------------------------------------------------------- preset
 
-    @staticmethod
-    def _split_csv(value: str | bool) -> list[str]:
-        if not value:
-            return []
-        return [p.strip() for p in str(value).split(',') if p.strip()]
-
-    @staticmethod
-    def _is_set(value) -> bool:
-        return value is not False and value is not None and str(value).strip() != ''
-
-    def _range_value(self, field_name: str, value, kind: str):
-        if not self._is_set(value):
-            return None
-        # Strip thin / regular spaces too — defaults like "10 000 000"
-        # are easier to read but would otherwise blow up int()/float().
-        raw = str(value).strip().replace(',', '.').replace(' ', '').replace(' ', '')
-        try:
-            if kind == 'range_int':
-                parsed = int(raw)
-            else:
-                parsed = float(raw)
-        except ValueError as exc:
-            field = self._fields[field_name]
-            raise UserError(
-                _("'%(value)s' is not a valid number for %(field)s.")
-                % {'value': value, 'field': field.string}
-            ) from exc
-        return parsed
-
-    def _append_range(self, values: list[dict], key: str, lo_field: str, hi_field: str, kind: str):
-        lo = self._range_value(lo_field, self[lo_field], kind)
-        hi = self._range_value(hi_field, self[hi_field], kind)
-        if lo is None and hi is None:
+    @api.onchange('preset_id')
+    def _onchange_preset_id(self):
+        """Apply the selected preset's filters. Clearing the preset leaves the
+        current filters in place (use Clear if you want a clean slate)."""
+        if not self.preset_id:
             return
-        r = {}
-        if lo is not None:
-            r['min'] = lo
-        if hi is not None:
-            r['max'] = hi
-        values.append({'filterCategory': key, 'SelectRange': r})
+        vals = self._resolve_filters_to_vals(self.preset_id._build_values())
+        for fname, value in vals.items():
+            self[fname] = value
 
-    def _build_values(self) -> list[dict]:
-        values: list[dict] = []
-        if self.region_ids:
-            values.append({'filterCategory': 'POST_REGION_CODE',
-                           'SelectOption': self.region_ids.mapped('code')})
-        if self.post_community_ids:
-            values.append({'filterCategory': 'POST_KOMMUNKOD',
-                           'SelectOption': self.post_community_ids.mapped('kommunkod')})
-        if self.alt_community_ids:
-            values.append({'filterCategory': 'ALT_KOMMUNKOD',
-                           'SelectOption': self.alt_community_ids.mapped('kommunkod')})
-        if prefixes := self._split_csv(self.zip_prefixes):
-            values.append({'filterCategory': 'ZIP_ANY', 'SelectOption': prefixes})
-        if snis := self.industry_ids.expand_prefixes():
-            snis = list(dict.fromkeys(snis))
-            values.append({'filterCategory': 'SNI_PREFIX', 'SelectOption': snis})
-        if self.legal_form_ids:
-            values.append({'filterCategory': 'LEGALGROUP_CODE',
-                           'SelectOption': self.legal_form_ids.mapped('code')})
-        if turnover_keys := list(dict.fromkeys(self.net_sales_magnitude_ids.expand_keys())):
-            values.append({'filterCategory': 'TURNOVER_INTERVAL',
-                           'SelectOption': turnover_keys})
-        if employee_keys := list(dict.fromkeys(self.employee_magnitude_ids.expand_keys())):
-            values.append({'filterCategory': 'NBR_EMPLOYEES_INTERVAL',
-                           'SelectOption': employee_keys})
-        if self.f_tax and self.f_tax != 'any':
-            values.append({'filterCategory': 'F_TAX', 'SelectOption': [self.f_tax]})
-        if self.moms and self.moms != 'any':
-            values.append({'filterCategory': 'MOMS', 'SelectOption': [self.moms]})
-        if self.accountant_reservation and self.accountant_reservation != 'any':
-            values.append({'filterCategory': 'ACCOUNTANT_RESERVATION',
-                           'SelectOption': [self.accountant_reservation]})
-        if self.accountant_obligation and self.accountant_obligation != 'any':
-            values.append({'filterCategory': 'ACCOUNTANT_OBLIGATION',
-                           'SelectOption': [self.accountant_obligation]})
-        for key, lo_f, hi_f in [
-            ('REGISTERED_DATE', 'registration_date_from', 'registration_date_to'),
-            ('STATUS_CHANGED_DATE', 'status_date_from', 'status_date_to'),
-            ('RESERVATION_DATE', 'reservation_date_from', 'reservation_date_to'),
-        ]:
-            lo, hi = self[lo_f], self[hi_f]
-            if not lo and not hi:
-                continue
-            r = {}
-            if lo:
-                r['min'] = fields.Date.to_string(lo)
-            if hi:
-                r['max'] = fields.Date.to_string(hi)
-            values.append({'filterCategory': key, 'SelectRange': r})
-        for key, lo, hi, kind in [
-            ('NET_SALES', 'net_sales_min', 'net_sales_max', 'range_float'),
-            ('NET_PROFIT_LOSS', 'net_profit_loss_min', 'net_profit_loss_max', 'range_float'),
-            ('GROWTH_PCT', 'growth_pct_min', 'growth_pct_max', 'range_float'),
-            ('SOLIDITY_PCT', 'solidity_pct_min', 'solidity_pct_max', 'range_float'),
-            ('EMPLOYEES_EXACT', 'employees_min', 'employees_max', 'range_int'),
-        ]:
-            self._append_range(values, key, lo, hi, kind)
-        return values
-
-    # --------------------------------------------------------------- preset
-
-    _filter_to_field_map: dict = {
-        'POST_REGION_CODE': ('region_ids', 'm2m_region'),
-        'POST_KOMMUNKOD': ('post_community_ids', 'm2m_community'),
-        # Old per-address picker preset entries now funnel into the
-        # unified alt_community_ids; VISITING_REGION_CODE is dropped
-        # since no current preset uses it.
-        'REGISTERED_KOMMUNKOD': ('alt_community_ids', 'm2m_community'),
-        'VISITING_KOMMUNKOD': ('alt_community_ids', 'm2m_community'),
-        'ALT_KOMMUNKOD': ('alt_community_ids', 'm2m_community'),
-        # All three legacy ZIP prefix categories funnel into the single
-        # zip_prefixes field, so a preset that targeted a specific
-        # address kind still populates the consolidated input.
-        'POST_ZIP_PREFIX': ('zip_prefixes', 'csv'),
-        'REGISTERED_ZIP_PREFIX': ('zip_prefixes', 'csv'),
-        'VISITING_ZIP_PREFIX': ('zip_prefixes', 'csv'),
-        'ZIP_ANY': ('zip_prefixes', 'csv'),
-        'SNI_PREFIX': ('industry_ids', 'm2m_industry_by_sni'),
-        'LEGALGROUP_CODE': ('legal_form_ids', 'm2m_legal_form'),
-        # Magnitudes are now the single tag picker for both buckets;
-        # presets that reference raw API bucket keys are resolved by
-        # matching against magnitude.bucket_keys CSV membership.
-        'TURNOVER_INTERVAL': ('net_sales_magnitude_ids', 'm2m_magnitude_by_key'),
-        'NBR_EMPLOYEES_INTERVAL': ('employee_magnitude_ids', 'm2m_magnitude_by_key'),
-        'F_TAX': ('f_tax', 'select'),
-        'MOMS': ('moms', 'select'),
-        'ACCOUNTANT_RESERVATION': ('accountant_reservation', 'select'),
-        'ACCOUNTANT_OBLIGATION': ('accountant_obligation', 'select'),
-        # Old API filter categories that use "months ago" semantics map
-        # to the new Date pickers via a months-to-date conversion when
-        # a preset references them.
-        'REGISTERED_WITHIN_MONTHS': (
-            ('registration_date_from', 'registration_date_to'), 'range_months_to_date'),
-        'REGISTERED_DATE': (
-            ('registration_date_from', 'registration_date_to'), 'range_date'),
-        'STATUS_CHANGED_WITHIN_MONTHS': (
-            ('status_date_from', 'status_date_to'), 'range_months_to_date'),
-        'STATUS_CHANGED_DATE': (
-            ('status_date_from', 'status_date_to'), 'range_date'),
-        'ACCOUNTANT_RESERVATION_WITHIN_MONTHS': (
-            ('reservation_date_from', 'reservation_date_to'), 'range_months_to_date'),
-        'RESERVATION_DATE': (
-            ('reservation_date_from', 'reservation_date_to'), 'range_date'),
-        'NET_SALES': (('net_sales_min', 'net_sales_max'), 'range_float'),
-        'NET_PROFIT_LOSS': (('net_profit_loss_min', 'net_profit_loss_max'), 'range_float'),
-        'GROWTH_PCT': (('growth_pct_min', 'growth_pct_max'), 'range_float'),
-        'SOLIDITY_PCT': (('solidity_pct_min', 'solidity_pct_max'), 'range_float'),
-        'EMPLOYEES_EXACT': (('employees_min', 'employees_max'), 'range_int'),
-    }
-
-    _M2M_KINDS = frozenset({
-        'm2m_region', 'm2m_community', 'm2m_industry_by_sni',
-        'm2m_legal_form', 'm2m_magnitude_by_key',
-    })
-
-    @classmethod
-    def _zero(cls, kind: str):
-        if kind in cls._M2M_KINDS:
-            return [(5, 0, 0)]
+    def action_save_preset(self):
+        """Open the dialog that stores the current filters as a new preset."""
+        self.ensure_one()
         return {
-            'csv': '',
-            'select': 'any',
-            'range_int': '',
-            'range_float': '',
-            # Date-typed targets clear to False so the date widget reads
-            # as empty rather than today's date.
-            'range_date': False,
-            'range_months_to_date': False,
-        }[kind]
+            'type': 'ir.actions.act_window',
+            'name': _('Save filters as preset'),
+            'res_model': 'bizfinder.preset.save',
+            'view_mode': 'form',
+            'views': [(False, 'form')],
+            'target': 'new',
+            'context': {'default_wizard_id': self.id},
+        }
 
-    def _reset_filters(self) -> dict:
-        """Return a vals dict that clears every server-mapped filter."""
-        vals: dict = {}
-        for filter_cat, (target, kind) in self._filter_to_field_map.items():
-            zero = self._zero(kind)
-            if isinstance(target, tuple):
-                for f in target:
-                    vals[f] = zero
-            else:
-                vals[target] = zero
-        # Clear local-only shortcut fields too, so a preset switch wipes
-        # the previous preset's auto-fill cleanly.
-        vals['industry_ids'] = [(5, 0, 0)]
-        vals['employee_magnitude_ids'] = [(5, 0, 0)]
-        vals['net_sales_magnitude_ids'] = [(5, 0, 0)]
-        return vals
+    def action_update_preset(self):
+        """Overwrite the selected preset's filters with the current ones, so
+        it becomes the new continuous version of that preset."""
+        self.ensure_one()
+        if not self.preset_id:
+            raise UserError(_("Select a preset first, then update it."))
+        self.preset_id.write(
+            self.preset_id._resolve_filters_to_vals(self._build_values()))
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('Preset updated'),
+                'message': _("'%s' now matches the current filters.") % self.preset_id.name,
+                'type': 'success',
+                'sticky': False,
+            },
+        }
+
+    def action_clear_preset(self):
+        """Detach the selected preset (filters are kept)."""
+        self.ensure_one()
+        self.preset_id = False
+
+    def action_manage_presets(self):
+        """Open the preset list to add / edit / delete presets."""
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Presets'),
+            'res_model': 'bizfinder.preset',
+            'view_mode': 'list,form',
+            'target': 'current',
+        }
+
+    # --------------------------------------------------------------- selection
+
+    def action_select_all(self):
+        """Native one-shot select of every result row."""
+        self.ensure_one()
+        self.result_line_ids.selected = True
+
+    def action_deselect_all(self):
+        self.ensure_one()
+        self.result_line_ids.selected = False
+
+    # --------------------------------------------------------------- entry/search
 
     @api.model
     def action_open_search(self) -> dict:
@@ -428,181 +195,6 @@ class BizfinderSearch(models.TransientModel):
             'views': [(False, 'form')],
             'target': 'current',
         }
-
-
-    def _resolve_preset_vals(self) -> dict:
-        """Build the field-write vals for the currently selected API preset."""
-        client = self.env['bizfinder.client']
-        segments = client.get_segments()
-        seg = next((s for s in segments if s.get('key') == self.preset_key), None)
-        if seg is None:
-            raise UserError(_("Preset %s is not known to the API.") % self.preset_key)
-
-        vals = self._resolve_filters_to_vals(seg.get('filters', []))
-        vals['preset_description'] = seg.get('description') or ''
-        return vals
-
-    def _resolve_filters_to_vals(self, filters: list) -> dict:
-        """Decode a list of API filter dicts ({filterCategory, SelectOption|
-        SelectRange}) into a wizard field-write vals dict, starting from a
-        clean slate. Shared by API segments and user-saved presets."""
-        vals = self._reset_filters()
-        for f in filters or []:
-            cat = f.get('filterCategory')
-            entry = self._filter_to_field_map.get(cat)
-            if not entry:
-                _logger.warning("preset references unknown filter %s", cat)
-                continue
-            target, kind = entry
-            if kind == 'csv':
-                opts = f.get('SelectOption') or []
-                vals[target] = ','.join(str(o) for o in opts)
-            elif kind == 'm2m_region':
-                opts = f.get('SelectOption') or []
-                if not opts:
-                    continue
-                codes = [int(o) for o in opts]
-                regions = self.env['bizfinder.region'].search([('code', 'in', codes)])
-                vals[target] = [(6, 0, regions.ids)]
-            elif kind == 'm2m_community':
-                opts = f.get('SelectOption') or []
-                if not opts:
-                    continue
-                codes = [int(o) for o in opts]
-                comms = self.env['bizfinder.community'].search([('kommunkod', 'in', codes)])
-                vals[target] = [(6, 0, comms.ids)]
-            elif kind == 'm2m_industry_by_sni':
-                # Preset gave us raw SNI prefixes; resolve them to the
-                # curated industry rows whose sni_prefixes CSV contains
-                # any of them. Exact-match on prefix string.
-                opts = [str(o) for o in (f.get('SelectOption') or []) if str(o)]
-                if not opts:
-                    continue
-                industries = self.env['bizfinder.industry'].search([])
-                wanted = set(opts)
-                matched = industries.filtered(
-                    lambda i: wanted.intersection(set(i.expand_prefixes()))
-                )
-                vals[target] = [(6, 0, matched.ids)]
-            elif kind == 'm2m_legal_form':
-                opts = f.get('SelectOption') or []
-                if not opts:
-                    continue
-                codes = [str(o) for o in opts]
-                lfs = self.env['bizfinder.legal.form'].search([('code', 'in', codes)])
-                vals[target] = [(6, 0, lfs.ids)]
-            elif kind == 'm2m_magnitude_by_key':
-                # Preset gives us raw API bucket keys; resolve to the
-                # magnitude rows whose bucket_keys CSV contains any of
-                # them. Field target tells us which magnitude kind.
-                opts = [str(o) for o in (f.get('SelectOption') or []) if str(o)]
-                if not opts:
-                    continue
-                mag_kind = ('employees' if target == 'employee_magnitude_ids'
-                            else 'net_sales')
-                magnitudes = self.env['bizfinder.magnitude'].search(
-                    [('kind', '=', mag_kind)])
-                wanted = set(opts)
-                matched = magnitudes.filtered(
-                    lambda m: wanted.intersection(set(m.expand_keys()))
-                )
-                vals[target] = [(6, 0, matched.ids)]
-            elif kind == 'select':
-                opts = f.get('SelectOption') or []
-                vals[target] = str(opts[0]) if opts else 'any'
-            elif kind in ('range_int', 'range_float'):
-                rng = f.get('SelectRange') or {}
-                lo_field, hi_field = target
-                if rng.get('min') is not None:
-                    vals[lo_field] = str(int(rng['min']) if kind == 'range_int' else rng['min'])
-                if rng.get('max') is not None:
-                    vals[hi_field] = str(int(rng['max']) if kind == 'range_int' else rng['max'])
-            elif kind == 'range_date':
-                # Preset gave ISO date strings; pass them straight to the
-                # Date target fields.
-                rng = f.get('SelectRange') or {}
-                lo_field, hi_field = target
-                if rng.get('min'):
-                    vals[lo_field] = rng['min']
-                if rng.get('max'):
-                    vals[hi_field] = rng['max']
-            elif kind == 'range_months_to_date':
-                # Legacy *_WITHIN_MONTHS preset values mean "this many
-                # months ago"; convert to absolute dates so the new Date
-                # pickers light up correctly.
-                from dateutil.relativedelta import relativedelta
-                today = fields.Date.context_today(self)
-                rng = f.get('SelectRange') or {}
-                lo_field, hi_field = target
-                # max=N months -> "no older than N months ago" -> date_from
-                if rng.get('max') is not None:
-                    vals[lo_field] = today - relativedelta(months=int(rng['max']))
-                # min=N months -> "at least N months ago" -> date_to
-                if rng.get('min') is not None:
-                    vals[hi_field] = today - relativedelta(months=int(rng['min']))
-        return vals
-
-    @api.onchange('preset_key')
-    def _onchange_preset_key(self):
-        """Auto-apply API preset filters as soon as the user picks one."""
-        if not self.preset_key:
-            self.preset_description = False
-            return
-        # The two preset pickers are alternatives; choosing an API segment
-        # clears any saved-preset selection so the description stays honest.
-        self.saved_preset_id = False
-        vals = self._resolve_preset_vals()
-        # Onchange writes to the in-memory record; no need to call write().
-        for fname, value in vals.items():
-            self[fname] = value
-
-    @api.onchange('saved_preset_id')
-    def _onchange_saved_preset_id(self):
-        """Auto-apply a user-saved preset's stored filters."""
-        if not self.saved_preset_id:
-            return
-        self.preset_key = False
-        try:
-            filters = json.loads(self.saved_preset_id.filters_json or '[]')
-        except (ValueError, TypeError):
-            filters = []
-        vals = self._resolve_filters_to_vals(filters)
-        for fname, value in vals.items():
-            self[fname] = value
-        self.preset_description = self.saved_preset_id.description or ''
-
-    # --------------------------------------------------------------- preset mgmt
-
-    def action_save_preset(self):
-        """Open the small dialog that saves the current filters as a named,
-        reusable preset (or overwrites an existing one)."""
-        self.ensure_one()
-        return {
-            'type': 'ir.actions.act_window',
-            'name': _('Save filters as preset'),
-            'res_model': 'bizfinder.preset.save',
-            'view_mode': 'form',
-            'views': [(False, 'form')],
-            'target': 'new',
-            'context': {
-                'default_wizard_id': self.id,
-                'default_name': self.saved_preset_id.name or '',
-                'default_preset_id': self.saved_preset_id.id or False,
-            },
-        }
-
-    def action_manage_presets(self):
-        """Open the saved-preset list so the user can rename/delete them."""
-        self.ensure_one()
-        return {
-            'type': 'ir.actions.act_window',
-            'name': _('Manage saved presets'),
-            'res_model': 'bizfinder.preset',
-            'view_mode': 'list,form',
-            'target': 'current',
-        }
-
-    # ----------------------------------------------------------------- search
 
     def action_search(self):
         self.ensure_one()
@@ -680,12 +272,13 @@ class BizfinderSearch(models.TransientModel):
         self.price_per_reveal = float(pricing.get('pricePerReveal') or 0.0)
         self.billing_currency = pricing.get('currency') or ''
 
+    # ---------------------------------------------------------------- leads
+
     @staticmethod
     def _format_notes(data: dict) -> str:
-        """Render every field of a revealed prospect into the lead's
-        description (notes). `data` is the JSON dict returned by the
-        /api/insight/reveal endpoint, not a result_line record, since
-        the result_line carries redacted data."""
+        """Render every field of a revealed prospect into HTML for the lead's
+        Bizfinder tab. `data` is the JSON dict returned by the
+        /api/insight/reveal endpoint."""
         def kv(label, value):
             if not value and value != 0:
                 return ""
@@ -792,8 +385,7 @@ class BizfinderSearch(models.TransientModel):
 
         # Catch-all: render any field the reveal returned that the curated
         # sections above don't already cover, so the lead carries the full
-        # payload rather than only the keys we happened to enumerate. New
-        # API fields show up here automatically without a code change.
+        # payload rather than only the keys we happened to enumerate.
         rendered_keys = {
             'name', 'organisationNumber', 'vatNumber', 'description',
             'legalEntityText', 'legalEntity', 'postCommunity',
@@ -1016,30 +608,18 @@ class BizfinderPresetSave(models.TransientModel):
     _description = 'Bizfinder Save Preset Dialog'
 
     wizard_id = fields.Many2one('bizfinder.search', required=True, ondelete='cascade')
-    # When set, the save overwrites this preset's filters ("modify");
-    # otherwise a new preset is created.
-    preset_id = fields.Many2one('bizfinder.preset', string='Overwrite preset')
     name = fields.Char(string='Preset name', required=True)
     description = fields.Text(string='Description')
 
     def action_save(self):
         self.ensure_one()
-        # Snapshot the wizard's current filters in the same JSON shape the
-        # API segments use, so applying the preset later reuses one path.
-        filters = self.wizard_id._build_values()
-        vals = {
+        preset = self.env['bizfinder.preset'].create({
             'name': self.name,
-            'description': self.description,
-            'filters_json': json.dumps(filters),
-        }
-        if self.preset_id:
-            self.preset_id.write(vals)
-            preset = self.preset_id
-        else:
-            preset = self.env['bizfinder.preset'].create(vals)
-        # Reflect the saved preset back on the wizard and reload it so the
-        # picker shows the new selection.
-        self.wizard_id.saved_preset_id = preset
+            'description': self.description or False,
+        })
+        # Snapshot the wizard's current filters onto the new preset's fields.
+        preset.write(preset._resolve_filters_to_vals(self.wizard_id._build_values()))
+        self.wizard_id.preset_id = preset
         return {
             'type': 'ir.actions.act_window',
             'name': 'Prospect Search',

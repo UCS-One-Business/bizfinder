@@ -1,35 +1,145 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-  <!-- Saved presets: a plain list/form so users can rename, edit the
-       description and delete. The stored filter payload is read-only (it is
-       written by the wizard's "Save as preset" action). -->
+  <!-- Preset list. "Built-in key" marks seeded segments. -->
   <record id="view_bizfinder_preset_list" model="ir.ui.view">
     <field name="name">bizfinder.preset.list</field>
     <field name="model">bizfinder.preset</field>
     <field name="arch" type="xml">
-      <list string="Saved presets" editable="bottom">
+      <list string="Presets">
         <field name="name"/>
         <field name="description"/>
-        <field name="user_id" optional="show"/>
+        <field name="key" optional="hide"/>
         <field name="company_id" groups="base.group_multi_company" optional="show"/>
       </list>
     </field>
   </record>
 
+  <!-- Preset form: the same filter layout as the prospect search, minus the
+       Results section, so a preset can be configured directly. Field names
+       match the wizard's (both share bizfinder.filter.mixin). -->
   <record id="view_bizfinder_preset_form" model="ir.ui.view">
     <field name="name">bizfinder.preset.form</field>
     <field name="model">bizfinder.preset</field>
     <field name="arch" type="xml">
-      <form string="Saved preset">
+      <form string="Preset">
         <sheet>
+          <div class="oe_title">
+            <label for="name" string="Preset name"/>
+            <h1><field name="name" placeholder="e.g. Growing IT consultancies in Skåne"/></h1>
+          </div>
           <group>
-            <field name="name"/>
-            <field name="description"/>
-            <field name="user_id"/>
+            <field name="description" placeholder="Shown when this preset is selected"/>
+            <field name="key" readonly="1" invisible="not key"/>
             <field name="company_id" groups="base.group_multi_company"/>
           </group>
-          <group string="Stored filters (read-only)">
-            <field name="filters_json" nolabel="1" readonly="1"/>
+
+          <group name="quick_search">
+            <group>
+              <field name="region_ids" widget="many2many_tags"
+                     placeholder="Pick one or more counties..."/>
+              <field name="post_community_ids" widget="many2many_tags"
+                     options="{'no_create': True, 'no_quick_create': True}"
+                     placeholder="Start typing a kommun..."/>
+              <field name="industry_ids" widget="many2many_tags"
+                     options="{'no_create': True, 'no_quick_create': True}"
+                     placeholder="Pick one or more industries..."/>
+            </group>
+            <group>
+              <field name="net_sales_magnitude_ids" widget="many2many_tags"
+                     options="{'no_create': True, 'no_quick_create': True}"
+                     placeholder="Pick turnover bands..."/>
+              <field name="employee_magnitude_ids" widget="many2many_tags"
+                     options="{'no_create': True, 'no_quick_create': True}"
+                     placeholder="Pick employee bands..."/>
+            </group>
+          </group>
+
+          <group string="Company" name="filter_company">
+            <group>
+              <field name="legal_form_ids" widget="many2many_tags"
+                     options="{'no_create': True, 'no_quick_create': True}"
+                     placeholder="AB, EF..."/>
+            </group>
+            <group>
+              <field name="f_tax"/>
+              <field name="moms"/>
+              <field name="accountant_reservation"/>
+              <field name="accountant_obligation"/>
+            </group>
+          </group>
+
+          <group string="Location" name="filter_location">
+            <group>
+              <field name="alt_community_ids" widget="many2many_tags"
+                     options="{'no_create': True, 'no_quick_create': True}"
+                     placeholder="Registered or visiting kommun..."/>
+            </group>
+            <group>
+              <field name="zip_prefixes" placeholder="58, 591, 60..."
+                     help="Matches if any of postal / registered / visiting ZIP starts with one of these prefixes."/>
+            </group>
+          </group>
+
+          <group string="Dates" name="filter_dates">
+            <group>
+              <label for="registration_date_from" string="Registered"/>
+              <div class="o_row">
+                <field name="registration_date_from" nolabel="1"/>
+                <span> – </span>
+                <field name="registration_date_to" nolabel="1"/>
+              </div>
+              <label for="status_date_from" string="Status changed"/>
+              <div class="o_row">
+                <field name="status_date_from" nolabel="1"/>
+                <span> – </span>
+                <field name="status_date_to" nolabel="1"/>
+              </div>
+            </group>
+            <group>
+              <label for="reservation_date_from" string="Auditor reservation"/>
+              <div class="o_row">
+                <field name="reservation_date_from" nolabel="1"/>
+                <span> – </span>
+                <field name="reservation_date_to" nolabel="1"/>
+              </div>
+            </group>
+          </group>
+
+          <group string="Financials &amp; ratios" name="filter_financials">
+            <group>
+              <label for="net_sales_min" string="Turnover (tkr)"/>
+              <div class="o_row">
+                <field name="net_sales_min" placeholder="-10 000 000"/>
+                <span> – </span>
+                <field name="net_sales_max" placeholder="100 000 000"/>
+              </div>
+              <label for="net_profit_loss_min" string="Net profit/loss (tkr)"/>
+              <div class="o_row">
+                <field name="net_profit_loss_min" placeholder="-10 000 000"/>
+                <span> – </span>
+                <field name="net_profit_loss_max" placeholder="100 000 000"/>
+              </div>
+              <label for="employees_min" string="Employees (exact)"/>
+              <div class="o_row">
+                <field name="employees_min" placeholder="0"/>
+                <span> – </span>
+                <field name="employees_max" placeholder="100 000"/>
+              </div>
+            </group>
+            <group>
+              <label for="growth_pct_min" string="Growth %"/>
+              <div class="o_row">
+                <field name="growth_pct_min" placeholder="-100"/>
+                <span> – </span>
+                <field name="growth_pct_max" placeholder="500"/>
+              </div>
+              <label for="solidity_pct_min" string="Solidity %"/>
+              <div class="o_row">
+                <field name="solidity_pct_min" placeholder="-100"/>
+                <span> – </span>
+                <field name="solidity_pct_max" placeholder="100"/>
+              </div>
+            </group>
           </group>
         </sheet>
       </form>
@@ -37,12 +147,12 @@
   </record>
 
   <record id="action_bizfinder_preset" model="ir.actions.act_window">
-    <field name="name">Bizfinder Saved Presets</field>
+    <field name="name">Presets</field>
     <field name="res_model">bizfinder.preset</field>
     <field name="view_mode">list,form</field>
   </record>
 
-  <!-- Save-current dialog opened from the wizard header cogwheel. -->
+  <!-- Save-current dialog opened from the prospect header. -->
   <record id="view_bizfinder_preset_save_form" model="ir.ui.view">
     <field name="name">bizfinder.preset.save.form</field>
     <field name="model">bizfinder.preset.save</field>
@@ -50,14 +160,10 @@
       <form string="Save filters as preset">
         <sheet>
           <field name="wizard_id" invisible="1"/>
-          <field name="preset_id" invisible="1"/>
           <group>
             <field name="name" placeholder="e.g. Growing IT consultancies in Skåne"/>
             <field name="description" placeholder="Optional note shown when this preset is picked"/>
           </group>
-          <div class="text-muted small" invisible="not preset_id">
-            This will overwrite the selected saved preset with the current filters.
-          </div>
         </sheet>
         <footer>
           <button name="action_save" string="Save" type="object" class="btn-primary"/>

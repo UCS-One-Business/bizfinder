@@ -199,6 +199,9 @@ class BizfinderClient(models.AbstractModel):
                 Legal.create(vals)
             result['legal_forms'] += 1
 
+        # Seed the built-in segments as managed presets (create-if-missing).
+        result['presets'] = self.env['bizfinder.preset']._seed_builtin_presets()
+
         return result
 
     @api.model
