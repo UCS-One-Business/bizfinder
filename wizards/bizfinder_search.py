@@ -4,7 +4,7 @@ import logging
 from markupsafe import escape
 
 from odoo import _, api, fields, models
-from odoo.exceptions import AccessError, UserError
+from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -177,24 +177,7 @@ class BizfinderSearch(models.TransientModel):
         self.ensure_one()
         self.result_line_ids.selected = False
 
-    # --------------------------------------------------------------- entry/search
-
-    @api.model
-    def action_open_search(self) -> dict:
-        """Entry point used by the CRM menu. Creates a fresh wizard record
-        and returns a full-page form action targeted at the current window."""
-        if not self.env.user.has_group('sales_team.group_sale_salesman'):
-            raise AccessError(_("Only CRM sales users can access Bizfinder."))
-        rec = self.create({})
-        return {
-            'type': 'ir.actions.act_window',
-            'name': 'Bizfinder Search',
-            'res_model': self._name,
-            'res_id': rec.id,
-            'view_mode': 'form',
-            'views': [(False, 'form')],
-            'target': 'current',
-        }
+    # --------------------------------------------------------------- search
 
     def action_search(self):
         self.ensure_one()

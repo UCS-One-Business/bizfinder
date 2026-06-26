@@ -9,9 +9,10 @@
             create="false" edit="true" delete="false" duplicate="false">
         <header>
           <button name="action_search" string="Search" type="object" class="btn-primary"/>
-          <!-- Preset management (save / update / clear / manage) lives in a
-               cogwheel dropdown rendered next to the breadcrumb title by
-               bizfinder_search_form.js. -->
+          <!-- Preset management (save / update / clear / manage) lives in this
+               native Dropdown cog widget; the controller reparents the whole
+               statusbar next to the "Bizfinder" breadcrumb title. -->
+          <widget name="bizfinder_preset_cog"/>
         </header>
         <sheet>
           <!-- One preset picker across the top; the description below has a
@@ -247,11 +248,13 @@
     </field>
   </record>
 
-  <record id="action_bizfinder_search_open" model="ir.actions.server">
+  <!-- Plain act_window entry point. Opens a fresh transient search record on a
+       full-page form. (Access is gated by the menu's group + the model ACL.) -->
+  <record id="action_bizfinder_search" model="ir.actions.act_window">
     <field name="name">Bizfinder</field>
     <field name="path">bizfinder</field>
-    <field name="model_id" ref="model_bizfinder_search"/>
-    <field name="state">code</field>
-    <field name="code">action = model.action_open_search()</field>
+    <field name="res_model">bizfinder.search</field>
+    <field name="view_mode">form</field>
+    <field name="target">current</field>
   </record>
 </odoo>

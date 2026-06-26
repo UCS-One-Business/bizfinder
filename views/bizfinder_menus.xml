@@ -3,7 +3,7 @@
   <menuitem id="menu_bizfinder_search"
             name="Bizfinder"
             parent="crm.crm_menu_root"
-            action="action_bizfinder_search_open"
+            action="action_bizfinder_search"
             sequence="50"
             groups="sales_team.group_sale_salesman"/>
   <menuitem id="menu_bizfinder_usage"
