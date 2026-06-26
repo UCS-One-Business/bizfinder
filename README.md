@@ -9,7 +9,7 @@ service and turns prospects into `crm.lead` records.
    - API URL for your Bizfinder service
    - Access Token issued by the Bizfinder service for this customer/company
    - Use **Test connection** to verify the token before running searches
-2. Open **CRM → New Prospect Search**.
+2. Open **CRM → Bizfinder**.
 3. Fill in filters (comma-separated codes, see field tooltips), hit
    **Preview count** to see hits, then **Search** to load results.
 4. Tick rows and **Create leads from selected**.

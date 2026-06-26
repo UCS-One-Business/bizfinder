@@ -19,7 +19,7 @@ class BizfinderSearch(models.TransientModel):
         # Override the framework-default "<model>,<id>" / "New" so the
         # breadcrumb reads as a real page name regardless of save state.
         for rec in self:
-            rec.display_name = "Prospect"
+            rec.display_name = "Bizfinder"
 
     # ------------------------------------------------------------------- preset
     preset_id = fields.Many2one('bizfinder.preset', string='Preset')
@@ -188,7 +188,7 @@ class BizfinderSearch(models.TransientModel):
         rec = self.create({})
         return {
             'type': 'ir.actions.act_window',
-            'name': 'Prospect Search',
+            'name': 'Bizfinder Search',
             'res_model': self._name,
             'res_id': rec.id,
             'view_mode': 'form',
@@ -622,7 +622,7 @@ class BizfinderPresetSave(models.TransientModel):
         self.wizard_id.preset_id = preset
         return {
             'type': 'ir.actions.act_window',
-            'name': 'Prospect Search',
+            'name': 'Bizfinder Search',
             'res_model': 'bizfinder.search',
             'res_id': self.wizard_id.id,
             'view_mode': 'form',

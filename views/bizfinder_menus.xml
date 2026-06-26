@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
   <menuitem id="menu_bizfinder_search"
-            name="Prospect"
+            name="Bizfinder"
             parent="crm.crm_menu_root"
             action="action_bizfinder_search_open"
             sequence="50"

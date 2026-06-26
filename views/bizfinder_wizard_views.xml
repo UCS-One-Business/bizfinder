@@ -4,20 +4,14 @@
     <field name="name">bizfinder.search.form</field>
     <field name="model">bizfinder.search</field>
     <field name="arch" type="xml">
-      <form string="Prospect Search" class="o_bizfinder_search_form"
+      <form string="Bizfinder Search" class="o_bizfinder_search_form"
             js_class="bizfinder_search_form"
             create="false" edit="true" delete="false" duplicate="false">
         <header>
           <button name="action_search" string="Search" type="object" class="btn-primary"/>
-          <!-- Preset management lives in the header: save the current filters
-               as a new preset, push the current filters back onto the
-               selected preset, or open the list to add/edit/delete presets. -->
-          <button name="action_save_preset" string="Save as preset" type="object"
-                  class="btn-secondary" icon="fa-floppy-o"/>
-          <button name="action_update_preset" string="Update preset" type="object"
-                  class="btn-secondary" icon="fa-refresh" invisible="not preset_id"/>
-          <button name="action_manage_presets" string="Manage presets" type="object"
-                  class="btn-secondary" icon="fa-cog"/>
+          <!-- Preset management (save / update / clear / manage) lives in a
+               cogwheel dropdown rendered next to the breadcrumb title by
+               bizfinder_search_form.js. -->
         </header>
         <sheet>
           <!-- One preset picker across the top; the description below has a
@@ -25,12 +19,10 @@
                user cycles through presets. -->
           <div class="mb-3">
             <label for="preset_id" string="Preset" class="o_form_label fw-bold d-block mb-1"/>
-            <div class="d-flex gap-2 mb-2 align-items-center">
+            <div class="mb-2">
               <field name="preset_id" nolabel="1" class="d-block"
                      options="{'no_create_edit': True, 'no_quick_create': True}"
                      placeholder="Pick a preset to auto-fill filters…"/>
-              <button name="action_clear_preset" string="Clear" type="object"
-                      class="btn-link p-0" invisible="not preset_id"/>
             </div>
             <div class="text-muted small"
                  style="min-height: 3em; line-height: 1.4;">
@@ -256,8 +248,8 @@
   </record>
 
   <record id="action_bizfinder_search_open" model="ir.actions.server">
-    <field name="name">Prospect</field>
-    <field name="path">prospect</field>
+    <field name="name">Bizfinder</field>
+    <field name="path">bizfinder</field>
     <field name="model_id" ref="model_bizfinder_search"/>
     <field name="state">code</field>
     <field name="code">action = model.action_open_search()</field>
