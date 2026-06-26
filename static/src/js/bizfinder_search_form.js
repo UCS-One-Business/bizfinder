@@ -1,10 +1,14 @@
 /** @odoo-module */
 
-// Custom form view for the Bizfinder search wizard. The only thing
-// it changes about the standard form view is that the form's
-// <header> (rendered as .o_form_statusbar) is reparented into the
-// control-panel breadcrumb so the user sees a single header row
-// instead of a stacked breadcrumb row + action button row.
+// Custom form view for the Bizfinder search wizard. It does two things on
+// top of the standard form view:
+//   1. Reparents the form <header> (.o_form_statusbar) into the control-panel
+//      breadcrumb so the user sees a single header row.
+//   2. Adds a "select all" checkbox to the results list header. The toggle
+//      drives the records through the form model (not by clicking each row's
+//      DOM checkbox), so it reliably (de)selects EVERY result — including
+//      rows on other list pages and rows not currently in edit mode, which
+//      the old click-each-checkbox approach silently missed.
 
 import { registry } from "@web/core/registry";
 import { formView } from "@web/views/form/form_view";
@@ -14,6 +18,10 @@ import { onMounted, onPatched } from "@odoo/owl";
 class BizfinderSearchFormController extends FormController {
     setup() {
         super.setup();
+
+        // The StaticList backing result_line_ids, or null before it loads.
+        const resultList = () => this.model?.root?.data?.result_line_ids || null;
+
         const moveStatusbarIntoBreadcrumb = () => {
             const statusbar = document.querySelector(
                 ".o_form_view.o_bizfinder_search_form .o_form_statusbar"
@@ -30,13 +38,29 @@ class BizfinderSearchFormController extends FormController {
                 breadcrumb.insertBefore(statusbar, breadcrumb.firstChild);
             }
         };
-        const syncSelectAllCheckbox = () => {
-            const form = document.querySelector(".o_form_view.o_bizfinder_search_form");
-            const list = form?.querySelector("[name='result_line_ids']");
+
+        const setAllSelected = async (checked) => {
+            const list = resultList();
             if (!list) {
                 return;
             }
-            const selectedHeader = list.querySelector(
+            // Update every record in the model, regardless of which list page
+            // is currently rendered. Sequential awaits keep the model writes
+            // ordered and let the view re-render once at the end.
+            for (const record of list.records) {
+                if (record.data.selected !== checked) {
+                    await record.update({ selected: checked });
+                }
+            }
+        };
+
+        const syncSelectAllCheckbox = () => {
+            const form = document.querySelector(".o_form_view.o_bizfinder_search_form");
+            const listEl = form?.querySelector("[name='result_line_ids']");
+            if (!listEl) {
+                return;
+            }
+            const selectedHeader = listEl.querySelector(
                 "thead th[data-name='selected'], thead th[name='selected']"
             );
             if (!selectedHeader) {
@@ -50,37 +74,19 @@ class BizfinderSearchFormController extends FormController {
                 selectAll.title = "Select all";
                 selectAll.setAttribute("aria-label", "Select all results");
                 selectAll.addEventListener("click", (ev) => ev.stopPropagation());
-                selectAll.addEventListener("change", () => {
-                    for (const checkbox of list.querySelectorAll(
-                        "tbody td[data-name='selected'] input[type='checkbox'], tbody td[name='selected'] input[type='checkbox']"
-                    )) {
-                        if (checkbox.checked !== selectAll.checked) {
-                            checkbox.click();
-                        }
-                    }
-                });
+                selectAll.addEventListener("change", () => setAllSelected(selectAll.checked));
                 selectedHeader.textContent = "";
                 selectedHeader.appendChild(selectAll);
             }
 
-            if (!list.dataset.bizfinderSelectAllBound) {
-                list.dataset.bizfinderSelectAllBound = "1";
-                list.addEventListener("change", (ev) => {
-                    if (ev.target.closest("tbody td[data-name='selected'], tbody td[name='selected']")) {
-                        syncSelectAllCheckbox();
-                    }
-                });
-            }
-
-            const rowCheckboxes = [
-                ...list.querySelectorAll(
-                    "tbody td[data-name='selected'] input[type='checkbox'], tbody td[name='selected'] input[type='checkbox']"
-                ),
-            ];
-            const checkedCount = rowCheckboxes.filter((checkbox) => checkbox.checked).length;
-            selectAll.checked = rowCheckboxes.length > 0 && checkedCount === rowCheckboxes.length;
-            selectAll.indeterminate = checkedCount > 0 && checkedCount < rowCheckboxes.length;
+            // Reflect the model's selection state on the header checkbox.
+            const records = resultList()?.records || [];
+            const total = records.length;
+            const checkedCount = records.filter((r) => r.data.selected).length;
+            selectAll.checked = total > 0 && checkedCount === total;
+            selectAll.indeterminate = checkedCount > 0 && checkedCount < total;
         };
+
         onMounted(moveStatusbarIntoBreadcrumb);
         onMounted(syncSelectAllCheckbox);
         onPatched(() => {

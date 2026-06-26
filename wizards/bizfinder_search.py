@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import json
 import logging
 from markupsafe import escape
 
@@ -42,6 +43,12 @@ class BizfinderSearch(models.TransientModel):
 
     # ------------------------------------------------------------------- preset
     preset_key = fields.Selection(PRESET_OPTIONS, string='Preset segment')
+    # User-owned presets saved from the wizard (see bizfinder.preset). Picking
+    # one applies its stored filters, exactly like an API segment.
+    saved_preset_id = fields.Many2one(
+        'bizfinder.preset',
+        string='Saved preset',
+    )
     # Not readonly at the Python level: the value is populated by the
     # preset_key onchange and must survive the implicit save that runs
     # before header buttons fire. Readonly-in-view keeps users from typing.
@@ -66,7 +73,9 @@ class BizfinderSearch(models.TransientModel):
         'wizard_id', 'magnitude_id',
         string='Employees',
         domain="[('kind', '=', 'employees')]",
-        help="Coarse employee bands. Each expands to its API bucket keys.",
+        help="Find companies by how many people they employ. Pick one or "
+             "more size bands (e.g. Small (10–49)). Leave empty to include "
+             "companies of every size.",
     )
     net_sales_magnitude_ids = fields.Many2many(
         'bizfinder.magnitude',
@@ -74,8 +83,9 @@ class BizfinderSearch(models.TransientModel):
         'wizard_id', 'magnitude_id',
         string='Turnover',
         domain="[('kind', '=', 'net_sales')]",
-        help="Coarse turnover bands. Each expands to its "
-             "TURNOVER_INTERVAL keys.",
+        help="Find companies by their yearly revenue. Pick one or more "
+             "ranges (e.g. 1–10 Mkr). Leave empty to include companies of "
+             "every size.",
     )
     post_community_ids = fields.Many2many(
         'bizfinder.community',
@@ -162,49 +172,24 @@ class BizfinderSearch(models.TransientModel):
     # full envelope and edits down, instead of staring at placeholder text.
     # Leaving an input empty drops the corresponding min/max from the
     # filter payload (see _is_set in _build_values).
+    # Trimmed to the handful of ranges sales actually filters on: turnover,
+    # bottom-line profit, headcount, growth and solidity. The API still
+    # accepts the other ranges, but they cluttered the form without earning
+    # their place; presets that reference dropped categories are ignored
+    # (see _resolve_filters_to_vals) rather than crashing.
     net_sales_min = fields.Char(string='Min turnover (tkr)', default='-10 000 000')
     net_sales_max = fields.Char(string='Max turnover (tkr)', default='100 000 000')
-    net_operating_income_min = fields.Char(string='Min operating income (tkr)', default='-10 000 000')
-    net_operating_income_max = fields.Char(string='Max operating income (tkr)', default='100 000 000')
-    operating_result_min = fields.Char(string='Min operating result (tkr)', default='-10 000 000')
-    operating_result_max = fields.Char(string='Max operating result (tkr)', default='100 000 000')
-    profit_after_fin_min = fields.Char(string='Min profit after financials (tkr)', default='-10 000 000')
-    profit_after_fin_max = fields.Char(string='Max profit after financials (tkr)', default='100 000 000')
     net_profit_loss_min = fields.Char(string='Min net profit/loss (tkr)', default='-10 000 000')
     net_profit_loss_max = fields.Char(string='Max net profit/loss (tkr)', default='100 000 000')
     growth_pct_min = fields.Char(string='Min growth %', default='-100')
     growth_pct_max = fields.Char(string='Max growth %', default='500')
-    headcount_change_min = fields.Char(string='Min headcount growth %', default='-100')
-    headcount_change_max = fields.Char(string='Max headcount growth %', default='500')
     solidity_pct_min = fields.Char(string='Min solidity %', default='-100')
     solidity_pct_max = fields.Char(string='Max solidity %', default='100')
-    operating_margin_min = fields.Char(string='Min operating margin %', default='-100')
-    operating_margin_max = fields.Char(string='Max operating margin %', default='100')
-    profit_margin_min = fields.Char(string='Min profit margin %', default='-100')
-    profit_margin_max = fields.Char(string='Max profit margin %', default='100')
-    quick_ratio_min = fields.Char(string='Min quick ratio %', default='0')
-    quick_ratio_max = fields.Char(string='Max quick ratio %', default='1000')
-    turnover_per_employee_min = fields.Char(string='Min turnover/employee (tkr)', default='0')
-    turnover_per_employee_max = fields.Char(string='Max turnover/employee (tkr)', default='100 000')
     employees_min = fields.Char(string='Min employees (exact)', default='0')
     employees_max = fields.Char(string='Max employees (exact)', default='100 000')
-    cash_min = fields.Char(string='Min cash & bank (tkr)', default='0')
-    cash_max = fields.Char(string='Max cash & bank (tkr)', default='10 000 000')
-    assets_min = fields.Char(string='Min assets (tkr)', default='0')
-    assets_max = fields.Char(string='Max assets (tkr)', default='100 000 000')
-    equity_min = fields.Char(string='Min equity (tkr)', default='-10 000 000')
-    equity_max = fields.Char(string='Max equity (tkr)', default='100 000 000')
-    current_liabilities_min = fields.Char(string='Min current liabilities (tkr)', default='0')
-    current_liabilities_max = fields.Char(string='Max current liabilities (tkr)', default='100 000 000')
-    long_term_debts_min = fields.Char(string='Min long-term debts (tkr)', default='0')
-    long_term_debts_max = fields.Char(string='Max long-term debts (tkr)', default='100 000 000')
-    account_months_min = fields.Char(string='Min account months', default='0')
-    account_months_max = fields.Char(string='Max account months', default='24')
     accountant_obligation = fields.Selection(
         [('any', 'Any'), ('YES', 'Auditor required'), ('NO', 'No auditor required')],
         default='any', string='Auditor obligation')
-    dividend_min = fields.Char(string='Min dividend (tkr)', default='0')
-    dividend_max = fields.Char(string='Max dividend (tkr)', default='100 000 000')
 
     # Page size for prospect previews. Hardcoded so users don't tune it
     # per-search and so billing assumptions stay stable.
@@ -331,28 +316,10 @@ class BizfinderSearch(models.TransientModel):
             values.append({'filterCategory': key, 'SelectRange': r})
         for key, lo, hi, kind in [
             ('NET_SALES', 'net_sales_min', 'net_sales_max', 'range_float'),
-            ('NET_OPERATING_INCOME', 'net_operating_income_min',
-             'net_operating_income_max', 'range_float'),
-            ('OPERATING_RESULT', 'operating_result_min', 'operating_result_max', 'range_float'),
-            ('PROFIT_LOSS_AFTER_FIN', 'profit_after_fin_min', 'profit_after_fin_max', 'range_float'),
             ('NET_PROFIT_LOSS', 'net_profit_loss_min', 'net_profit_loss_max', 'range_float'),
             ('GROWTH_PCT', 'growth_pct_min', 'growth_pct_max', 'range_float'),
-            ('HEADCOUNT_CHANGE_PCT', 'headcount_change_min', 'headcount_change_max', 'range_float'),
             ('SOLIDITY_PCT', 'solidity_pct_min', 'solidity_pct_max', 'range_float'),
-            ('OPERATING_MARGIN_PCT', 'operating_margin_min', 'operating_margin_max', 'range_float'),
-            ('PROFIT_MARGIN_PCT', 'profit_margin_min', 'profit_margin_max', 'range_float'),
-            ('QUICK_RATIO_PCT', 'quick_ratio_min', 'quick_ratio_max', 'range_float'),
-            ('TURNOVER_PER_EMPLOYEE', 'turnover_per_employee_min',
-             'turnover_per_employee_max', 'range_float'),
             ('EMPLOYEES_EXACT', 'employees_min', 'employees_max', 'range_int'),
-            ('CASH_AT_BANK', 'cash_min', 'cash_max', 'range_float'),
-            ('TOTAL_ASSETS', 'assets_min', 'assets_max', 'range_float'),
-            ('TOTAL_EQUITY', 'equity_min', 'equity_max', 'range_float'),
-            ('CURRENT_LIABILITIES', 'current_liabilities_min',
-             'current_liabilities_max', 'range_float'),
-            ('LONG_TERM_DEBTS', 'long_term_debts_min', 'long_term_debts_max', 'range_float'),
-            ('ACCOUNT_MONTHS', 'account_months_min', 'account_months_max', 'range_int'),
-            ('DIVIDEND', 'dividend_min', 'dividend_max', 'range_float'),
         ]:
             self._append_range(values, key, lo, hi, kind)
         return values
@@ -402,28 +369,10 @@ class BizfinderSearch(models.TransientModel):
         'RESERVATION_DATE': (
             ('reservation_date_from', 'reservation_date_to'), 'range_date'),
         'NET_SALES': (('net_sales_min', 'net_sales_max'), 'range_float'),
-        'NET_OPERATING_INCOME': (
-            ('net_operating_income_min', 'net_operating_income_max'), 'range_float'),
-        'OPERATING_RESULT': (('operating_result_min', 'operating_result_max'), 'range_float'),
-        'PROFIT_LOSS_AFTER_FIN': (('profit_after_fin_min', 'profit_after_fin_max'), 'range_float'),
         'NET_PROFIT_LOSS': (('net_profit_loss_min', 'net_profit_loss_max'), 'range_float'),
         'GROWTH_PCT': (('growth_pct_min', 'growth_pct_max'), 'range_float'),
-        'HEADCOUNT_CHANGE_PCT': (('headcount_change_min', 'headcount_change_max'), 'range_float'),
         'SOLIDITY_PCT': (('solidity_pct_min', 'solidity_pct_max'), 'range_float'),
-        'OPERATING_MARGIN_PCT': (('operating_margin_min', 'operating_margin_max'), 'range_float'),
-        'PROFIT_MARGIN_PCT': (('profit_margin_min', 'profit_margin_max'), 'range_float'),
-        'QUICK_RATIO_PCT': (('quick_ratio_min', 'quick_ratio_max'), 'range_float'),
-        'TURNOVER_PER_EMPLOYEE': (
-            ('turnover_per_employee_min', 'turnover_per_employee_max'), 'range_float'),
         'EMPLOYEES_EXACT': (('employees_min', 'employees_max'), 'range_int'),
-        'CASH_AT_BANK': (('cash_min', 'cash_max'), 'range_float'),
-        'TOTAL_ASSETS': (('assets_min', 'assets_max'), 'range_float'),
-        'TOTAL_EQUITY': (('equity_min', 'equity_max'), 'range_float'),
-        'CURRENT_LIABILITIES': (
-            ('current_liabilities_min', 'current_liabilities_max'), 'range_float'),
-        'LONG_TERM_DEBTS': (('long_term_debts_min', 'long_term_debts_max'), 'range_float'),
-        'ACCOUNT_MONTHS': (('account_months_min', 'account_months_max'), 'range_int'),
-        'DIVIDEND': (('dividend_min', 'dividend_max'), 'range_float'),
     }
 
     _M2M_KINDS = frozenset({
@@ -482,17 +431,23 @@ class BizfinderSearch(models.TransientModel):
 
 
     def _resolve_preset_vals(self) -> dict:
-        """Build the field-write vals for the currently selected preset."""
+        """Build the field-write vals for the currently selected API preset."""
         client = self.env['bizfinder.client']
         segments = client.get_segments()
         seg = next((s for s in segments if s.get('key') == self.preset_key), None)
         if seg is None:
             raise UserError(_("Preset %s is not known to the API.") % self.preset_key)
 
-        vals = self._reset_filters()
+        vals = self._resolve_filters_to_vals(seg.get('filters', []))
         vals['preset_description'] = seg.get('description') or ''
+        return vals
 
-        for f in seg.get('filters', []):
+    def _resolve_filters_to_vals(self, filters: list) -> dict:
+        """Decode a list of API filter dicts ({filterCategory, SelectOption|
+        SelectRange}) into a wizard field-write vals dict, starting from a
+        clean slate. Shared by API segments and user-saved presets."""
+        vals = self._reset_filters()
+        for f in filters or []:
             cat = f.get('filterCategory')
             entry = self._filter_to_field_map.get(cat)
             if not entry:
@@ -589,14 +544,63 @@ class BizfinderSearch(models.TransientModel):
 
     @api.onchange('preset_key')
     def _onchange_preset_key(self):
-        """Auto-apply preset filters as soon as the user picks one."""
+        """Auto-apply API preset filters as soon as the user picks one."""
         if not self.preset_key:
             self.preset_description = False
             return
+        # The two preset pickers are alternatives; choosing an API segment
+        # clears any saved-preset selection so the description stays honest.
+        self.saved_preset_id = False
         vals = self._resolve_preset_vals()
         # Onchange writes to the in-memory record; no need to call write().
         for fname, value in vals.items():
             self[fname] = value
+
+    @api.onchange('saved_preset_id')
+    def _onchange_saved_preset_id(self):
+        """Auto-apply a user-saved preset's stored filters."""
+        if not self.saved_preset_id:
+            return
+        self.preset_key = False
+        try:
+            filters = json.loads(self.saved_preset_id.filters_json or '[]')
+        except (ValueError, TypeError):
+            filters = []
+        vals = self._resolve_filters_to_vals(filters)
+        for fname, value in vals.items():
+            self[fname] = value
+        self.preset_description = self.saved_preset_id.description or ''
+
+    # --------------------------------------------------------------- preset mgmt
+
+    def action_save_preset(self):
+        """Open the small dialog that saves the current filters as a named,
+        reusable preset (or overwrites an existing one)."""
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Save filters as preset'),
+            'res_model': 'bizfinder.preset.save',
+            'view_mode': 'form',
+            'views': [(False, 'form')],
+            'target': 'new',
+            'context': {
+                'default_wizard_id': self.id,
+                'default_name': self.saved_preset_id.name or '',
+                'default_preset_id': self.saved_preset_id.id or False,
+            },
+        }
+
+    def action_manage_presets(self):
+        """Open the saved-preset list so the user can rename/delete them."""
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Manage saved presets'),
+            'res_model': 'bizfinder.preset',
+            'view_mode': 'list,form',
+            'target': 'current',
+        }
 
     # ----------------------------------------------------------------- search
 
@@ -786,6 +790,40 @@ class BizfinderSearch(models.TransientModel):
         if financials:
             sections.append(f"<p><b>Financials (latest year)</b></p><ul>{financials}</ul>")
 
+        # Catch-all: render any field the reveal returned that the curated
+        # sections above don't already cover, so the lead carries the full
+        # payload rather than only the keys we happened to enumerate. New
+        # API fields show up here automatically without a code change.
+        rendered_keys = {
+            'name', 'organisationNumber', 'vatNumber', 'description',
+            'legalEntityText', 'legalEntity', 'postCommunity',
+            'companyFormedDate', 'registrationDate', 'statusDate',
+            'numberOfUnits', 'directorName', 'directorRole', 'phone', 'fax',
+            'address', 'postCode', 'city', 'visitingAddress',
+            'visitingPostCode', 'visitingCity', 'visitingCommunity',
+            'registeredAddress', 'registeredPostCode', 'registeredCity',
+            'employees', 'turnOver', 'accountDateTo', 'accountMonths',
+            'netSales', 'netOperatingIncome', 'operatingResult',
+            'profitLossAfterFin', 'netProfitLoss', 'growthPct',
+            'headcountChangePct', 'solidityPct', 'operatingMarginPct',
+            'profitMarginPct', 'quickRatioPct', 'turnoverPerEmployee',
+            'cashAtBank', 'totalAssets', 'totalEquity', 'currentLiabilities',
+            'longTermDebts', 'dividend', 'accountantObligation',
+        }
+
+        def humanize(key: str) -> str:
+            import re
+            spaced = re.sub(r'(?<=[a-z0-9])(?=[A-Z])', ' ', key)
+            return spaced[:1].upper() + spaced[1:]
+
+        other = "".join(
+            kv(humanize(k), v)
+            for k, v in data.items()
+            if k not in rendered_keys and not isinstance(v, (dict, list))
+        )
+        if other:
+            sections.append(f"<p><b>Other data</b></p><ul>{other}</ul>")
+
         if sections:
             sections.insert(0, "<p><i>Imported from Creditsafe via Bizfinder.</i></p>")
         return "".join(sections)
@@ -831,6 +869,11 @@ class BizfinderSearch(models.TransientModel):
         # one reveal_log row gets written per org_number on the API side.
         revealed = {r.get('organisationNumber'): r for r in client.reveal(org_numbers)}
 
+        # Tag the lead's Source so it reads as "Bizfinder" rather than the
+        # blank/default a manual lead would get. Also drives the Bizfinder
+        # tab visibility (crm.lead.is_bizfinder_lead).
+        source = self.env.ref('bizfinder.utm_source_bizfinder', raise_if_not_found=False)
+
         Lead = self.env['crm.lead']
         created = Lead
         for line in selected:
@@ -857,7 +900,8 @@ class BizfinderSearch(models.TransientModel):
                 'street': data.get('address') or False,
                 'zip': data.get('postCode') or False,
                 'city': data.get('city') or False,
-                'description': self._format_notes(data) or False,
+                'source_id': source.id if source else False,
+                'bizfinder_data': self._format_notes(data) or False,
                 'company_vat_number': data.get('vatNumber') or False,
                 'company_organisation_number': data.get('organisationNumber') or False,
                 'company_employees': data.get('employees') or False,
@@ -965,3 +1009,43 @@ class BizfinderRevealConfirm(models.TransientModel):
     def action_confirm(self):
         self.ensure_one()
         return self.wizard_id.with_context(bizfinder_billing_confirmed=True).action_create_leads()
+
+
+class BizfinderPresetSave(models.TransientModel):
+    _name = 'bizfinder.preset.save'
+    _description = 'Bizfinder Save Preset Dialog'
+
+    wizard_id = fields.Many2one('bizfinder.search', required=True, ondelete='cascade')
+    # When set, the save overwrites this preset's filters ("modify");
+    # otherwise a new preset is created.
+    preset_id = fields.Many2one('bizfinder.preset', string='Overwrite preset')
+    name = fields.Char(string='Preset name', required=True)
+    description = fields.Text(string='Description')
+
+    def action_save(self):
+        self.ensure_one()
+        # Snapshot the wizard's current filters in the same JSON shape the
+        # API segments use, so applying the preset later reuses one path.
+        filters = self.wizard_id._build_values()
+        vals = {
+            'name': self.name,
+            'description': self.description,
+            'filters_json': json.dumps(filters),
+        }
+        if self.preset_id:
+            self.preset_id.write(vals)
+            preset = self.preset_id
+        else:
+            preset = self.env['bizfinder.preset'].create(vals)
+        # Reflect the saved preset back on the wizard and reload it so the
+        # picker shows the new selection.
+        self.wizard_id.saved_preset_id = preset
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Prospect Search',
+            'res_model': 'bizfinder.search',
+            'res_id': self.wizard_id.id,
+            'view_mode': 'form',
+            'views': [(False, 'form')],
+            'target': 'current',
+        }

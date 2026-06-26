@@ -5,6 +5,8 @@ access_bizfinder_region_user,bizfinder.region user,model_bizfinder_region,sales_
 access_bizfinder_region_admin,bizfinder.region admin,model_bizfinder_region,base.group_system,1,1,1,1
 access_bizfinder_usage_manager,bizfinder.usage manager,model_bizfinder_usage,sales_team.group_sale_manager,1,1,1,1
 access_bizfinder_reveal_confirm_user,bizfinder.reveal.confirm user,model_bizfinder_reveal_confirm,sales_team.group_sale_salesman,1,1,1,1
+access_bizfinder_preset_user,bizfinder.preset user,model_bizfinder_preset,sales_team.group_sale_salesman,1,1,1,1
+access_bizfinder_preset_save_user,bizfinder.preset.save user,model_bizfinder_preset_save,sales_team.group_sale_salesman,1,1,1,1
 access_bizfinder_community_user,bizfinder.community user,model_bizfinder_community,sales_team.group_sale_salesman,1,0,0,0
 access_bizfinder_community_admin,bizfinder.community admin,model_bizfinder_community,base.group_system,1,1,1,1
 access_bizfinder_legal_form_user,bizfinder.legal.form user,model_bizfinder_legal_form,sales_team.group_sale_salesman,1,0,0,0

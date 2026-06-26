@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+  <!-- UTM source tagged on every lead created from the Bizfinder wizard so
+       the lead's "Source" reflects where it actually came from, and so the
+       dedicated Bizfinder tab on the lead form can key its visibility off it.
+       noupdate so an admin-renamed source isn't reset on module upgrade. -->
+  <record id="utm_source_bizfinder" model="utm.source">
+    <field name="name">Bizfinder</field>
+  </record>
+</odoo>

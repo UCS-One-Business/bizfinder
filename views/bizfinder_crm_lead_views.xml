@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <!-- Leads sourced from Bizfinder get their own tab holding the structured
+       company facts and the full imported information, so the data lives
+       alongside the lead but out of the generic "Notes" tab. The tab only
+       shows for Bizfinder leads (is_bizfinder_lead, derived from the UTM
+       source set at creation). -->
+  <record id="view_crm_lead_form_bizfinder" model="ir.ui.view">
+    <field name="name">crm.lead.form.bizfinder</field>
+    <field name="model">crm.lead</field>
+    <field name="inherit_id" ref="crm.crm_lead_view_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//notebook/page[@name='internal_notes']" position="after">
+        <page string="Bizfinder" name="bizfinder_data" invisible="not is_bizfinder_lead">
+          <field name="is_bizfinder_lead" invisible="1"/>
+          <group>
+            <group string="Company">
+              <field name="company_organisation_number"/>
+              <field name="company_vat_number"/>
+              <field name="company_legal_entity"/>
+              <field name="company_director_name"/>
+              <field name="company_director_role"/>
+              <field name="company_number_of_units"/>
+            </group>
+            <group string="Key figures">
+              <field name="company_employees"/>
+              <field name="company_turnover"/>
+              <field name="company_net_sales"/>
+              <field name="company_operating_result"/>
+              <field name="company_net_profit_loss"/>
+              <field name="company_growth_pct"/>
+              <field name="company_solidity_pct"/>
+              <field name="company_account_date_to"/>
+            </group>
+          </group>
+          <group string="Addresses">
+            <group>
+              <field name="company_post_community"/>
+              <field name="company_visiting_address"/>
+              <field name="company_visiting_post_code"/>
+              <field name="company_visiting_city"/>
+              <field name="company_visiting_community"/>
+            </group>
+            <group>
+              <field name="company_registered_address"/>
+              <field name="company_registered_city"/>
+            </group>
+          </group>
+          <separator string="Full imported information"/>
+          <field name="bizfinder_data" nolabel="1" readonly="1"/>
+        </page>
+      </xpath>
+    </field>
+  </record>
+</odoo>
