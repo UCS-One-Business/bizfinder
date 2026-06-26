@@ -65,6 +65,7 @@ registry.category("view_widgets").add("bizfinder_preset_cog", {
 class BizfinderSearchFormController extends FormController {
     setup() {
         super.setup();
+        this.orm = useService("orm");
         const moveStatusbarIntoBreadcrumb = () => {
             const statusbar = document.querySelector(
                 ".o_form_view.o_bizfinder_search_form .o_form_statusbar"
@@ -77,8 +78,57 @@ class BizfinderSearchFormController extends FormController {
                 breadcrumb.insertBefore(statusbar, breadcrumb.firstChild);
             }
         };
-        onMounted(moveStatusbarIntoBreadcrumb);
-        onPatched(moveStatusbarIntoBreadcrumb);
+
+        // Inject a "select all" checkbox into the results list's Select column
+        // header. Toggling it delegates to the wizard's action_select_all /
+        // action_deselect_all (a single server-side write over every result
+        // line — reliable across list pages), then reloads.
+        const syncSelectAllCheckbox = () => {
+            const form = document.querySelector(".o_form_view.o_bizfinder_search_form");
+            const listEl = form?.querySelector("[name='result_line_ids']");
+            const header = listEl?.querySelector(
+                "thead th[data-name='selected'], thead th[name='selected']"
+            );
+            if (!header) {
+                return;
+            }
+            let checkbox = header.querySelector(".o_bizfinder_select_all");
+            if (!checkbox) {
+                checkbox = document.createElement("input");
+                checkbox.type = "checkbox";
+                checkbox.className = "form-check-input o_bizfinder_select_all";
+                checkbox.title = "Select all";
+                checkbox.setAttribute("aria-label", "Select all results");
+                checkbox.addEventListener("click", (ev) => ev.stopPropagation());
+                checkbox.addEventListener("change", async () => {
+                    const root = this.model.root;
+                    await root.save();
+                    await this.orm.call(
+                        "bizfinder.search",
+                        checkbox.checked ? "action_select_all" : "action_deselect_all",
+                        [root.resId]
+                    );
+                    await this.model.load();
+                });
+                header.textContent = "";
+                header.appendChild(checkbox);
+            }
+            // Reflect the model's selection state on the header checkbox.
+            const records = this.model.root?.data?.result_line_ids?.records || [];
+            const total = records.length;
+            const checkedCount = records.filter((r) => r.data.selected).length;
+            checkbox.checked = total > 0 && checkedCount === total;
+            checkbox.indeterminate = checkedCount > 0 && checkedCount < total;
+        };
+
+        onMounted(() => {
+            moveStatusbarIntoBreadcrumb();
+            syncSelectAllCheckbox();
+        });
+        onPatched(() => {
+            moveStatusbarIntoBreadcrumb();
+            syncSelectAllCheckbox();
+        });
     }
 }
 

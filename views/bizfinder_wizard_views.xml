@@ -183,10 +183,6 @@
                 <button name="action_create_leads"
                         string="Create lead"
                         type="object" class="btn-primary"/>
-                <button name="action_select_all" string="Select all" type="object"
-                        class="btn-secondary ms-2"/>
-                <button name="action_deselect_all" string="Clear selection" type="object"
-                        class="btn-secondary ms-1"/>
                 <span class="text-muted small ms-3">
                   Selected reveals:
                   <field name="selected_reveal_count" readonly="1" class="d-inline-block oe_inline"/>
