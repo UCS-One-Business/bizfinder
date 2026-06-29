@@ -31,6 +31,9 @@ prospects into crm.lead records.
             'bizfinder/static/src/js/bizfinder_search_form.js',
             'bizfinder/static/src/scss/bizfinder_search.scss',
         ],
+        'web.assets_tests': [
+            'bizfinder/static/tests/tours/bizfinder_search_tour.js',
+        ],
     },
     'license': 'OPL-1',
     'application': True,
