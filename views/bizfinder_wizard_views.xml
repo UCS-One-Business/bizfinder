@@ -196,6 +196,20 @@
                   Price/reveal:
                   <field name="price_per_reveal" readonly="1" class="d-inline-block oe_inline"/>
                 </span>
+                <field name="month_usage_loaded" invisible="1"/>
+                <!-- Spend-to-date for this month, managers only, pushed to the
+                     far right so it reads as a separate "billing" cluster from
+                     the per-search estimate. Replaces the old top-level menu. -->
+                <span class="text-muted small ms-auto"
+                      groups="sales_team.group_sale_manager"
+                      invisible="not month_usage_loaded">
+                  This month:
+                  <field name="month_usage_display" readonly="1"
+                         class="d-inline-block oe_inline ms-1"/>
+                  <button name="action_open_month_usage" type="object"
+                          string="Details"
+                          class="btn btn-link btn-sm p-0 ms-2 align-baseline"/>
+                </span>
               </div>
               <field name="result_line_ids" nolabel="1">
                 <list editable="top" create="false" delete="false">

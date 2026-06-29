@@ -93,6 +93,16 @@ class BizfinderSearch(models.TransientModel):
         compute='_compute_billing_estimate',
     )
 
+    # Manager-only spend-to-date for the current calendar month, shown in the
+    # results toolbar so billing context sits right next to the per-search
+    # estimate. This is the contextual replacement for the old standalone
+    # "Bizfinder Usage" menu.
+    month_reveals = fields.Integer(string='Reveals this month', readonly=True)
+    month_amount = fields.Float(string='Spent this month', readonly=True)
+    month_usage_loaded = fields.Boolean(readonly=True)
+    month_usage_display = fields.Char(
+        string='This month', compute='_compute_month_usage_display')
+
     result_line_ids = fields.One2many(
         'bizfinder.result.line',
         'wizard_id',
@@ -105,6 +115,16 @@ class BizfinderSearch(models.TransientModel):
             selected = rec.result_line_ids.filtered(lambda line: line.selected)
             rec.selected_reveal_count = len(selected)
             rec.estimated_reveal_total = rec.selected_reveal_count * rec.price_per_reveal
+
+    @api.depends('month_reveals', 'month_amount', 'billing_currency',
+                 'month_usage_loaded')
+    def _compute_month_usage_display(self):
+        for rec in self:
+            if not rec.month_usage_loaded:
+                rec.month_usage_display = ''
+                continue
+            rec.month_usage_display = "%s reveals · %.2f %s" % (
+                rec.month_reveals, rec.month_amount, rec.billing_currency or '')
 
     # ------------------------------------------------------------------- preset
 
@@ -181,6 +201,7 @@ class BizfinderSearch(models.TransientModel):
         self.ensure_one()
         client = self.env['bizfinder.client']
         self._refresh_billing_pricing(client)
+        self._refresh_month_usage(client)
         values = self._build_values()
         # Fetch the true total alongside the result page so the user sees
         # both "what was returned" and "what's available".
@@ -268,6 +289,46 @@ class BizfinderSearch(models.TransientModel):
         pricing = client.get_billing_pricing()
         self.price_per_reveal = float(pricing.get('pricePerReveal') or 0.0)
         self.billing_currency = pricing.get('currency') or ''
+
+    def _refresh_month_usage(self, client=None):
+        """Manager-only, best-effort: pull this calendar month's reveal usage so
+        the results toolbar can show spend-to-date beside the per-search
+        estimate. This is a secondary, informational readout — a usage hiccup
+        must never abort the search the user actually asked for, so a failure is
+        logged and leaves the stat hidden rather than raising."""
+        self.ensure_one()
+        if not self.env.user.has_group('sales_team.group_sale_manager'):
+            return
+        client = client or self.env['bizfinder.client']
+        today = fields.Date.today()
+        try:
+            usage = client.get_billing_usage(
+                fields.Date.start_of(today, 'month'),
+                fields.Date.end_of(today, 'month'),
+            )
+        except Exception:
+            _logger.warning(
+                "bizfinder: month-usage toolbar fetch failed; hiding the stat",
+                exc_info=True,
+            )
+            return
+        self.month_reveals = int(usage.get('reveals') or 0)
+        self.month_amount = float(usage.get('amount') or 0.0)
+        # The display reuses billing_currency (set from pricing just before this
+        # call). Deliberately not written here: usage carries its own currency,
+        # but billing_currency is the pricing/estimate currency and must reflect
+        # only what get_billing_pricing() returned.
+        self.month_usage_loaded = True
+
+    def action_open_month_usage(self):
+        """Open the full Bizfinder usage form (defaults to the current month) in
+        a dialog, from the search toolbar. The contextual replacement for the
+        old standalone 'Bizfinder Usage' menu; the usage model re-checks the
+        manager group and the toolbar button is manager-gated too."""
+        self.ensure_one()
+        action = self.env['bizfinder.usage'].action_open_usage()
+        action['target'] = 'new'
+        return action
 
     # ---------------------------------------------------------------- leads
 

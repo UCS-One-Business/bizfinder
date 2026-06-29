@@ -6,10 +6,8 @@
             action="action_bizfinder_search"
             sequence="50"
             groups="sales_team.group_sale_salesman"/>
-  <menuitem id="menu_bizfinder_usage"
-            name="Bizfinder Usage"
-            parent="crm.crm_menu_root"
-            action="action_bizfinder_usage_open"
-            sequence="51"
-            groups="sales_team.group_sale_manager"/>
+  <!-- Billing usage is no longer a top-level menu: managers reach it from the
+       "This month … Details" link in the search results toolbar
+       (bizfinder.search.action_open_month_usage). The act_window server action
+       below still backs the /odoo/bizfinder-usage URL. -->
 </odoo>
