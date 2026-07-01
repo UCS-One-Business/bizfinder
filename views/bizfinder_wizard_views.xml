@@ -53,21 +53,6 @@
             </group>
           </group>
 
-          <div class="o_bizfinder_search_counts d-flex gap-3 mb-2"
-               invisible="not hit_count and not returned_count">
-            <span class="text-muted small">Matches:
-              <field name="hit_count" readonly="1" class="d-inline-block oe_inline"/>
-            </span>
-            <span class="text-muted small">Shown:
-              <field name="returned_count" readonly="1" class="d-inline-block oe_inline"/>
-            </span>
-          </div>
-
-          <div class="mb-2" invisible="duplicate_count == 0">
-            <span class="text-muted small me-1">Already in CRM:</span>
-            <field name="duplicate_count" readonly="1" class="d-inline-block oe_inline"/>
-          </div>
-
           <details class="mt-3">
             <summary class="btn btn-link p-0" style="cursor: pointer;">Advanced filters</summary>
             <!-- Each <group string="..."> below contains two inner <group>s
@@ -174,10 +159,10 @@
 
           <notebook>
             <page string="Results" name="results">
-              <!-- Action row above the list. The CSS hooks under
-                   .o_bizfinder_results_actions visually align this with
-                   the list's pager row (rendered top-right of the list
-                   widget) so they read as a single toolbar. -->
+              <!-- Action row above the list. The js_class controller relocates
+                   the list's pager (.o_cp_pager) into this row — see
+                   bizfinder_search_form.js — so the Create-lead button, the
+                   billing estimate and the pager read as a single toolbar. -->
               <div class="o_bizfinder_results_actions d-flex align-items-center mt-2"
                    invisible="not result_line_ids">
                 <button name="action_create_leads"
@@ -197,10 +182,16 @@
                   <field name="price_per_reveal" readonly="1" class="d-inline-block oe_inline"/>
                 </span>
                 <field name="month_usage_loaded" invisible="1"/>
-                <!-- Spend-to-date for this month, managers only, pushed to the
-                     far right so it reads as a separate "billing" cluster from
-                     the per-search estimate. Replaces the old top-level menu. -->
-                <span class="text-muted small ms-auto"
+                <!-- Flex spacer: the single ms-auto in this row. Pushes the
+                     month-to-date stat and the relocated pager to the right
+                     edge, regardless of whether the (manager-only) stat is
+                     shown. Keeping the auto-margin here rather than on the stat
+                     avoids a second auto-margin fighting the pager. -->
+                <span class="ms-auto"/>
+                <!-- Spend-to-date for this month, managers only. Sits just left
+                     of the pager as a separate "billing" cluster from the
+                     per-search estimate. Replaces the old top-level menu. -->
+                <span class="text-muted small"
                       groups="sales_team.group_sale_manager"
                       invisible="not month_usage_loaded">
                   This month:

@@ -121,13 +121,36 @@ class BizfinderSearchFormController extends FormController {
             checkbox.indeterminate = checkedCount > 0 && checkedCount < total;
         };
 
+        // Relocate the results list's pager out of the x2many control panel
+        // (where Odoo renders it, on its own row above the table) and into the
+        // Create-lead action row, so pagination sits on the same toolbar line
+        // as the action buttons. Moving the whole .o_cp_pager wrapper keeps the
+        // Pager component inside its expected parent; OWL patches it by
+        // reference, so re-running on patch is enough to keep it in place.
+        const movePagerIntoActions = () => {
+            const form = document.querySelector(
+                ".o_form_view.o_bizfinder_search_form"
+            );
+            const actions = form?.querySelector(".o_bizfinder_results_actions");
+            const listEl = form?.querySelector("[name='result_line_ids']");
+            const pager = listEl?.querySelector(".o_cp_pager");
+            if (!actions || !pager) {
+                return;
+            }
+            if (pager.parentElement !== actions) {
+                actions.appendChild(pager);
+            }
+        };
+
         onMounted(() => {
             moveStatusbarIntoBreadcrumb();
             syncSelectAllCheckbox();
+            movePagerIntoActions();
         });
         onPatched(() => {
             moveStatusbarIntoBreadcrumb();
             syncSelectAllCheckbox();
+            movePagerIntoActions();
         });
     }
 }

@@ -53,4 +53,21 @@ body:has(.o_form_view.o_bizfinder_search_form) {
         min-height: 2rem;
         align-content: center;
     }
+
+    // The js_class controller moves the results pager (.o_cp_pager) into the
+    // Create-lead action row. Drop the control panel's default
+    // margin-left:auto (the toolbar's own ms-auto spacer right-aligns the
+    // billing stat + pager together) and give it a small gap instead.
+    .o_bizfinder_results_actions .o_cp_pager {
+        margin-left: 0.75rem;
+    }
+
+    // With the pager relocated, the list's x2many control panel is empty; its
+    // mt-1/mb-4 would otherwise leave a blank band between the toolbar and the
+    // table. Collapse it. (If the move ever fails, the pager still renders here
+    // — just tight against the table — so pagination degrades gracefully.)
+    [name='result_line_ids'] .o_x2m_control_panel {
+        margin-top: 0;
+        margin-bottom: 0;
+    }
 }
