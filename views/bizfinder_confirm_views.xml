@@ -7,10 +7,8 @@
       <form string="Confirm Billable Reveals" create="false" edit="false" delete="false">
         <sheet>
           <group>
-            <field name="reveal_count"/>
-            <field name="price_per_reveal"/>
-            <field name="estimated_total"/>
-            <field name="currency"/>
+            <field name="reveal_count" string="Selected leads"/>
+            <field name="estimated_total_display" string="Total price"/>
           </group>
         </sheet>
         <footer>

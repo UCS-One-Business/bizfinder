@@ -36,9 +36,6 @@
             <group>
               <field name="region_ids" widget="many2many_tags"
                      placeholder="Pick one or more counties..."/>
-              <field name="post_community_ids" widget="many2many_tags"
-                     options="{'no_create': True, 'no_quick_create': True}"
-                     placeholder="Start typing a kommun..."/>
               <field name="industry_ids" widget="many2many_tags"
                      options="{'no_create': True, 'no_quick_create': True}"
                      placeholder="Pick one or more industries..."/>
@@ -172,15 +169,8 @@
                   Selected reveals:
                   <field name="selected_reveal_count" readonly="1" class="d-inline-block oe_inline"/>
                 </span>
-                <span class="text-muted small ms-3">
-                  Estimate:
-                  <field name="estimated_reveal_total" readonly="1" class="d-inline-block oe_inline"/>
-                  <field name="billing_currency" readonly="1" class="d-inline-block oe_inline"/>
-                </span>
-                <span class="text-muted small ms-3">
-                  Price/reveal:
-                  <field name="price_per_reveal" readonly="1" class="d-inline-block oe_inline"/>
-                </span>
+                <!-- Estimate / price-per-reveal moved out of the toolbar: they
+                     are shown on the reveal-confirmation modal instead. -->
                 <field name="month_usage_loaded" invisible="1"/>
                 <!-- Flex spacer: the single ms-auto in this row. Pushes the
                      month-to-date stat and the relocated pager to the right
@@ -228,8 +218,6 @@
                   <field name="total_assets" optional="hide"/>
                   <field name="total_equity" optional="hide"/>
                   <field name="account_date_to" optional="hide"/>
-                  <field name="account_months" optional="hide"/>
-                  <field name="number_of_units" optional="hide"/>
                   <field name="registration_date" string="Reg." optional="hide"/>
                   <field name="company_formed_date" optional="hide"/>
                   <field name="status_date" optional="hide"/>

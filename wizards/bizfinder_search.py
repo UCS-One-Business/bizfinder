@@ -650,11 +650,20 @@ class BizfinderRevealConfirm(models.TransientModel):
         string='Estimated total',
         compute='_compute_estimated_total',
     )
+    # Single-field "amount + currency" readout for the compact confirm modal,
+    # e.g. "340.00 SEK" (currency here is a plain Char from the billing API,
+    # not a res.currency, so the monetary widget can't be used).
+    estimated_total_display = fields.Char(
+        string='Total price',
+        compute='_compute_estimated_total',
+    )
 
-    @api.depends('reveal_count', 'price_per_reveal')
+    @api.depends('reveal_count', 'price_per_reveal', 'currency')
     def _compute_estimated_total(self):
         for rec in self:
             rec.estimated_total = rec.reveal_count * rec.price_per_reveal
+            rec.estimated_total_display = "%.2f %s" % (
+                rec.estimated_total, rec.currency or '')
 
     def action_confirm(self):
         self.ensure_one()
