@@ -220,11 +220,34 @@ class BizfinderPreset(models.Model):
                 'key': key,
             })
             preset.write(preset._resolve_filters_to_vals(seg.get('filters') or []))
-            self._write_builtin_sv(preset)
+            # Prefer the translations served with the segment; fall back to
+            # the local table for API versions that don't ship i18n yet.
+            if not self._write_builtin_i18n(preset, seg.get('i18n')):
+                self._write_builtin_sv(preset)
             created += 1
         if created:
             _logger.info("bizfinder: seeded %s built-in preset(s)", created)
         return created
+
+    @api.model
+    def _write_builtin_i18n(self, preset, i18n) -> int:
+        """Write the per-language name/description translations served in a
+        segment payload (``{lang_code: {'name': .., 'description': ..}}``)
+        onto a freshly seeded preset. Languages not active in this database
+        are skipped. Returns the number of languages written."""
+        active = set(self.env['res.lang'].search([]).mapped('code'))
+        written = 0
+        for lang, texts in (i18n or {}).items():
+            if lang not in active or not isinstance(texts, dict):
+                continue
+            vals = {
+                field: texts[field]
+                for field in ('name', 'description') if texts.get(field)
+            }
+            if vals:
+                preset.with_context(lang=lang).write(vals)
+                written += 1
+        return written
 
     @api.model
     def _write_builtin_sv(self, presets=None) -> int:
