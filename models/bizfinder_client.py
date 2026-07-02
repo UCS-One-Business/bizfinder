@@ -67,25 +67,25 @@ class BizfinderClient(models.AbstractModel):
 
     @api.model
     def validate(self) -> bool:
-        r = self._request('GET', "/api/insight/validatelogin", timeout=_TIMEOUT)
+        r = self._request('GET', "/api/v1/insight/validatelogin", timeout=_TIMEOUT)
         self._check(r)
         return True
 
     @api.model
     def get_filters(self) -> list[dict]:
-        r = self._request('GET', "/api/insight/filters", timeout=_TIMEOUT)
+        r = self._request('GET', "/api/v1/insight/filters", timeout=_TIMEOUT)
         self._check(r)
         return r.json()
 
     @api.model
     def get_segments(self) -> list[dict]:
-        r = self._request('GET', "/api/insight/segments", timeout=_TIMEOUT)
+        r = self._request('GET', "/api/v1/insight/segments", timeout=_TIMEOUT)
         self._check(r)
         return r.json()
 
     @api.model
     def get_billing_pricing(self) -> dict:
-        r = self._request('GET', "/api/billing/pricing", timeout=_TIMEOUT)
+        r = self._request('GET', "/api/v1/billing/pricing", timeout=_TIMEOUT)
         self._check(r)
         return r.json()
 
@@ -93,7 +93,7 @@ class BizfinderClient(models.AbstractModel):
     def get_billing_usage(self, date_from, date_to) -> dict:
         r = self._request(
             'GET',
-            "/api/billing/usage",
+            "/api/v1/billing/usage",
             params={'from': fields.Date.to_string(date_from), 'to': fields.Date.to_string(date_to)},
             timeout=_TIMEOUT,
         )
@@ -102,7 +102,7 @@ class BizfinderClient(models.AbstractModel):
 
     @api.model
     def preview(self, values: list[dict]) -> int:
-        r = self._request('POST', "/api/insight/filters", json=values, timeout=_TIMEOUT)
+        r = self._request('POST', "/api/v1/insight/filters", json=values, timeout=_TIMEOUT)
         self._check(r)
         return int(r.json().get('hitCount', 0))
 
@@ -110,7 +110,7 @@ class BizfinderClient(models.AbstractModel):
     def search(self, values: list[dict], skip: int = 0, take: int = 200) -> list[dict]:
         r = self._request(
             'POST',
-            "/api/insight/prospects",
+            "/api/v1/insight/prospects",
             params={'skip': skip, 'take': take},
             json=values,
             timeout=_TIMEOUT * 2,
@@ -120,19 +120,19 @@ class BizfinderClient(models.AbstractModel):
 
     @api.model
     def get_communities(self) -> list[dict]:
-        r = self._request('GET', "/api/insight/communities", timeout=_TIMEOUT)
+        r = self._request('GET', "/api/v1/insight/communities", timeout=_TIMEOUT)
         self._check(r)
         return r.json()
 
     @api.model
     def get_sni(self) -> list[dict]:
-        r = self._request('GET', "/api/insight/sni", timeout=_TIMEOUT)
+        r = self._request('GET', "/api/v1/insight/sni", timeout=_TIMEOUT)
         self._check(r)
         return r.json()
 
     @api.model
     def get_buckets(self) -> dict:
-        r = self._request('GET', "/api/insight/buckets", timeout=_TIMEOUT)
+        r = self._request('GET', "/api/v1/insight/buckets", timeout=_TIMEOUT)
         self._check(r)
         return r.json()
 
@@ -220,7 +220,7 @@ class BizfinderClient(models.AbstractModel):
             return []
         r = self._request(
             'POST',
-            "/api/insight/reveal",
+            "/api/v1/insight/reveal",
             json={'orgNumbers': list(org_numbers)},
             timeout=_TIMEOUT * 2,
         )
