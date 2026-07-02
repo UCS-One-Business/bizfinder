@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e-20260619\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-02 13:47+0000\n"
-"PO-Revision-Date: 2026-07-02 13:47+0000\n"
+"POT-Creation-Date: 2026-07-02 14:13+0000\n"
+"PO-Revision-Date: 2026-07-02 14:13+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -96,11 +96,15 @@ msgid "Access Token"
 msgstr ""
 
 #. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/wizards/bizfinder_search.py:0
 #: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__account_months
 msgid "Account months"
 msgstr ""
 
 #. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/wizards/bizfinder_search.py:0
 #: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__address
 msgid "Address"
 msgstr ""
@@ -153,6 +157,8 @@ msgid "Assets"
 msgstr ""
 
 #. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/wizards/bizfinder_search.py:0
 #: model:ir.model.fields,field_description:bizfinder.field_bizfinder_filter_mixin__accountant_obligation
 #: model:ir.model.fields,field_description:bizfinder.field_bizfinder_preset__accountant_obligation
 #: model:ir.model.fields,field_description:bizfinder.field_bizfinder_search__accountant_obligation
@@ -331,6 +337,12 @@ msgid "Cash and bank"
 msgstr ""
 
 #. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/wizards/bizfinder_search.py:0
+msgid "Cash and bank (tkr)"
+msgstr ""
+
+#. module: bizfinder
 #: model_terms:ir.ui.view,arch_db:bizfinder.res_config_settings_view_form_bizfinder
 msgid "Catalogues"
 msgstr ""
@@ -394,12 +406,20 @@ msgid "Companies"
 msgstr ""
 
 #. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/wizards/bizfinder_search.py:0
 #: model:ir.model.fields,field_description:bizfinder.field_bizfinder_preset__company_id
 #: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__name
 #: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_preset_form
 #: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_search_form
 #: model_terms:ir.ui.view,arch_db:bizfinder.view_crm_lead_form_bizfinder
 msgid "Company"
+msgstr ""
+
+#. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/wizards/bizfinder_search.py:0
+msgid "Company formed"
 msgstr ""
 
 #. module: bizfinder
@@ -432,6 +452,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/bizfinder/models/bizfinder_settings.py:0
 msgid "Connection to the Bizfinder service succeeded."
+msgstr ""
+
+#. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/wizards/bizfinder_search.py:0
+msgid "Contact"
 msgstr ""
 
 #. module: bizfinder
@@ -500,6 +526,12 @@ msgid "Currency"
 msgstr ""
 
 #. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/wizards/bizfinder_search.py:0
+msgid "Current liabilities (tkr)"
+msgstr ""
+
+#. module: bizfinder
 #: model:ir.model.fields,help:bizfinder.field_res_company__bizfinder_access_token
 #: model:ir.model.fields,help:bizfinder.field_res_config_settings__bizfinder_access_token
 msgid "Customer tenant token issued by the Bizfinder service."
@@ -559,6 +591,14 @@ msgid "Display Name"
 msgstr ""
 
 #. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/wizards/bizfinder_search.py:0
+msgid "Dividend (tkr)"
+msgstr ""
+
+#. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/wizards/bizfinder_search.py:0
 #: model:ir.model.fields,field_description:bizfinder.field_bizfinder_preset__employee_magnitude_ids
 #: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__employees
 #: model:ir.model.fields,field_description:bizfinder.field_bizfinder_search__employee_magnitude_ids
@@ -612,6 +652,8 @@ msgid "F-tax registered"
 msgstr ""
 
 #. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/wizards/bizfinder_search.py:0
 #: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__fax
 msgid "Fax"
 msgstr ""
@@ -620,6 +662,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_preset_form
 #: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_search_form
 msgid "Financials & ratios"
+msgstr ""
+
+#. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/wizards/bizfinder_search.py:0
+msgid "Financials (latest year)"
 msgstr ""
 
 #. module: bizfinder
@@ -672,6 +720,12 @@ msgid "Full imported information"
 msgstr ""
 
 #. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/wizards/bizfinder_search.py:0
+msgid "Growth"
+msgstr ""
+
+#. module: bizfinder
 #: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__growth_pct
 #: model:ir.model.fields,field_description:bizfinder.field_crm_lead__company_growth_pct
 #: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_preset_form
@@ -684,6 +738,12 @@ msgstr ""
 #: model:ir.model.fields.selection,name:bizfinder.selection__bizfinder_preset__accountant_reservation__yes
 #: model:ir.model.fields.selection,name:bizfinder.selection__bizfinder_search__accountant_reservation__yes
 msgid "Has reservation"
+msgstr ""
+
+#. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/wizards/bizfinder_search.py:0
+msgid "Headcount growth"
 msgstr ""
 
 #. module: bizfinder
@@ -712,6 +772,12 @@ msgid "ID"
 msgstr ""
 
 #. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/wizards/bizfinder_search.py:0
+msgid "Imported from Creditsafe via Bizfinder."
+msgstr ""
+
+#. module: bizfinder
 #: model:ir.model.fields,field_description:bizfinder.field_bizfinder_preset__industry_ids
 #: model:ir.model.fields,field_description:bizfinder.field_bizfinder_search__industry_ids
 msgid "Industries"
@@ -720,6 +786,12 @@ msgstr ""
 #. module: bizfinder
 #: model:ir.model.fields,field_description:bizfinder.field_bizfinder_industry__name
 msgid "Industry"
+msgstr ""
+
+#. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/wizards/bizfinder_search.py:0
+msgid "Industry (SNI)"
 msgstr ""
 
 #. module: bizfinder
@@ -779,11 +851,19 @@ msgid "Last Updated on"
 msgstr ""
 
 #. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/wizards/bizfinder_search.py:0
+msgid "Latest statement"
+msgstr ""
+
+#. module: bizfinder
 #: model:ir.model,name:bizfinder.model_crm_lead
 msgid "Lead"
 msgstr ""
 
 #. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/wizards/bizfinder_search.py:0
 #: model:ir.model.fields,field_description:bizfinder.field_crm_lead__company_legal_entity
 msgid "Legal form"
 msgstr ""
@@ -803,6 +883,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_preset_form
 #: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_search_form
 msgid "Location"
+msgstr ""
+
+#. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/wizards/bizfinder_search.py:0
+msgid "Long-term debts (tkr)"
 msgstr ""
 
 #. module: bizfinder
@@ -917,6 +1003,8 @@ msgid "Municipalities (postal)"
 msgstr ""
 
 #. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/wizards/bizfinder_search.py:0
 #: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__post_community
 #: model:ir.model.fields,field_description:bizfinder.field_crm_lead__company_post_community
 msgid "Municipality"
@@ -937,6 +1025,8 @@ msgid "Net profit/loss"
 msgstr ""
 
 #. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/wizards/bizfinder_search.py:0
 #: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_preset_form
 #: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_search_form
 msgid "Net profit/loss (tkr)"
@@ -947,6 +1037,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:bizfinder.field_crm_lead__company_net_sales
 #: model:ir.model.fields.selection,name:bizfinder.selection__bizfinder_magnitude__kind__net_sales
 msgid "Net sales"
+msgstr ""
+
+#. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/wizards/bizfinder_search.py:0
+msgid "Net sales (tkr)"
 msgstr ""
 
 #. module: bizfinder
@@ -1002,6 +1098,14 @@ msgid "Only Sales managers can view Bizfinder billing usage."
 msgstr ""
 
 #. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/wizards/bizfinder_search.py:0
+msgid "Operating income (tkr)"
+msgstr ""
+
+#. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/wizards/bizfinder_search.py:0
 #: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__operating_margin_pct
 msgid "Operating margin %"
 msgstr ""
@@ -1010,6 +1114,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__operating_result
 #: model:ir.model.fields,field_description:bizfinder.field_crm_lead__company_operating_result
 msgid "Operating result"
+msgstr ""
+
+#. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/wizards/bizfinder_search.py:0
+msgid "Operating result (tkr)"
 msgstr ""
 
 #. module: bizfinder
@@ -1024,8 +1134,16 @@ msgid "Org no."
 msgstr ""
 
 #. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/wizards/bizfinder_search.py:0
 #: model:ir.model.fields,field_description:bizfinder.field_crm_lead__company_organisation_number
 msgid "Organisation number"
+msgstr ""
+
+#. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/wizards/bizfinder_search.py:0
+msgid "Other data"
 msgstr ""
 
 #. module: bizfinder
@@ -1034,6 +1152,8 @@ msgid "Period"
 msgstr ""
 
 #. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/wizards/bizfinder_search.py:0
 #: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__phone
 msgid "Phone"
 msgstr ""
@@ -1094,6 +1214,12 @@ msgid "Post Code"
 msgstr ""
 
 #. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/wizards/bizfinder_search.py:0
+msgid "Postal"
+msgstr ""
+
+#. module: bizfinder
 #: model:ir.model.fields,help:bizfinder.field_bizfinder_preset__post_community_ids
 #: model:ir.model.fields,help:bizfinder.field_bizfinder_search__post_community_ids
 msgid "Postal-address kommun. Start typing to filter."
@@ -1145,11 +1271,21 @@ msgid "Price per reveal"
 msgstr ""
 
 #. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/wizards/bizfinder_search.py:0
+msgid "Profit after financials (tkr)"
+msgstr ""
+
+#. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/wizards/bizfinder_search.py:0
 #: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__profit_margin_pct
 msgid "Profit margin %"
 msgstr ""
 
 #. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/wizards/bizfinder_search.py:0
 #: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__quick_ratio_pct
 msgid "Quick ratio %"
 msgstr ""
@@ -1196,6 +1332,8 @@ msgid "Regions"
 msgstr ""
 
 #. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/wizards/bizfinder_search.py:0
 #: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__registration_date
 #: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_preset_form
 #: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_search_form
@@ -1365,6 +1503,12 @@ msgid "Small (10–49)"
 msgstr ""
 
 #. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/wizards/bizfinder_search.py:0
+msgid "Solidity"
+msgstr ""
+
+#. module: bizfinder
 #: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__solidity_pct
 #: model:ir.model.fields,field_description:bizfinder.field_crm_lead__company_solidity_pct
 #: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_preset_form
@@ -1389,6 +1533,8 @@ msgid "Statement date"
 msgstr ""
 
 #. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/wizards/bizfinder_search.py:0
 #: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_preset_form
 #: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_search_form
 msgid "Status changed"
@@ -1450,9 +1596,23 @@ msgid "This month:"
 msgstr ""
 
 #. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/wizards/bizfinder_search.py:0
 #: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__director_name
 #: model:ir.model.fields,field_description:bizfinder.field_crm_lead__company_director_name
 msgid "Top director"
+msgstr ""
+
+#. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/wizards/bizfinder_search.py:0
+msgid "Total assets (tkr)"
+msgstr ""
+
+#. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/wizards/bizfinder_search.py:0
+msgid "Total equity (tkr)"
 msgstr ""
 
 #. module: bizfinder
@@ -1467,6 +1627,8 @@ msgid "Total price"
 msgstr ""
 
 #. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/wizards/bizfinder_search.py:0
 #: model:ir.model.fields,field_description:bizfinder.field_bizfinder_preset__net_sales_magnitude_ids
 #: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__turn_over
 #: model:ir.model.fields,field_description:bizfinder.field_bizfinder_search__net_sales_magnitude_ids
@@ -1486,6 +1648,14 @@ msgid "Turnover (tkr)"
 msgstr ""
 
 #. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/wizards/bizfinder_search.py:0
+msgid "Turnover per employee (tkr)"
+msgstr ""
+
+#. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/wizards/bizfinder_search.py:0
 #: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__number_of_units
 #: model:ir.model.fields,field_description:bizfinder.field_crm_lead__company_number_of_units
 msgid "Units"
@@ -1515,6 +1685,8 @@ msgid "VAT (Moms)"
 msgstr ""
 
 #. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/wizards/bizfinder_search.py:0
 #: model:ir.model.fields,field_description:bizfinder.field_crm_lead__company_vat_number
 msgid "VAT number"
 msgstr ""
@@ -1524,6 +1696,12 @@ msgstr ""
 #: model:ir.model.fields.selection,name:bizfinder.selection__bizfinder_preset__moms__yes
 #: model:ir.model.fields.selection,name:bizfinder.selection__bizfinder_search__moms__yes
 msgid "VAT registered"
+msgstr ""
+
+#. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/wizards/bizfinder_search.py:0
+msgid "Visiting"
 msgstr ""
 
 #. module: bizfinder

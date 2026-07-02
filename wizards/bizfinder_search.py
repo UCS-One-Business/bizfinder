@@ -332,11 +332,12 @@ class BizfinderSearch(models.TransientModel):
 
     # ---------------------------------------------------------------- leads
 
-    @staticmethod
-    def _format_notes(data: dict) -> str:
+    def _format_notes(self, data: dict) -> str:
         """Render every field of a revealed prospect into HTML for the lead's
         Bizfinder tab. `data` is the JSON dict returned by the
-        /api/insight/reveal endpoint."""
+        /api/insight/reveal endpoint. Labels resolve via _() in the creating
+        user's language (the HTML is stored on the lead, not re-rendered per
+        viewer)."""
         def kv(label, value):
             if not value and value != 0:
                 return ""
@@ -384,62 +385,64 @@ class BizfinderSearch(models.TransientModel):
 
         sections = []
         company = "".join(filter(None, [
-            kv("Organisation number", data.get('organisationNumber')),
-            kv("VAT number", data.get('vatNumber')),
-            kv("Industry (SNI)", data.get('description')),
-            kv("Legal form", data.get('legalEntityText') or data.get('legalEntity')),
-            kv("Municipality", data.get('postCommunity')),
-            kv("Company formed", data.get('companyFormedDate')),
-            kv("Registered", data.get('registrationDate')),
-            kv("Status changed", data.get('statusDate')),
-            kv("Units", data.get('numberOfUnits')),
+            kv(_("Organisation number"), data.get('organisationNumber')),
+            kv(_("VAT number"), data.get('vatNumber')),
+            kv(_("Industry (SNI)"), data.get('description')),
+            kv(_("Legal form"), data.get('legalEntityText') or data.get('legalEntity')),
+            kv(_("Municipality"), data.get('postCommunity')),
+            kv(_("Company formed"), data.get('companyFormedDate')),
+            kv(_("Registered"), data.get('registrationDate')),
+            kv(_("Status changed"), data.get('statusDate')),
+            kv(_("Units"), data.get('numberOfUnits')),
         ]))
         if company:
-            sections.append(f"<p><b>Company</b></p><ul>{company}</ul>")
+            sections.append(f"<p><b>{escape(_('Company'))}</b></p><ul>{company}</ul>")
 
         contact = "".join(filter(None, [
-            kv("Top director", director),
-            kv("Phone", data.get('phone')),
-            kv("Fax", data.get('fax')),
+            kv(_("Top director"), director),
+            kv(_("Phone"), data.get('phone')),
+            kv(_("Fax"), data.get('fax')),
         ]))
         if contact:
-            sections.append(f"<p><b>Contact</b></p><ul>{contact}</ul>")
+            sections.append(f"<p><b>{escape(_('Contact'))}</b></p><ul>{contact}</ul>")
 
         addr = "".join(filter(None, [
-            kv("Postal", postal),
-            kv("Visiting", visiting),
-            kv("Registered", registered),
+            kv(_("Postal"), postal),
+            kv(_("Visiting"), visiting),
+            kv(_("Registered"), registered),
         ]))
         if addr:
-            sections.append(f"<p><b>Address</b></p><ul>{addr}</ul>")
+            sections.append(f"<p><b>{escape(_('Address'))}</b></p><ul>{addr}</ul>")
 
         financials = "".join(filter(None, [
-            kv("Employees", data.get('employees')),
-            kv("Turnover", data.get('turnOver')),
-            kv("Latest statement", data.get('accountDateTo')),
-            kv("Account months", data.get('accountMonths')),
-            kv("Net sales (tkr)", data.get('netSales')),
-            kv("Operating income (tkr)", data.get('netOperatingIncome')),
-            kv("Operating result (tkr)", data.get('operatingResult')),
-            kv("Profit after financials (tkr)", data.get('profitLossAfterFin')),
-            kv("Net profit/loss (tkr)", data.get('netProfitLoss')),
-            kv("Growth", growth),
-            kv("Headcount growth", headcount),
-            kv("Solidity", solidity),
-            kv("Operating margin %", data.get('operatingMarginPct')),
-            kv("Profit margin %", data.get('profitMarginPct')),
-            kv("Quick ratio %", data.get('quickRatioPct')),
-            kv("Turnover per employee (tkr)", data.get('turnoverPerEmployee')),
-            kv("Cash and bank (tkr)", data.get('cashAtBank')),
-            kv("Total assets (tkr)", data.get('totalAssets')),
-            kv("Total equity (tkr)", data.get('totalEquity')),
-            kv("Current liabilities (tkr)", data.get('currentLiabilities')),
-            kv("Long-term debts (tkr)", data.get('longTermDebts')),
-            kv("Dividend (tkr)", data.get('dividend')),
-            kv("Auditor obligation", data.get('accountantObligation')),
+            kv(_("Employees"), data.get('employees')),
+            kv(_("Turnover"), data.get('turnOver')),
+            kv(_("Latest statement"), data.get('accountDateTo')),
+            kv(_("Account months"), data.get('accountMonths')),
+            kv(_("Net sales (tkr)"), data.get('netSales')),
+            kv(_("Operating income (tkr)"), data.get('netOperatingIncome')),
+            kv(_("Operating result (tkr)"), data.get('operatingResult')),
+            kv(_("Profit after financials (tkr)"), data.get('profitLossAfterFin')),
+            kv(_("Net profit/loss (tkr)"), data.get('netProfitLoss')),
+            kv(_("Growth"), growth),
+            kv(_("Headcount growth"), headcount),
+            kv(_("Solidity"), solidity),
+            kv(_("Operating margin %"), data.get('operatingMarginPct')),
+            kv(_("Profit margin %"), data.get('profitMarginPct')),
+            kv(_("Quick ratio %"), data.get('quickRatioPct')),
+            kv(_("Turnover per employee (tkr)"), data.get('turnoverPerEmployee')),
+            kv(_("Cash and bank (tkr)"), data.get('cashAtBank')),
+            kv(_("Total assets (tkr)"), data.get('totalAssets')),
+            kv(_("Total equity (tkr)"), data.get('totalEquity')),
+            kv(_("Current liabilities (tkr)"), data.get('currentLiabilities')),
+            kv(_("Long-term debts (tkr)"), data.get('longTermDebts')),
+            kv(_("Dividend (tkr)"), data.get('dividend')),
+            kv(_("Auditor obligation"), data.get('accountantObligation')),
         ]))
         if financials:
-            sections.append(f"<p><b>Financials (latest year)</b></p><ul>{financials}</ul>")
+            sections.append(
+                f"<p><b>{escape(_('Financials (latest year)'))}</b></p><ul>{financials}</ul>"
+            )
 
         # Catch-all: render any field the reveal returned that the curated
         # sections above don't already cover, so the lead carries the full
@@ -472,10 +475,12 @@ class BizfinderSearch(models.TransientModel):
             if k not in rendered_keys and not isinstance(v, (dict, list))
         )
         if other:
-            sections.append(f"<p><b>Other data</b></p><ul>{other}</ul>")
+            sections.append(f"<p><b>{escape(_('Other data'))}</b></p><ul>{other}</ul>")
 
         if sections:
-            sections.insert(0, "<p><i>Imported from Creditsafe via Bizfinder.</i></p>")
+            sections.insert(
+                0, f"<p><i>{escape(_('Imported from Creditsafe via Bizfinder.'))}</i></p>"
+            )
         return "".join(sections)
 
     def action_create_leads(self):
