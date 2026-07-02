@@ -225,7 +225,7 @@ class BizfinderSearch(models.TransientModel):
         Line = self.env['bizfinder.result.line']
         Line.create([{
             'wizard_id': self.id,
-            'name': r.get('name') or '(unknown)',
+            'name': r.get('name') or _('(unknown)'),
             'organisation_number': r.get('organisationNumber') or '',
             'vat_number': r.get('vatNumber') or '',
             'phone': r.get('phone') or '',
@@ -689,7 +689,7 @@ class BizfinderPresetSave(models.TransientModel):
         self.wizard_id.preset_id = preset
         return {
             'type': 'ir.actions.act_window',
-            'name': 'Bizfinder Search',
+            'name': _('Bizfinder Search'),
             'res_model': 'bizfinder.search',
             'res_id': self.wizard_id.id,
             'view_mode': 'form',

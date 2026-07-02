@@ -2,7 +2,7 @@
 
 import os
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 
 
 ENV_BIZFINDER_API_URL = 'BIZFINDER_API_URL'
@@ -36,7 +36,7 @@ class BizfinderSettings(models.TransientModel):
             'tag': 'display_notification',
             'params': {
                 'title': 'Bizfinder',
-                'message': 'Catalogues refreshed from the API.',
+                'message': _('Catalogues refreshed from the API.'),
                 'type': 'success',
                 'sticky': False,
             },
@@ -50,7 +50,7 @@ class BizfinderSettings(models.TransientModel):
             'tag': 'display_notification',
             'params': {
                 'title': 'Bizfinder',
-                'message': 'Connection to the Bizfinder service succeeded.',
+                'message': _('Connection to the Bizfinder service succeeded.'),
                 'type': 'success',
                 'sticky': False,
             },

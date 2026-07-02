@@ -4,7 +4,7 @@ import logging
 
 import requests
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
@@ -25,9 +25,9 @@ class BizfinderClient(models.AbstractModel):
     def _creds(self) -> tuple[str, dict]:
         url, access_token = self.env['res.config.settings'].get_bizfinder_credentials()
         if not url:
-            raise UserError("Bizfinder API URL is not configured.")
+            raise UserError(_("Bizfinder API URL is not configured."))
         if not access_token:
-            raise UserError("Bizfinder access token is not configured.")
+            raise UserError(_("Bizfinder access token is not configured."))
         headers = {
             'Authorization': f'Bearer {access_token}',
             'X-Odoo-Db': self.env.cr.dbname,
@@ -45,8 +45,13 @@ class BizfinderClient(models.AbstractModel):
             except Exception:
                 detail = response.text
             raise UserError(
-                f"Bizfinder API {response.request.method} {response.request.url} "
-                f"failed: {response.status_code} {detail}"
+                _("Bizfinder API %(method)s %(url)s failed: %(status)s %(detail)s")
+                % {
+                    'method': response.request.method,
+                    'url': response.request.url,
+                    'status': response.status_code,
+                    'detail': detail,
+                }
             )
 
     @api.model
@@ -55,7 +60,10 @@ class BizfinderClient(models.AbstractModel):
         try:
             return requests.request(method, f"{url}{path}", headers=headers, **kwargs)
         except requests.RequestException as exc:
-            raise UserError(f"Could not reach Bizfinder API {url}: {exc}") from exc
+            raise UserError(
+                _("Could not reach Bizfinder API %(url)s: %(error)s")
+                % {'url': url, 'error': exc}
+            ) from exc
 
     @api.model
     def validate(self) -> bool:

@@ -8,6 +8,7 @@
 //      into the control-panel breadcrumb, so the Search button and the cog sit
 //      on the same row as the "Bizfinder" title.
 
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { formView } from "@web/views/form/form_view";
 import { FormController } from "@web/views/form/form_controller";
@@ -19,7 +20,7 @@ import { Component, onMounted, onPatched, xml } from "@odoo/owl";
 class BizfinderPresetCog extends Component {
     static template = xml`
         <Dropdown items="menuItems" menuClass="'o_bizfinder_preset_cog_menu'">
-            <button type="button" class="btn btn-secondary" title="Presets" aria-label="Presets">
+            <button type="button" class="btn btn-secondary" t-att-title="presetsLabel" t-att-aria-label="presetsLabel">
                 <i class="fa fa-cog"/>
             </button>
         </Dropdown>
@@ -32,15 +33,19 @@ class BizfinderPresetCog extends Component {
         this.action = useService("action");
     }
 
+    get presetsLabel() {
+        return _t("Presets");
+    }
+
     get menuItems() {
         const items = [
-            { label: "Save current as preset", onSelected: () => this.run("action_save_preset") },
+            { label: _t("Save current as preset"), onSelected: () => this.run("action_save_preset") },
         ];
         if (this.props.record.data.preset_id) {
-            items.push({ label: "Update current preset", onSelected: () => this.run("action_update_preset") });
-            items.push({ label: "Clear preset", onSelected: () => this.run("action_clear_preset") });
+            items.push({ label: _t("Update current preset"), onSelected: () => this.run("action_update_preset") });
+            items.push({ label: _t("Clear preset"), onSelected: () => this.run("action_clear_preset") });
         }
-        items.push({ label: "Manage presets", onSelected: () => this.run("action_manage_presets") });
+        items.push({ label: _t("Manage presets"), onSelected: () => this.run("action_manage_presets") });
         return items;
     }
 
@@ -97,8 +102,8 @@ class BizfinderSearchFormController extends FormController {
                 checkbox = document.createElement("input");
                 checkbox.type = "checkbox";
                 checkbox.className = "form-check-input o_bizfinder_select_all";
-                checkbox.title = "Select all";
-                checkbox.setAttribute("aria-label", "Select all results");
+                checkbox.title = _t("Select all");
+                checkbox.setAttribute("aria-label", _t("Select all results"));
                 checkbox.addEventListener("click", (ev) => ev.stopPropagation());
                 checkbox.addEventListener("change", async () => {
                     const root = this.model.root;

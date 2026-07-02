@@ -1,0 +1,1596 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* bizfinder
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0+e-20260619\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-02 13:47+0000\n"
+"PO-Revision-Date: 2026-07-02 13:47+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: sv\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/models/bizfinder_filter_mixin.py:0
+msgid "'%(value)s' is not a valid number for %(field)s."
+msgstr "'%(value)s' är inte ett giltigt tal för %(field)s."
+
+#. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/wizards/bizfinder_search.py:0
+msgid "'%s' now matches the current filters."
+msgstr "'%s' motsvarar nu de aktuella filtren."
+
+#. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/wizards/bizfinder_search.py:0
+msgid "(unknown)"
+msgstr "(okänd)"
+
+#. module: bizfinder
+#: model:bizfinder.magnitude,name:bizfinder.magnitude_net_sales_100m_1b
+msgid "100 Mkr – 1 Mdr"
+msgstr "100 Mkr – 1 Mdr"
+
+#. module: bizfinder
+#: model:bizfinder.magnitude,name:bizfinder.magnitude_net_sales_10_100m
+msgid "10–100 Mkr"
+msgstr "10–100 Mkr"
+
+#. module: bizfinder
+#: model:bizfinder.magnitude,name:bizfinder.magnitude_net_sales_1_10m
+msgid "1–10 Mkr"
+msgstr "1–10 Mkr"
+
+#. module: bizfinder
+#: model:bizfinder.magnitude,name:bizfinder.magnitude_net_sales_under_1m
+msgid "< 1 Mkr"
+msgstr "< 1 Mkr"
+
+#. module: bizfinder
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_preset_form
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_search_form
+msgid "<span> – </span>"
+msgstr "<span> – </span>"
+
+#. module: bizfinder
+#: model:bizfinder.magnitude,name:bizfinder.magnitude_net_sales_over_1b
+msgid "> 1 Mdr"
+msgstr "> 1 Mdr"
+
+#. module: bizfinder
+#: model:ir.model.constraint,message:bizfinder.constraint_crm_lead_company_organisation_number_uniq
+msgid "A CRM lead already exists for this organisation number."
+msgstr "Det finns redan ett CRM-kundämne för detta organisationsnummer."
+
+#. module: bizfinder
+#: model:ir.model.constraint,message:bizfinder.constraint_bizfinder_preset_name_company_uniq
+msgid "A preset with this name already exists for this company."
+msgstr "Det finns redan en förinställning med detta namn för detta företag."
+
+#. module: bizfinder
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_preset_form
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_search_form
+msgid "AB, EF..."
+msgstr "AB, EF..."
+
+#. module: bizfinder
+#: model_terms:ir.ui.view,arch_db:bizfinder.res_config_settings_view_form_bizfinder
+msgid "API URL"
+msgstr "API-URL"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_magnitude__bucket_keys
+msgid "API bucket keys"
+msgstr "API-intervallnycklar"
+
+#. module: bizfinder
+#: model_terms:ir.ui.view,arch_db:bizfinder.res_config_settings_view_form_bizfinder
+msgid "Access Token"
+msgstr "Åtkomsttoken"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__account_months
+msgid "Account months"
+msgstr "Räkenskapsmånader"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__address
+msgid "Address"
+msgstr "Adress"
+
+#. module: bizfinder
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_crm_lead_form_bizfinder
+msgid "Addresses"
+msgstr "Adresser"
+
+#. module: bizfinder
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_search_form
+msgid "Advanced filters"
+msgstr "Avancerade filter"
+
+#. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/wizards/bizfinder_search.py:0
+msgid "All selected prospects already exist in CRM."
+msgstr "Alla valda prospekt finns redan i CRM."
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_search__duplicate_count
+msgid "Already in CRM"
+msgstr "Finns redan i CRM"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_usage__amount
+msgid "Amount"
+msgstr "Belopp"
+
+#. module: bizfinder
+#: model:ir.model.fields.selection,name:bizfinder.selection__bizfinder_filter_mixin__accountant_obligation__any
+#: model:ir.model.fields.selection,name:bizfinder.selection__bizfinder_filter_mixin__accountant_reservation__any
+#: model:ir.model.fields.selection,name:bizfinder.selection__bizfinder_filter_mixin__f_tax__any
+#: model:ir.model.fields.selection,name:bizfinder.selection__bizfinder_filter_mixin__moms__any
+#: model:ir.model.fields.selection,name:bizfinder.selection__bizfinder_preset__accountant_obligation__any
+#: model:ir.model.fields.selection,name:bizfinder.selection__bizfinder_preset__accountant_reservation__any
+#: model:ir.model.fields.selection,name:bizfinder.selection__bizfinder_preset__f_tax__any
+#: model:ir.model.fields.selection,name:bizfinder.selection__bizfinder_preset__moms__any
+#: model:ir.model.fields.selection,name:bizfinder.selection__bizfinder_search__accountant_obligation__any
+#: model:ir.model.fields.selection,name:bizfinder.selection__bizfinder_search__accountant_reservation__any
+#: model:ir.model.fields.selection,name:bizfinder.selection__bizfinder_search__f_tax__any
+#: model:ir.model.fields.selection,name:bizfinder.selection__bizfinder_search__moms__any
+msgid "Any"
+msgstr "Alla"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__total_assets
+msgid "Assets"
+msgstr "Tillgångar"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_filter_mixin__accountant_obligation
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_preset__accountant_obligation
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_search__accountant_obligation
+msgid "Auditor obligation"
+msgstr "Revisionsplikt"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__accountant_obligation
+#: model:ir.model.fields.selection,name:bizfinder.selection__bizfinder_filter_mixin__accountant_obligation__yes
+#: model:ir.model.fields.selection,name:bizfinder.selection__bizfinder_preset__accountant_obligation__yes
+#: model:ir.model.fields.selection,name:bizfinder.selection__bizfinder_search__accountant_obligation__yes
+msgid "Auditor required"
+msgstr "Revisor krävs"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_filter_mixin__accountant_reservation
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_preset__accountant_reservation
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_search__accountant_reservation
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_preset_form
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_search_form
+msgid "Auditor reservation"
+msgstr "Revisorsanmärkning"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_filter_mixin__reservation_date_from
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_preset__reservation_date_from
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_search__reservation_date_from
+msgid "Auditor reservation from"
+msgstr "Revisorsanmärkning från"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_filter_mixin__reservation_date_to
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_preset__reservation_date_to
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_search__reservation_date_to
+msgid "Auditor reservation to"
+msgstr "Revisorsanmärkning till"
+
+#. module: bizfinder
+#: model:ir.model.fields,help:bizfinder.field_res_company__bizfinder_api_url
+#: model:ir.model.fields,help:bizfinder.field_res_config_settings__bizfinder_api_url
+msgid "Base URL for the Bizfinder service used by this company."
+msgstr "Bas-URL för Bizfinder-tjänsten som används av detta företag."
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_reveal_confirm__reveal_count
+msgid "Billable reveals"
+msgstr "Debiterbara upplåsningar"
+
+#. module: bizfinder
+#: model:ir.actions.act_window,name:bizfinder.action_bizfinder_search
+#: model:ir.ui.menu,name:bizfinder.menu_bizfinder_search
+#: model_terms:ir.ui.view,arch_db:bizfinder.res_config_settings_view_form_bizfinder
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_crm_lead_form_bizfinder
+msgid "Bizfinder"
+msgstr "Bizfinder"
+
+#. module: bizfinder
+#: model_terms:ir.ui.view,arch_db:bizfinder.res_config_settings_view_form_bizfinder
+msgid "Bizfinder API"
+msgstr "Bizfinder API"
+
+#. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/models/bizfinder_client.py:0
+msgid "Bizfinder API %(method)s %(url)s failed: %(status)s %(detail)s"
+msgstr "Bizfinder-API %(method)s %(url)s misslyckades: %(status)s %(detail)s"
+
+#. module: bizfinder
+#: model:ir.model,name:bizfinder.model_bizfinder_client
+msgid "Bizfinder API Client"
+msgstr "Bizfinder API-klient"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_res_company__bizfinder_api_url
+#: model:ir.model.fields,field_description:bizfinder.field_res_config_settings__bizfinder_api_url
+msgid "Bizfinder API URL"
+msgstr "Bizfinder API-URL"
+
+#. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/models/bizfinder_client.py:0
+msgid "Bizfinder API URL is not configured."
+msgstr "Bizfinder API-URL är inte konfigurerad."
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_res_company__bizfinder_access_token
+#: model:ir.model.fields,field_description:bizfinder.field_res_config_settings__bizfinder_access_token
+msgid "Bizfinder Access Token"
+msgstr "Bizfinder åtkomsttoken"
+
+#. module: bizfinder
+#: model:ir.model,name:bizfinder.model_bizfinder_usage
+msgid "Bizfinder Billing Usage"
+msgstr "Bizfinder faktureringsanvändning"
+
+#. module: bizfinder
+#: model:ir.model,name:bizfinder.model_bizfinder_filter_mixin
+msgid "Bizfinder Filter Mixin"
+msgstr "Bizfinder filter-mixin"
+
+#. module: bizfinder
+#: model:ir.model,name:bizfinder.model_bizfinder_preset
+msgid "Bizfinder Preset"
+msgstr "Bizfinder-förinställning"
+
+#. module: bizfinder
+#: model:ir.model,name:bizfinder.model_bizfinder_result_line
+msgid "Bizfinder Result Line"
+msgstr "Bizfinder-resultatrad"
+
+#. module: bizfinder
+#: model:ir.model,name:bizfinder.model_bizfinder_reveal_confirm
+msgid "Bizfinder Reveal Billing Confirmation"
+msgstr "Bizfinder-bekräftelse av debiterbara upplåsningar"
+
+#. module: bizfinder
+#: model:ir.model,name:bizfinder.model_bizfinder_preset_save
+msgid "Bizfinder Save Preset Dialog"
+msgstr "Bizfinder-dialog för att spara förinställning"
+
+#. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/wizards/bizfinder_search.py:0
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_search_form
+msgid "Bizfinder Search"
+msgstr "Bizfinder-sökning"
+
+#. module: bizfinder
+#: model:ir.model,name:bizfinder.model_bizfinder_search
+msgid "Bizfinder Search Wizard"
+msgstr "Bizfinder-sökguide"
+
+#. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/models/bizfinder_usage.py:0
+#: model:ir.actions.server,name:bizfinder.action_bizfinder_usage_open
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_usage_form
+msgid "Bizfinder Usage"
+msgstr "Bizfinder-användning"
+
+#. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/models/bizfinder_client.py:0
+msgid "Bizfinder access token is not configured."
+msgstr "Bizfinder-åtkomsttoken är inte konfigurerad."
+
+#. module: bizfinder
+#: model:ir.model,name:bizfinder.model_bizfinder_industry
+msgid "Bizfinder industry shortcut"
+msgstr "Bizfinder-branschgenväg"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_crm_lead__bizfinder_data
+msgid "Bizfinder information"
+msgstr "Bizfinder-information"
+
+#. module: bizfinder
+#: model:ir.model,name:bizfinder.model_bizfinder_magnitude
+msgid "Bizfinder magnitude band"
+msgstr "Bizfinder-storleksintervall"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_preset__key
+msgid "Built-in key"
+msgstr "Inbyggd nyckel"
+
+#. module: bizfinder
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_preset_save_form
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_reveal_confirm_form
+msgid "Cancel"
+msgstr "Avbryt"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__cash_at_bank
+msgid "Cash and bank"
+msgstr "Kassa och bank"
+
+#. module: bizfinder
+#: model_terms:ir.ui.view,arch_db:bizfinder.res_config_settings_view_form_bizfinder
+msgid "Catalogues"
+msgstr "Kataloger"
+
+#. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/models/bizfinder_settings.py:0
+msgid "Catalogues refreshed from the API."
+msgstr "Katalogerna har uppdaterats från API:et."
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__city
+msgid "City"
+msgstr "Ort"
+
+#. module: bizfinder
+#. odoo-javascript
+#: code:addons/bizfinder/static/src/js/bizfinder_search_form.js:0
+msgid "Clear preset"
+msgstr "Rensa förinställning"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_usage__client_id
+msgid "Client"
+msgstr "Klient"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_legal_form__code
+msgid "Code"
+msgstr "Kod"
+
+#. module: bizfinder
+#: model:ir.model.fields,help:bizfinder.field_bizfinder_magnitude__bucket_keys
+msgid ""
+"Comma-separated API enum keys this magnitude expands to (e.g. '5-9 "
+"anställda,10-19 anställda')."
+msgstr ""
+"Kommaseparerade API-nycklar som detta intervall expanderar till (t.ex. '5-9 "
+"anställda,10-19 anställda')."
+
+#. module: bizfinder
+#: model:ir.model.fields,help:bizfinder.field_bizfinder_industry__sni_prefixes
+msgid "Comma-separated SNI prefixes (e.g. '41,43' for construction)."
+msgstr "Kommaseparerade SNI-prefix (t.ex. '41,43' för byggverksamhet)."
+
+#. module: bizfinder
+#: model:ir.model.fields,help:bizfinder.field_bizfinder_filter_mixin__zip_prefixes
+#: model:ir.model.fields,help:bizfinder.field_bizfinder_preset__zip_prefixes
+#: model:ir.model.fields,help:bizfinder.field_bizfinder_search__zip_prefixes
+msgid ""
+"Comma-separated postnummer-prefix (1–5 digits). Matches if any of "
+"postal/registered/visiting postnummer starts with one of them."
+msgstr ""
+"Kommaseparerade postnummerprefix (1–5 siffror). Matchar om något av post-, "
+"registrerings- eller besöksadressens postnummer börjar med ett av dem."
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_community__community_code
+msgid "Community code"
+msgstr "Kommunkod"
+
+#. module: bizfinder
+#: model:ir.model,name:bizfinder.model_res_company
+msgid "Companies"
+msgstr "Företag"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_preset__company_id
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__name
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_preset_form
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_search_form
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_crm_lead_form_bizfinder
+msgid "Company"
+msgstr "Företag"
+
+#. module: bizfinder
+#: model:ir.model,name:bizfinder.model_res_config_settings
+msgid "Config Settings"
+msgstr "Inställningar"
+
+#. module: bizfinder
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_reveal_confirm_form
+msgid "Confirm Billable Reveals"
+msgstr "Bekräfta debiterbara upplåsningar"
+
+#. module: bizfinder
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_reveal_confirm_form
+msgid "Confirm and create leads"
+msgstr "Bekräfta och skapa kundämnen"
+
+#. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/wizards/bizfinder_search.py:0
+msgid "Confirm billable reveals"
+msgstr "Bekräfta debiterbara upplåsningar"
+
+#. module: bizfinder
+#: model_terms:ir.ui.view,arch_db:bizfinder.res_config_settings_view_form_bizfinder
+msgid "Connection"
+msgstr "Anslutning"
+
+#. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/models/bizfinder_settings.py:0
+msgid "Connection to the Bizfinder service succeeded."
+msgstr "Anslutningen till Bizfinder-tjänsten lyckades."
+
+#. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/models/bizfinder_client.py:0
+msgid "Could not reach Bizfinder API %(url)s: %(error)s"
+msgstr "Kunde inte nå Bizfinder-API:et %(url)s: %(error)s"
+
+#. module: bizfinder
+#: model:ir.model,website_form_label:bizfinder.model_crm_lead
+msgid "Create an Opportunity"
+msgstr "Skapa en möjlighet"
+
+#. module: bizfinder
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_search_form
+msgid "Create lead"
+msgstr "Skapa kundämne"
+
+#. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/wizards/bizfinder_search.py:0
+msgid "Created Bizfinder Leads"
+msgstr "Skapade Bizfinder-kundämnen"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_community__create_uid
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_industry__create_uid
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_legal_form__create_uid
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_magnitude__create_uid
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_preset__create_uid
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_preset_save__create_uid
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_region__create_uid
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__create_uid
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_reveal_confirm__create_uid
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_search__create_uid
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_usage__create_uid
+msgid "Created by"
+msgstr "Skapad av"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_community__create_date
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_industry__create_date
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_legal_form__create_date
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_magnitude__create_date
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_preset__create_date
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_preset_save__create_date
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_region__create_date
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__create_date
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_reveal_confirm__create_date
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_search__create_date
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_usage__create_date
+msgid "Created on"
+msgstr "Skapad den"
+
+#. module: bizfinder
+#: model:ir.model.fields,help:bizfinder.field_bizfinder_preset__industry_ids
+#: model:ir.model.fields,help:bizfinder.field_bizfinder_search__industry_ids
+msgid "Curated industry shortcuts. Each expands to its SNI prefixes."
+msgstr "Utvalda branschgenvägar. Var och en expanderar till sina SNI-prefix."
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_reveal_confirm__currency
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_search__billing_currency
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_usage__currency
+msgid "Currency"
+msgstr "Valuta"
+
+#. module: bizfinder
+#: model:ir.model.fields,help:bizfinder.field_res_company__bizfinder_access_token
+#: model:ir.model.fields,help:bizfinder.field_res_config_settings__bizfinder_access_token
+msgid "Customer tenant token issued by the Bizfinder service."
+msgstr "Kundtoken utfärdad av Bizfinder-tjänsten."
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_usage__date_from
+msgid "Date From"
+msgstr "Datum från"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_usage__date_to
+msgid "Date To"
+msgstr "Datum till"
+
+#. module: bizfinder
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_preset_form
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_search_form
+msgid "Dates"
+msgstr "Datum"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_preset__description
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_preset_save__description
+msgid "Description"
+msgstr "Beskrivning"
+
+#. module: bizfinder
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_search_form
+msgid "Details"
+msgstr "Detaljer"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__director_role
+#: model:ir.model.fields,field_description:bizfinder.field_crm_lead__company_director_role
+msgid "Director role"
+msgstr "Befattning"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_client__display_name
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_community__display_name
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_filter_mixin__display_name
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_industry__display_name
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_legal_form__display_name
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_magnitude__display_name
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_preset__display_name
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_preset_save__display_name
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_region__display_name
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__display_name
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_reveal_confirm__display_name
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_search__display_name
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_usage__display_name
+#: model:ir.model.fields,field_description:bizfinder.field_crm_lead__display_name
+#: model:ir.model.fields,field_description:bizfinder.field_res_company__display_name
+#: model:ir.model.fields,field_description:bizfinder.field_res_config_settings__display_name
+msgid "Display Name"
+msgstr "Visningsnamn"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_preset__employee_magnitude_ids
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__employees
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_search__employee_magnitude_ids
+#: model:ir.model.fields.selection,name:bizfinder.selection__bizfinder_magnitude__kind__employees
+msgid "Employees"
+msgstr "Anställda"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_crm_lead__company_employees
+msgid "Employees (bucket)"
+msgstr "Anställda (intervall)"
+
+#. module: bizfinder
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_preset_form
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_search_form
+msgid "Employees (exact)"
+msgstr "Anställda (exakt)"
+
+#. module: bizfinder
+#: model:bizfinder.magnitude,name:bizfinder.magnitude_employees_enterprise
+msgid "Enterprise (1000+)"
+msgstr "Mycket stort (1000+)"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__total_equity
+msgid "Equity"
+msgstr "Eget kapital"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_search__estimated_reveal_total
+msgid "Estimated cost"
+msgstr "Beräknad kostnad"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_reveal_confirm__estimated_total
+msgid "Estimated total"
+msgstr "Beräknat totalbelopp"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_filter_mixin__f_tax
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_preset__f_tax
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_search__f_tax
+msgid "F-tax"
+msgstr "F-skatt"
+
+#. module: bizfinder
+#: model:ir.model.fields.selection,name:bizfinder.selection__bizfinder_filter_mixin__f_tax__yes
+#: model:ir.model.fields.selection,name:bizfinder.selection__bizfinder_preset__f_tax__yes
+#: model:ir.model.fields.selection,name:bizfinder.selection__bizfinder_search__f_tax__yes
+msgid "F-tax registered"
+msgstr "Registrerad för F-skatt"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__fax
+msgid "Fax"
+msgstr "Fax"
+
+#. module: bizfinder
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_preset_form
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_search_form
+msgid "Financials & ratios"
+msgstr "Ekonomi & nyckeltal"
+
+#. module: bizfinder
+#: model:ir.model.fields,help:bizfinder.field_bizfinder_search__employee_magnitude_ids
+msgid ""
+"Find companies by how many people they employ. Pick one or more size bands "
+"(e.g. Small (10–49)). Leave empty to include companies of every size."
+msgstr ""
+"Hitta företag utifrån antal anställda. Välj ett eller flera "
+"storleksintervall (t.ex. Litet (10–49)). Lämna tomt för att inkludera "
+"företag av alla storlekar."
+
+#. module: bizfinder
+#: model:ir.model.fields,help:bizfinder.field_bizfinder_preset__employee_magnitude_ids
+msgid ""
+"Find companies by how many people they employ. Pick one or more size bands. "
+"Leave empty to include every size."
+msgstr ""
+"Hitta företag utifrån antal anställda. Välj ett eller flera "
+"storleksintervall. Lämna tomt för att inkludera alla storlekar."
+
+#. module: bizfinder
+#: model:ir.model.fields,help:bizfinder.field_bizfinder_search__net_sales_magnitude_ids
+msgid ""
+"Find companies by their yearly revenue. Pick one or more ranges (e.g. 1–10 "
+"Mkr). Leave empty to include companies of every size."
+msgstr ""
+"Hitta företag utifrån årsomsättning. Välj ett eller flera intervall (t.ex. "
+"1–10 Mkr). Lämna tomt för att inkludera företag av alla storlekar."
+
+#. module: bizfinder
+#: model:ir.model.fields,help:bizfinder.field_bizfinder_preset__net_sales_magnitude_ids
+msgid ""
+"Find companies by their yearly revenue. Pick one or more ranges. Leave empty"
+" to include every size."
+msgstr ""
+"Hitta företag utifrån årsomsättning. Välj ett eller flera intervall. Lämna "
+"tomt för att inkludera alla storlekar."
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__legal_entity
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_search_form
+msgid "Form"
+msgstr "Bolagsform"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__company_formed_date
+msgid "Formed"
+msgstr "Bildat"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_crm_lead__is_bizfinder_lead
+msgid "From Bizfinder"
+msgstr "Från Bizfinder"
+
+#. module: bizfinder
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_crm_lead_form_bizfinder
+msgid "Full imported information"
+msgstr "Fullständig importerad information"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__growth_pct
+#: model:ir.model.fields,field_description:bizfinder.field_crm_lead__company_growth_pct
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_preset_form
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_search_form
+msgid "Growth %"
+msgstr "Tillväxt %"
+
+#. module: bizfinder
+#: model:ir.model.fields.selection,name:bizfinder.selection__bizfinder_filter_mixin__accountant_reservation__yes
+#: model:ir.model.fields.selection,name:bizfinder.selection__bizfinder_preset__accountant_reservation__yes
+#: model:ir.model.fields.selection,name:bizfinder.selection__bizfinder_search__accountant_reservation__yes
+msgid "Has reservation"
+msgstr "Har anmärkning"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__headcount_change_pct
+msgid "Headcount growth %"
+msgstr "Personaltillväxt %"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_client__id
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_community__id
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_filter_mixin__id
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_industry__id
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_legal_form__id
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_magnitude__id
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_preset__id
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_preset_save__id
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_region__id
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__id
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_reveal_confirm__id
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_search__id
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_usage__id
+#: model:ir.model.fields,field_description:bizfinder.field_crm_lead__id
+#: model:ir.model.fields,field_description:bizfinder.field_res_company__id
+#: model:ir.model.fields,field_description:bizfinder.field_res_config_settings__id
+msgid "ID"
+msgstr "ID"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_preset__industry_ids
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_search__industry_ids
+msgid "Industries"
+msgstr "Branscher"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_industry__name
+msgid "Industry"
+msgstr "Bransch"
+
+#. module: bizfinder
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_crm_lead_form_bizfinder
+msgid "Key figures"
+msgstr "Nyckeltal"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_magnitude__kind
+msgid "Kind"
+msgstr "Typ"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_preset__alt_community_ids
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_search__alt_community_ids
+msgid "Kommun"
+msgstr "Kommun"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_magnitude__name
+msgid "Label"
+msgstr "Etikett"
+
+#. module: bizfinder
+#: model:bizfinder.magnitude,name:bizfinder.magnitude_employees_large
+msgid "Large (200–999)"
+msgstr "Stort (200–999)"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_community__write_uid
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_industry__write_uid
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_legal_form__write_uid
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_magnitude__write_uid
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_preset__write_uid
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_preset_save__write_uid
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_region__write_uid
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__write_uid
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_reveal_confirm__write_uid
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_search__write_uid
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_usage__write_uid
+msgid "Last Updated by"
+msgstr "Senast uppdaterad av"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_community__write_date
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_industry__write_date
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_legal_form__write_date
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_magnitude__write_date
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_preset__write_date
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_preset_save__write_date
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_region__write_date
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__write_date
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_reveal_confirm__write_date
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_search__write_date
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_usage__write_date
+msgid "Last Updated on"
+msgstr "Senast uppdaterad den"
+
+#. module: bizfinder
+#: model:ir.model,name:bizfinder.model_crm_lead
+msgid "Lead"
+msgstr "Kundämne"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_crm_lead__company_legal_entity
+msgid "Legal form"
+msgstr "Bolagsform"
+
+#. module: bizfinder
+#: model:ir.model.constraint,message:bizfinder.constraint_bizfinder_legal_form_code_uniq
+msgid "Legal form code must be unique."
+msgstr "Bolagsformskoden måste vara unik."
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_preset__legal_form_ids
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_search__legal_form_ids
+msgid "Legal forms"
+msgstr "Bolagsformer"
+
+#. module: bizfinder
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_preset_form
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_search_form
+msgid "Location"
+msgstr "Plats"
+
+#. module: bizfinder
+#. odoo-javascript
+#: code:addons/bizfinder/static/src/js/bizfinder_search_form.js:0
+msgid "Manage presets"
+msgstr "Hantera förinställningar"
+
+#. module: bizfinder
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_preset_form
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_search_form
+msgid ""
+"Matches if any of postal / registered / visiting ZIP starts with one of "
+"these prefixes."
+msgstr ""
+"Matchar om något av post-, registrerings- eller besöksadressens postnummer "
+"börjar med ett av dessa prefix."
+
+#. module: bizfinder
+#: model:ir.model.fields,help:bizfinder.field_bizfinder_preset__alt_community_ids
+#: model:ir.model.fields,help:bizfinder.field_bizfinder_search__alt_community_ids
+msgid "Matches registered OR visiting address kommun."
+msgstr "Matchar registrerings- ELLER besöksadressens kommun."
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_filter_mixin__employees_max
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_preset__employees_max
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_search__employees_max
+msgid "Max employees (exact)"
+msgstr "Max antal anställda (exakt)"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_filter_mixin__growth_pct_max
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_preset__growth_pct_max
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_search__growth_pct_max
+msgid "Max growth %"
+msgstr "Max tillväxt %"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_filter_mixin__net_profit_loss_max
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_preset__net_profit_loss_max
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_search__net_profit_loss_max
+msgid "Max net profit/loss (tkr)"
+msgstr "Max årets resultat (tkr)"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_filter_mixin__solidity_pct_max
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_preset__solidity_pct_max
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_search__solidity_pct_max
+msgid "Max solidity %"
+msgstr "Max soliditet %"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_filter_mixin__net_sales_max
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_preset__net_sales_max
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_search__net_sales_max
+msgid "Max turnover (tkr)"
+msgstr "Max omsättning (tkr)"
+
+#. module: bizfinder
+#: model:bizfinder.magnitude,name:bizfinder.magnitude_employees_medium
+msgid "Medium (50–199)"
+msgstr "Medelstort (50–199)"
+
+#. module: bizfinder
+#: model:bizfinder.magnitude,name:bizfinder.magnitude_employees_micro
+msgid "Micro (0–9)"
+msgstr "Mikro (0–9)"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_filter_mixin__employees_min
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_preset__employees_min
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_search__employees_min
+msgid "Min employees (exact)"
+msgstr "Min antal anställda (exakt)"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_filter_mixin__growth_pct_min
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_preset__growth_pct_min
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_search__growth_pct_min
+msgid "Min growth %"
+msgstr "Min tillväxt %"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_filter_mixin__net_profit_loss_min
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_preset__net_profit_loss_min
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_search__net_profit_loss_min
+msgid "Min net profit/loss (tkr)"
+msgstr "Min årets resultat (tkr)"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_filter_mixin__solidity_pct_min
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_preset__solidity_pct_min
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_search__solidity_pct_min
+msgid "Min solidity %"
+msgstr "Min soliditet %"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_filter_mixin__net_sales_min
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_preset__net_sales_min
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_search__net_sales_min
+msgid "Min turnover (tkr)"
+msgstr "Min omsättning (tkr)"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_search__month_usage_loaded
+msgid "Month Usage Loaded"
+msgstr "Månadsanvändning inläst"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_preset__post_community_ids
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_search__post_community_ids
+msgid "Municipalities (postal)"
+msgstr "Kommuner (postadress)"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__post_community
+#: model:ir.model.fields,field_description:bizfinder.field_crm_lead__company_post_community
+msgid "Municipality"
+msgstr "Kommun"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_community__name
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_legal_form__name
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_preset__name
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_region__name
+msgid "Name"
+msgstr "Namn"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__net_profit_loss
+#: model:ir.model.fields,field_description:bizfinder.field_crm_lead__company_net_profit_loss
+msgid "Net profit/loss"
+msgstr "Årets resultat"
+
+#. module: bizfinder
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_preset_form
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_search_form
+msgid "Net profit/loss (tkr)"
+msgstr "Årets resultat (tkr)"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__net_sales
+#: model:ir.model.fields,field_description:bizfinder.field_crm_lead__company_net_sales
+#: model:ir.model.fields.selection,name:bizfinder.selection__bizfinder_magnitude__kind__net_sales
+msgid "Net sales"
+msgstr "Nettoomsättning"
+
+#. module: bizfinder
+#: model:ir.model.fields.selection,name:bizfinder.selection__bizfinder_filter_mixin__f_tax__no
+#: model:ir.model.fields.selection,name:bizfinder.selection__bizfinder_preset__f_tax__no
+#: model:ir.model.fields.selection,name:bizfinder.selection__bizfinder_search__f_tax__no
+msgid "No F-tax"
+msgstr "Ingen F-skatt"
+
+#. module: bizfinder
+#: model:ir.model.fields.selection,name:bizfinder.selection__bizfinder_filter_mixin__moms__no
+#: model:ir.model.fields.selection,name:bizfinder.selection__bizfinder_preset__moms__no
+#: model:ir.model.fields.selection,name:bizfinder.selection__bizfinder_search__moms__no
+msgid "No VAT"
+msgstr "Ej momsregistrerad"
+
+#. module: bizfinder
+#: model:ir.model.fields.selection,name:bizfinder.selection__bizfinder_filter_mixin__accountant_obligation__no
+#: model:ir.model.fields.selection,name:bizfinder.selection__bizfinder_preset__accountant_obligation__no
+#: model:ir.model.fields.selection,name:bizfinder.selection__bizfinder_search__accountant_obligation__no
+msgid "No auditor required"
+msgstr "Ingen revisor krävs"
+
+#. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/wizards/bizfinder_search.py:0
+msgid "No companies matched your filters. Try widening them."
+msgstr "Inga företag matchade dina filter. Prova att bredda dem."
+
+#. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/wizards/bizfinder_search.py:0
+msgid "No leads were created. The selected prospects could not be revealed."
+msgstr "Inga kundämnen skapades. De valda prospekten kunde inte låsas upp."
+
+#. module: bizfinder
+#: model:ir.model.fields.selection,name:bizfinder.selection__bizfinder_filter_mixin__accountant_reservation__no
+#: model:ir.model.fields.selection,name:bizfinder.selection__bizfinder_preset__accountant_reservation__no
+#: model:ir.model.fields.selection,name:bizfinder.selection__bizfinder_search__accountant_reservation__no
+msgid "No reservation"
+msgstr "Ingen anmärkning"
+
+#. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/wizards/bizfinder_search.py:0
+msgid "No results"
+msgstr "Inga resultat"
+
+#. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/models/bizfinder_usage.py:0
+msgid "Only Sales managers can view Bizfinder billing usage."
+msgstr "Endast försäljningschefer kan se Bizfinders faktureringsanvändning."
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__operating_margin_pct
+msgid "Operating margin %"
+msgstr "Rörelsemarginal %"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__operating_result
+#: model:ir.model.fields,field_description:bizfinder.field_crm_lead__company_operating_result
+msgid "Operating result"
+msgstr "Rörelseresultat"
+
+#. module: bizfinder
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_preset_save_form
+msgid "Optional note shown when this preset is picked"
+msgstr "Valfri anteckning som visas när förinställningen väljs"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__organisation_number
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_search_form
+msgid "Org no."
+msgstr "Org.nr"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_crm_lead__company_organisation_number
+msgid "Organisation number"
+msgstr "Organisationsnummer"
+
+#. module: bizfinder
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_usage_form
+msgid "Period"
+msgstr "Period"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__phone
+msgid "Phone"
+msgstr "Telefon"
+
+#. module: bizfinder
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_search_form
+msgid ""
+"Phone, director, address and other contact details are\n"
+"                redacted in the preview and revealed only when you create\n"
+"                leads (one billable reveal per selected company)."
+msgstr ""
+"Telefon, direktör, adress och andra kontaktuppgifter är maskerade i "
+"förhandsvisningen och låses upp först när du skapar kundämnen (en debiterbar"
+" upplåsning per valt företag)."
+
+#. module: bizfinder
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_search_form
+msgid ""
+"Pick a preset to auto-fill filters, or use Save as preset to store the "
+"current ones."
+msgstr ""
+"Välj en förinställning för att fylla i filtren automatiskt, eller använd "
+"Spara som förinställning för att spara de aktuella."
+
+#. module: bizfinder
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_search_form
+msgid "Pick a preset to auto-fill filters…"
+msgstr "Välj en förinställning för att fylla i filtren automatiskt…"
+
+#. module: bizfinder
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_preset_form
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_search_form
+msgid "Pick employee bands..."
+msgstr "Välj intervall för anställda..."
+
+#. module: bizfinder
+#: model:ir.model.fields,help:bizfinder.field_bizfinder_preset__region_ids
+#: model:ir.model.fields,help:bizfinder.field_bizfinder_search__region_ids
+msgid "Pick one or more Swedish counties (län) to limit the search."
+msgstr "Välj ett eller flera län för att avgränsa sökningen."
+
+#. module: bizfinder
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_preset_form
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_search_form
+msgid "Pick one or more counties..."
+msgstr "Välj ett eller flera län..."
+
+#. module: bizfinder
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_preset_form
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_search_form
+msgid "Pick one or more industries..."
+msgstr "Välj en eller flera branscher..."
+
+#. module: bizfinder
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_preset_form
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_search_form
+msgid "Pick turnover bands..."
+msgstr "Välj omsättningsintervall..."
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__post_code
+msgid "Post Code"
+msgstr "Postnummer"
+
+#. module: bizfinder
+#: model:ir.model.fields,help:bizfinder.field_bizfinder_preset__post_community_ids
+#: model:ir.model.fields,help:bizfinder.field_bizfinder_search__post_community_ids
+msgid "Postal-address kommun. Start typing to filter."
+msgstr "Postadressens kommun. Börja skriva för att filtrera."
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_filter_mixin__zip_prefixes
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_preset__zip_prefixes
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_search__zip_prefixes
+msgid "Postkoder"
+msgstr "Postkoder"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_search__preset_id
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_preset_form
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_search_form
+msgid "Preset"
+msgstr "Förinställning"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_search__preset_description
+msgid "Preset description"
+msgstr "Beskrivning av förinställning"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_preset_save__name
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_preset_form
+msgid "Preset name"
+msgstr "Namn på förinställning"
+
+#. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/wizards/bizfinder_search.py:0
+msgid "Preset updated"
+msgstr "Förinställning uppdaterad"
+
+#. module: bizfinder
+#. odoo-javascript
+#: code:addons/bizfinder/static/src/js/bizfinder_search_form.js:0
+#: model:ir.actions.act_window,name:bizfinder.action_bizfinder_preset
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_preset_list
+msgid "Presets"
+msgstr "Förinställningar"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_reveal_confirm__price_per_reveal
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_search__price_per_reveal
+msgid "Price per reveal"
+msgstr "Pris per upplåsning"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__profit_margin_pct
+msgid "Profit margin %"
+msgstr "Vinstmarginal %"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__quick_ratio_pct
+msgid "Quick ratio %"
+msgstr "Kassalikviditet %"
+
+#. module: bizfinder
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_usage_form
+msgid "Refresh"
+msgstr "Uppdatera"
+
+#. module: bizfinder
+#: model_terms:ir.ui.view,arch_db:bizfinder.res_config_settings_view_form_bizfinder
+msgid "Refresh catalogues"
+msgstr "Uppdatera kataloger"
+
+#. module: bizfinder
+#: model_terms:ir.ui.view,arch_db:bizfinder.res_config_settings_view_form_bizfinder
+msgid "Refresh kommun, SNI, bucket and legal-form lookup tables from the API."
+msgstr ""
+"Uppdatera uppslagstabeller för kommun, SNI, intervall och bolagsform från "
+"API:et."
+
+#. module: bizfinder
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_search_form
+msgid "Reg."
+msgstr "Reg."
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_community__region_id
+msgid "Region"
+msgstr "Län"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_region__code
+msgid "Region code"
+msgstr "Länskod"
+
+#. module: bizfinder
+#: model:ir.model.constraint,message:bizfinder.constraint_bizfinder_region_code_uniq
+msgid "Region code must be unique."
+msgstr "Länskoden måste vara unik."
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_preset__region_ids
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_search__region_ids
+msgid "Regions"
+msgstr "Län"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__registration_date
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_preset_form
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_search_form
+msgid "Registered"
+msgstr "Registrerat"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_crm_lead__company_registered_address
+msgid "Registered address"
+msgstr "Registrerad adress"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_crm_lead__company_registered_city
+msgid "Registered city"
+msgstr "Registrerad ort"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_filter_mixin__registration_date_from
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_preset__registration_date_from
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_search__registration_date_from
+msgid "Registered from"
+msgstr "Registrerat från"
+
+#. module: bizfinder
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_preset_form
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_search_form
+msgid "Registered or visiting kommun..."
+msgstr "Registrerings- eller besökskommun..."
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_filter_mixin__registration_date_to
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_preset__registration_date_to
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_search__registration_date_to
+msgid "Registered to"
+msgstr "Registrerat till"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_search__result_line_ids
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_search_form
+msgid "Results"
+msgstr "Resultat"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_search__returned_count
+msgid "Returned"
+msgstr "Hämtade"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_usage__reveals
+msgid "Reveals"
+msgstr "Upplåsningar"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_search__month_reveals
+msgid "Reveals this month"
+msgstr "Upplåsningar denna månad"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_community__kommunkod
+msgid "SCB kommunkod"
+msgstr "SCB-kommunkod"
+
+#. module: bizfinder
+#: model:ir.model.constraint,message:bizfinder.constraint_bizfinder_community_kommunkod_uniq
+msgid "SCB kommunkod must be unique."
+msgstr "SCB-kommunkoden måste vara unik."
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__description
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_search_form
+msgid "SNI"
+msgstr "SNI"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_industry__sni_prefixes
+msgid "SNI prefixes"
+msgstr "SNI-prefix"
+
+#. module: bizfinder
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_preset_save_form
+msgid "Save"
+msgstr "Spara"
+
+#. module: bizfinder
+#. odoo-javascript
+#: code:addons/bizfinder/static/src/js/bizfinder_search_form.js:0
+msgid "Save current as preset"
+msgstr "Spara aktuell som förinställning"
+
+#. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/wizards/bizfinder_search.py:0
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_preset_save_form
+msgid "Save filters as preset"
+msgstr "Spara filter som förinställning"
+
+#. module: bizfinder
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_search_form
+msgid "Search"
+msgstr "Sök"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__selected
+msgid "Select"
+msgstr "Välj"
+
+#. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/wizards/bizfinder_search.py:0
+msgid "Select a preset first, then update it."
+msgstr "Välj först en förinställning och uppdatera den sedan."
+
+#. module: bizfinder
+#. odoo-javascript
+#: code:addons/bizfinder/static/src/js/bizfinder_search_form.js:0
+msgid "Select all"
+msgstr "Markera alla"
+
+#. module: bizfinder
+#. odoo-javascript
+#: code:addons/bizfinder/static/src/js/bizfinder_search_form.js:0
+msgid "Select all results"
+msgstr "Markera alla resultat"
+
+#. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/wizards/bizfinder_search.py:0
+msgid "Select at least one prospect first."
+msgstr "Välj minst ett prospekt först."
+
+#. module: bizfinder
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_reveal_confirm_form
+msgid "Selected leads"
+msgstr "Valda kundämnen"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_search__selected_reveal_count
+msgid "Selected reveals"
+msgstr "Valda upplåsningar"
+
+#. module: bizfinder
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_search_form
+msgid "Selected reveals:"
+msgstr "Valda upplåsningar:"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_industry__sequence
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_legal_form__sequence
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_magnitude__sequence
+msgid "Sequence"
+msgstr "Sekvens"
+
+#. module: bizfinder
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_preset_form
+msgid "Shown when this preset is selected"
+msgstr "Visas när denna förinställning väljs"
+
+#. module: bizfinder
+#: model:ir.model.fields,help:bizfinder.field_bizfinder_preset__description
+#: model:ir.model.fields,help:bizfinder.field_bizfinder_search__preset_description
+msgid "Shown when this preset is selected on the prospect search."
+msgstr "Visas när denna förinställning väljs i prospektsökningen."
+
+#. module: bizfinder
+#: model:bizfinder.magnitude,name:bizfinder.magnitude_employees_small
+msgid "Small (10–49)"
+msgstr "Litet (10–49)"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__solidity_pct
+#: model:ir.model.fields,field_description:bizfinder.field_crm_lead__company_solidity_pct
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_preset_form
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_search_form
+msgid "Solidity %"
+msgstr "Soliditet %"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_search__month_amount
+msgid "Spent this month"
+msgstr "Förbrukat denna månad"
+
+#. module: bizfinder
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_preset_form
+msgid "Start typing a kommun..."
+msgstr "Börja skriva en kommun..."
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__account_date_to
+#: model:ir.model.fields,field_description:bizfinder.field_crm_lead__company_account_date_to
+msgid "Statement date"
+msgstr "Bokslutsdatum"
+
+#. module: bizfinder
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_preset_form
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_search_form
+msgid "Status changed"
+msgstr "Status ändrad"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_filter_mixin__status_date_from
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_preset__status_date_from
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_search__status_date_from
+msgid "Status changed from"
+msgstr "Status ändrad från"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_filter_mixin__status_date_to
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_preset__status_date_to
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_search__status_date_to
+msgid "Status changed to"
+msgstr "Status ändrad till"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__status_date
+msgid "Status date"
+msgstr "Statusdatum"
+
+#. module: bizfinder
+#: model:ir.model,name:bizfinder.model_bizfinder_community
+msgid "Swedish kommun"
+msgstr "Svensk kommun"
+
+#. module: bizfinder
+#: model:ir.model,name:bizfinder.model_bizfinder_legal_form
+msgid "Swedish legal form"
+msgstr "Svensk bolagsform"
+
+#. module: bizfinder
+#: model:ir.model,name:bizfinder.model_bizfinder_region
+msgid "Swedish region (län)"
+msgstr "Svenskt län"
+
+#. module: bizfinder
+#: model_terms:ir.ui.view,arch_db:bizfinder.res_config_settings_view_form_bizfinder
+msgid "Test connection"
+msgstr "Testa anslutning"
+
+#. module: bizfinder
+#. odoo-python
+#: code:addons/bizfinder/wizards/bizfinder_search.py:0
+msgid "The companies that matched are already in your CRM."
+msgstr "Företagen som matchade finns redan i ditt CRM."
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_search__month_usage_display
+msgid "This month"
+msgstr "Denna månad"
+
+#. module: bizfinder
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_search_form
+msgid "This month:"
+msgstr "Denna månad:"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__director_name
+#: model:ir.model.fields,field_description:bizfinder.field_crm_lead__company_director_name
+msgid "Top director"
+msgstr "Högsta befattningshavare"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_search__hit_count
+msgid "Total matches"
+msgstr "Totalt antal träffar"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_reveal_confirm__estimated_total_display
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_reveal_confirm_form
+msgid "Total price"
+msgstr "Totalpris"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_preset__net_sales_magnitude_ids
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__turn_over
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_search__net_sales_magnitude_ids
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_search_form
+msgid "Turnover"
+msgstr "Omsättning"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_crm_lead__company_turnover
+msgid "Turnover (bucket)"
+msgstr "Omsättning (intervall)"
+
+#. module: bizfinder
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_preset_form
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_search_form
+msgid "Turnover (tkr)"
+msgstr "Omsättning (tkr)"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__number_of_units
+#: model:ir.model.fields,field_description:bizfinder.field_crm_lead__company_number_of_units
+msgid "Units"
+msgstr "Arbetsställen"
+
+#. module: bizfinder
+#. odoo-javascript
+#: code:addons/bizfinder/static/src/js/bizfinder_search_form.js:0
+msgid "Update current preset"
+msgstr "Uppdatera aktuell förinställning"
+
+#. module: bizfinder
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_usage_form
+msgid "Usage"
+msgstr "Användning"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__vat_number
+msgid "VAT"
+msgstr "Momsnr"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_filter_mixin__moms
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_preset__moms
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_search__moms
+msgid "VAT (Moms)"
+msgstr "Moms"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_crm_lead__company_vat_number
+msgid "VAT number"
+msgstr "Momsregistreringsnummer"
+
+#. module: bizfinder
+#: model:ir.model.fields.selection,name:bizfinder.selection__bizfinder_filter_mixin__moms__yes
+#: model:ir.model.fields.selection,name:bizfinder.selection__bizfinder_preset__moms__yes
+#: model:ir.model.fields.selection,name:bizfinder.selection__bizfinder_search__moms__yes
+msgid "VAT registered"
+msgstr "Momsregistrerad"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__visiting_post_code
+#: model:ir.model.fields,field_description:bizfinder.field_crm_lead__company_visiting_post_code
+msgid "Visiting ZIP"
+msgstr "Besökspostnummer"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__visiting_address
+msgid "Visiting addr."
+msgstr "Besöksadress"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_crm_lead__company_visiting_address
+msgid "Visiting address"
+msgstr "Besöksadress"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__visiting_city
+#: model:ir.model.fields,field_description:bizfinder.field_crm_lead__company_visiting_city
+msgid "Visiting city"
+msgstr "Besöksort"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__visiting_community
+#: model:ir.model.fields,field_description:bizfinder.field_crm_lead__company_visiting_community
+msgid "Visiting municipality"
+msgstr "Besökskommun"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_preset_save__wizard_id
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_result_line__wizard_id
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_reveal_confirm__wizard_id
+msgid "Wizard"
+msgstr "Guide"
+
+#. module: bizfinder
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_search_form
+msgid "Zip"
+msgstr "Postnr"
+
+#. module: bizfinder
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_preset_form
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_preset_save_form
+msgid "e.g. Growing IT consultancies in Skåne"
+msgstr "t.ex. Växande IT-konsultbolag i Skåne"
