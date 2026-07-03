@@ -3,28 +3,27 @@
   <record id="res_config_settings_view_form_bizfinder" model="ir.ui.view">
     <field name="name">res.config.settings.view.form.bizfinder</field>
     <field name="model">res.config.settings</field>
-    <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+    <field name="inherit_id" ref="crm.res_config_settings_view_form"/>
     <field name="arch" type="xml">
-      <xpath expr="//form" position="inside">
-        <app data-string="Bizfinder" string="Bizfinder" name="bizfinder" groups="sales_team.group_sale_manager">
-          <block title="Bizfinder API" name="bizfinder_api">
-            <setting id="bizfinder_api_url_setting" string="API URL">
-              <field name="bizfinder_api_url"/>
-            </setting>
-            <setting id="bizfinder_access_token_setting" string="Access Token">
-              <field name="bizfinder_access_token" password="True"/>
-            </setting>
-            <setting id="bizfinder_test_connection_setting" string="Connection">
-              <button name="action_bizfinder_test_connection"
-                      string="Test connection" type="object" class="btn-secondary"/>
-            </setting>
-            <setting id="bizfinder_sync_setting" string="Catalogues"
-                     help="Refresh kommun, SNI, bucket and legal-form lookup tables from the API.">
-              <button name="action_bizfinder_sync_catalogues"
-                      string="Refresh catalogues" type="object" class="btn-primary"/>
-            </setting>
-          </block>
-        </app>
+      <xpath expr="//app[@name='crm']" position="inside">
+        <block title="Bizfinder" name="bizfinder_api"
+               help="Creditsafe-backed lead generation. The service URL is built in; only the access token issued to your company is needed.">
+          <!-- The service URL is built in (DEFAULT_BIZFINDER_API_URL);
+               customers only paste their access token. The per-company
+               URL field still exists as a hidden dev/test override. -->
+          <setting id="bizfinder_access_token_setting" string="Access Token">
+            <field name="bizfinder_access_token" password="True"/>
+          </setting>
+          <setting id="bizfinder_test_connection_setting" string="Connection">
+            <button name="action_bizfinder_test_connection"
+                    string="Test connection" type="object" class="btn-secondary"/>
+          </setting>
+          <setting id="bizfinder_sync_setting" string="Catalogues"
+                   help="Refresh kommun, SNI, bucket and legal-form lookup tables from the API.">
+            <button name="action_bizfinder_sync_catalogues"
+                    string="Refresh catalogues" type="object" class="btn-primary"/>
+          </setting>
+        </block>
       </xpath>
     </field>
   </record>
