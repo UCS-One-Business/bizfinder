@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+  <!-- Creditsafe legal-form groups, mirrored from the service's
+       LEGAL_FORMS constant (bizfinder_api/filters.py). -->
+  <record id="legal_form_ab" model="bizfinder.legal.form"><field name="code">AB</field><field name="name">Aktiebolag</field><field name="sequence">10</field></record>
+  <record id="legal_form_ef" model="bizfinder.legal.form"><field name="code">EF</field><field name="name">Enskild firma</field><field name="sequence">20</field></record>
+  <record id="legal_form_hb_kb" model="bizfinder.legal.form"><field name="code">HB/KB</field><field name="name">Handels-/kommanditbolag</field><field name="sequence">30</field></record>
+  <record id="legal_form_ovr" model="bizfinder.legal.form"><field name="code">OVR</field><field name="name">Övriga</field><field name="sequence">40</field></record>
+</odoo>

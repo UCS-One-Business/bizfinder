@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+  <!-- Full SNI 2007 division taxonomy, mirrored from the service's own
+       SNI_DIVISIONS constant (bizfinder_api/filters.py) — the API /sni
+       endpoint intersects the same list with the ingested data. Name
+       format "NN Name" matches what sync_catalogues writes. -->
+  <record id="industry_sni_00" model="bizfinder.industry"><field name="name">00 Okänd huvudnäring</field><field name="sequence">10</field><field name="sni_prefixes">00</field></record>
+  <record id="industry_sni_01" model="bizfinder.industry"><field name="name">01 Jordbruk och jakt samt service i anslutning härtill</field><field name="sequence">20</field><field name="sni_prefixes">01</field></record>
+  <record id="industry_sni_02" model="bizfinder.industry"><field name="name">02 Skogsbruk</field><field name="sequence">30</field><field name="sni_prefixes">02</field></record>
+  <record id="industry_sni_03" model="bizfinder.industry"><field name="name">03 Fiske och vattenbruk</field><field name="sequence">40</field><field name="sni_prefixes">03</field></record>
+  <record id="industry_sni_05" model="bizfinder.industry"><field name="name">05 Kolutvinning</field><field name="sequence">50</field><field name="sni_prefixes">05</field></record>
+  <record id="industry_sni_06" model="bizfinder.industry"><field name="name">06 Utvinning av råpetroleum och naturgas</field><field name="sequence">60</field><field name="sni_prefixes">06</field></record>
+  <record id="industry_sni_07" model="bizfinder.industry"><field name="name">07 Utvinning av metallmalmer</field><field name="sequence">70</field><field name="sni_prefixes">07</field></record>
+  <record id="industry_sni_08" model="bizfinder.industry"><field name="name">08 Annan utvinning av mineral</field><field name="sequence">80</field><field name="sni_prefixes">08</field></record>
+  <record id="industry_sni_09" model="bizfinder.industry"><field name="name">09 Service till utvinning</field><field name="sequence">90</field><field name="sni_prefixes">09</field></record>
+  <record id="industry_sni_10" model="bizfinder.industry"><field name="name">10 Livsmedelsframställning</field><field name="sequence">100</field><field name="sni_prefixes">10</field></record>
+  <record id="industry_sni_11" model="bizfinder.industry"><field name="name">11 Framställning av drycker</field><field name="sequence">110</field><field name="sni_prefixes">11</field></record>
+  <record id="industry_sni_12" model="bizfinder.industry"><field name="name">12 Tobaksvarutillverkning</field><field name="sequence">120</field><field name="sni_prefixes">12</field></record>
+  <record id="industry_sni_13" model="bizfinder.industry"><field name="name">13 Tillverkning av textilier</field><field name="sequence">130</field><field name="sni_prefixes">13</field></record>
+  <record id="industry_sni_14" model="bizfinder.industry"><field name="name">14 Tillverkning av kläder</field><field name="sequence">140</field><field name="sni_prefixes">14</field></record>
+  <record id="industry_sni_15" model="bizfinder.industry"><field name="name">15 Tillverkning av läder, läder- och skinnvaror m.m.</field><field name="sequence">150</field><field name="sni_prefixes">15</field></record>
+  <record id="industry_sni_16" model="bizfinder.industry"><field name="name">16 Tillverkning av trä och varor av trä och kork, utom möbler</field><field name="sequence">160</field><field name="sni_prefixes">16</field></record>
+  <record id="industry_sni_17" model="bizfinder.industry"><field name="name">17 Pappers- och pappersvarutillverkning</field><field name="sequence">170</field><field name="sni_prefixes">17</field></record>
+  <record id="industry_sni_18" model="bizfinder.industry"><field name="name">18 Grafisk produktion och reproduktion av inspelningar</field><field name="sequence">180</field><field name="sni_prefixes">18</field></record>
+  <record id="industry_sni_19" model="bizfinder.industry"><field name="name">19 Tillverkning av stenkolsprodukter och raffinerade petroleumprodukter</field><field name="sequence">190</field><field name="sni_prefixes">19</field></record>
+  <record id="industry_sni_20" model="bizfinder.industry"><field name="name">20 Tillverkning av kemikalier och kemiska produkter</field><field name="sequence">200</field><field name="sni_prefixes">20</field></record>
+  <record id="industry_sni_21" model="bizfinder.industry"><field name="name">21 Tillverkning av farmaceutiska basprodukter och läkemedel</field><field name="sequence">210</field><field name="sni_prefixes">21</field></record>
+  <record id="industry_sni_22" model="bizfinder.industry"><field name="name">22 Tillverkning av gummi- och plastvaror</field><field name="sequence">220</field><field name="sni_prefixes">22</field></record>
+  <record id="industry_sni_23" model="bizfinder.industry"><field name="name">23 Tillverkning av andra icke-metalliska mineraliska produkter</field><field name="sequence">230</field><field name="sni_prefixes">23</field></record>
+  <record id="industry_sni_24" model="bizfinder.industry"><field name="name">24 Stål- och metallframställning</field><field name="sequence">240</field><field name="sni_prefixes">24</field></record>
+  <record id="industry_sni_25" model="bizfinder.industry"><field name="name">25 Tillverkning av metallvaror utom maskiner och apparater</field><field name="sequence">250</field><field name="sni_prefixes">25</field></record>
+  <record id="industry_sni_26" model="bizfinder.industry"><field name="name">26 Tillverkning av datorer, elektronikvaror och optik</field><field name="sequence">260</field><field name="sni_prefixes">26</field></record>
+  <record id="industry_sni_27" model="bizfinder.industry"><field name="name">27 Tillverkning av elapparatur</field><field name="sequence">270</field><field name="sni_prefixes">27</field></record>
+  <record id="industry_sni_28" model="bizfinder.industry"><field name="name">28 Tillverkning av övriga maskiner</field><field name="sequence">280</field><field name="sni_prefixes">28</field></record>
+  <record id="industry_sni_29" model="bizfinder.industry"><field name="name">29 Tillverkning av motorfordon, släpfordon och påhängsvagnar</field><field name="sequence">290</field><field name="sni_prefixes">29</field></record>
+  <record id="industry_sni_30" model="bizfinder.industry"><field name="name">30 Tillverkning av andra transportmedel</field><field name="sequence">300</field><field name="sni_prefixes">30</field></record>
+  <record id="industry_sni_31" model="bizfinder.industry"><field name="name">31 Tillverkning av möbler</field><field name="sequence">310</field><field name="sni_prefixes">31</field></record>
+  <record id="industry_sni_32" model="bizfinder.industry"><field name="name">32 Annan tillverkning</field><field name="sequence">320</field><field name="sni_prefixes">32</field></record>
+  <record id="industry_sni_33" model="bizfinder.industry"><field name="name">33 Reparation och installation av maskiner och apparater</field><field name="sequence">330</field><field name="sni_prefixes">33</field></record>
+  <record id="industry_sni_35" model="bizfinder.industry"><field name="name">35 Försörjning av el, gas, värme och kyla</field><field name="sequence">340</field><field name="sni_prefixes">35</field></record>
+  <record id="industry_sni_36" model="bizfinder.industry"><field name="name">36 Vattenförsörjning</field><field name="sequence">350</field><field name="sni_prefixes">36</field></record>
+  <record id="industry_sni_37" model="bizfinder.industry"><field name="name">37 Avloppsrening</field><field name="sequence">360</field><field name="sni_prefixes">37</field></record>
+  <record id="industry_sni_38" model="bizfinder.industry"><field name="name">38 Avfallshantering och återvinning</field><field name="sequence">370</field><field name="sni_prefixes">38</field></record>
+  <record id="industry_sni_39" model="bizfinder.industry"><field name="name">39 Sanering, efterbehandling av jord och vatten samt annan verksamhet för föroreningsbekämpning</field><field name="sequence">380</field><field name="sni_prefixes">39</field></record>
+  <record id="industry_sni_41" model="bizfinder.industry"><field name="name">41 Byggande av hus</field><field name="sequence">390</field><field name="sni_prefixes">41</field></record>
+  <record id="industry_sni_42" model="bizfinder.industry"><field name="name">42 Anläggningsarbeten</field><field name="sequence">400</field><field name="sni_prefixes">42</field></record>
+  <record id="industry_sni_43" model="bizfinder.industry"><field name="name">43 Specialiserad bygg- och anläggningsverksamhet</field><field name="sequence">410</field><field name="sni_prefixes">43</field></record>
+  <record id="industry_sni_45" model="bizfinder.industry"><field name="name">45 Handel samt reparation av motorfordon och motorcyklar</field><field name="sequence">420</field><field name="sni_prefixes">45</field></record>
+  <record id="industry_sni_46" model="bizfinder.industry"><field name="name">46 Parti- och provisionshandel utom med motorfordon</field><field name="sequence">430</field><field name="sni_prefixes">46</field></record>
+  <record id="industry_sni_47" model="bizfinder.industry"><field name="name">47 Detaljhandel utom med motorfordon och motorcyklar</field><field name="sequence">440</field><field name="sni_prefixes">47</field></record>
+  <record id="industry_sni_49" model="bizfinder.industry"><field name="name">49 Landtransport; transport i rörsystem</field><field name="sequence">450</field><field name="sni_prefixes">49</field></record>
+  <record id="industry_sni_50" model="bizfinder.industry"><field name="name">50 Sjötransport</field><field name="sequence">460</field><field name="sni_prefixes">50</field></record>
+  <record id="industry_sni_51" model="bizfinder.industry"><field name="name">51 Lufttransport</field><field name="sequence">470</field><field name="sni_prefixes">51</field></record>
+  <record id="industry_sni_52" model="bizfinder.industry"><field name="name">52 Magasinering och stödtjänster till transport</field><field name="sequence">480</field><field name="sni_prefixes">52</field></record>
+  <record id="industry_sni_53" model="bizfinder.industry"><field name="name">53 Post- och kurirverksamhet</field><field name="sequence">490</field><field name="sni_prefixes">53</field></record>
+  <record id="industry_sni_55" model="bizfinder.industry"><field name="name">55 Hotell- och logiverksamhet</field><field name="sequence">500</field><field name="sni_prefixes">55</field></record>
+  <record id="industry_sni_56" model="bizfinder.industry"><field name="name">56 Restaurang-, catering- och barverksamhet</field><field name="sequence">510</field><field name="sni_prefixes">56</field></record>
+  <record id="industry_sni_58" model="bizfinder.industry"><field name="name">58 Förlagsverksamhet</field><field name="sequence">520</field><field name="sni_prefixes">58</field></record>
+  <record id="industry_sni_59" model="bizfinder.industry"><field name="name">59 Film-, video- och tv-programverksamhet, ljudinspelningar m.m.</field><field name="sequence">530</field><field name="sni_prefixes">59</field></record>
+  <record id="industry_sni_60" model="bizfinder.industry"><field name="name">60 Planering och sändning av program</field><field name="sequence">540</field><field name="sni_prefixes">60</field></record>
+  <record id="industry_sni_61" model="bizfinder.industry"><field name="name">61 Telekommunikation</field><field name="sequence">550</field><field name="sni_prefixes">61</field></record>
+  <record id="industry_sni_62" model="bizfinder.industry"><field name="name">62 Dataprogrammering, datakonsultverksamhet o.d.</field><field name="sequence">560</field><field name="sni_prefixes">62</field></record>
+  <record id="industry_sni_63" model="bizfinder.industry"><field name="name">63 Informationstjänster</field><field name="sequence">570</field><field name="sni_prefixes">63</field></record>
+  <record id="industry_sni_64" model="bizfinder.industry"><field name="name">64 Finansiella tjänster utom försäkring och pensionsfondsverksamhet</field><field name="sequence">580</field><field name="sni_prefixes">64</field></record>
+  <record id="industry_sni_65" model="bizfinder.industry"><field name="name">65 Försäkring, återförsäkring och pensionsfondsverksamhet</field><field name="sequence">590</field><field name="sni_prefixes">65</field></record>
+  <record id="industry_sni_66" model="bizfinder.industry"><field name="name">66 Stödtjänster till finansiella tjänster och försäkring</field><field name="sequence">600</field><field name="sni_prefixes">66</field></record>
+  <record id="industry_sni_68" model="bizfinder.industry"><field name="name">68 Fastighetsverksamhet</field><field name="sequence">610</field><field name="sni_prefixes">68</field></record>
+  <record id="industry_sni_69" model="bizfinder.industry"><field name="name">69 Juridisk och ekonomisk konsultverksamhet</field><field name="sequence">620</field><field name="sni_prefixes">69</field></record>
+  <record id="industry_sni_70" model="bizfinder.industry"><field name="name">70 Verksamheter som utövas av huvudkontor; konsulttjänster till företag</field><field name="sequence">630</field><field name="sni_prefixes">70</field></record>
+  <record id="industry_sni_71" model="bizfinder.industry"><field name="name">71 Arkitekt- och teknisk konsultverksamhet; teknisk provning och analys</field><field name="sequence">640</field><field name="sni_prefixes">71</field></record>
+  <record id="industry_sni_72" model="bizfinder.industry"><field name="name">72 Vetenskaplig forskning och utveckling</field><field name="sequence">650</field><field name="sni_prefixes">72</field></record>
+  <record id="industry_sni_73" model="bizfinder.industry"><field name="name">73 Reklam och marknadsundersökning</field><field name="sequence">660</field><field name="sni_prefixes">73</field></record>
+  <record id="industry_sni_74" model="bizfinder.industry"><field name="name">74 Annan verksamhet inom juridik, ekonomi, vetenskap och teknik</field><field name="sequence">670</field><field name="sni_prefixes">74</field></record>
+  <record id="industry_sni_75" model="bizfinder.industry"><field name="name">75 Veterinärverksamhet</field><field name="sequence">680</field><field name="sni_prefixes">75</field></record>
+  <record id="industry_sni_77" model="bizfinder.industry"><field name="name">77 Uthyrning och leasing</field><field name="sequence">690</field><field name="sni_prefixes">77</field></record>
+  <record id="industry_sni_78" model="bizfinder.industry"><field name="name">78 Arbetsförmedling, bemanning och andra personalrelaterade tjänster</field><field name="sequence">700</field><field name="sni_prefixes">78</field></record>
+  <record id="industry_sni_79" model="bizfinder.industry"><field name="name">79 Resebyrå- och researrangörsverksamhet och andra resetjänster</field><field name="sequence">710</field><field name="sni_prefixes">79</field></record>
+  <record id="industry_sni_80" model="bizfinder.industry"><field name="name">80 Säkerhets- och bevakningsverksamhet</field><field name="sequence">720</field><field name="sni_prefixes">80</field></record>
+  <record id="industry_sni_81" model="bizfinder.industry"><field name="name">81 Fastighetsservice samt skötsel och underhåll av grönytor</field><field name="sequence">730</field><field name="sni_prefixes">81</field></record>
+  <record id="industry_sni_82" model="bizfinder.industry"><field name="name">82 Kontorstjänster och andra företagstjänster</field><field name="sequence">740</field><field name="sni_prefixes">82</field></record>
+  <record id="industry_sni_84" model="bizfinder.industry"><field name="name">84 Offentlig förvaltning och försvar; obligatorisk socialförsäkring</field><field name="sequence">750</field><field name="sni_prefixes">84</field></record>
+  <record id="industry_sni_85" model="bizfinder.industry"><field name="name">85 Utbildning</field><field name="sequence">760</field><field name="sni_prefixes">85</field></record>
+  <record id="industry_sni_86" model="bizfinder.industry"><field name="name">86 Hälso- och sjukvård</field><field name="sequence">770</field><field name="sni_prefixes">86</field></record>
+  <record id="industry_sni_87" model="bizfinder.industry"><field name="name">87 Vård och omsorg med boende</field><field name="sequence">780</field><field name="sni_prefixes">87</field></record>
+  <record id="industry_sni_88" model="bizfinder.industry"><field name="name">88 Öppna sociala insatser</field><field name="sequence">790</field><field name="sni_prefixes">88</field></record>
+  <record id="industry_sni_90" model="bizfinder.industry"><field name="name">90 Konstnärlig och kulturell verksamhet samt underhållning</field><field name="sequence">800</field><field name="sni_prefixes">90</field></record>
+  <record id="industry_sni_91" model="bizfinder.industry"><field name="name">91 Biblioteks-, arkiv- och museiverksamhet m.m.</field><field name="sequence">810</field><field name="sni_prefixes">91</field></record>
+  <record id="industry_sni_92" model="bizfinder.industry"><field name="name">92 Spel- och vadhållningsverksamhet</field><field name="sequence">820</field><field name="sni_prefixes">92</field></record>
+  <record id="industry_sni_93" model="bizfinder.industry"><field name="name">93 Sport-, fritids- och nöjesverksamhet</field><field name="sequence">830</field><field name="sni_prefixes">93</field></record>
+  <record id="industry_sni_94" model="bizfinder.industry"><field name="name">94 Intressebevakning; religiös verksamhet</field><field name="sequence">840</field><field name="sni_prefixes">94</field></record>
+  <record id="industry_sni_95" model="bizfinder.industry"><field name="name">95 Reparation av datorer, hushållsartiklar och personliga artiklar</field><field name="sequence">850</field><field name="sni_prefixes">95</field></record>
+  <record id="industry_sni_96" model="bizfinder.industry"><field name="name">96 Andra konsumenttjänster</field><field name="sequence">860</field><field name="sni_prefixes">96</field></record>
+  <record id="industry_sni_97" model="bizfinder.industry"><field name="name">97 Förvärvsarbete i hushåll</field><field name="sequence">870</field><field name="sni_prefixes">97</field></record>
+  <record id="industry_sni_98" model="bizfinder.industry"><field name="name">98 Hushållens produktion av varor och tjänster för eget bruk</field><field name="sequence">880</field><field name="sni_prefixes">98</field></record>
+  <record id="industry_sni_99" model="bizfinder.industry"><field name="name">99 Verksamhet vid internationella organisationer och utländska ambassader</field><field name="sequence">890</field><field name="sni_prefixes">99</field></record>
+</odoo>
