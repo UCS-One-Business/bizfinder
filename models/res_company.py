@@ -8,7 +8,9 @@ class ResCompany(models.Model):
 
     bizfinder_api_url = fields.Char(
         string='Bizfinder API URL',
-        help='Base URL for the Bizfinder service used by this company.',
+        help='Dev/test override of the built-in Bizfinder service URL. '
+             'Leave empty in production: the module targets the official '
+             'service by default and customers only configure their token.',
     )
     bizfinder_access_token = fields.Char(
         string='Bizfinder Access Token',

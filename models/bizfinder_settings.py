@@ -8,6 +8,11 @@ from odoo import _, api, fields, models
 ENV_BIZFINDER_API_URL = 'BIZFINDER_API_URL'
 ENV_BIZFINDER_ACCESS_TOKEN = 'BIZFINDER_ACCESS_TOKEN'
 
+# Production service URL, built in so customer setup is only the access
+# token. Dev/test overrides stay possible via the (UI-hidden) per-company
+# field or the BIZFINDER_API_URL env var — see get_bizfinder_credentials.
+DEFAULT_BIZFINDER_API_URL = 'https://bizfinder.se'
+
 
 def _env_value(name: str) -> str:
     return (os.getenv(name) or '').strip()
@@ -60,7 +65,11 @@ class BizfinderSettings(models.TransientModel):
     def get_bizfinder_credentials(self) -> tuple[str, str]:
         company = self.env.company.sudo()
         return (
-            (company.bizfinder_api_url or _env_value(ENV_BIZFINDER_API_URL)).strip(),
+            (
+                company.bizfinder_api_url
+                or _env_value(ENV_BIZFINDER_API_URL)
+                or DEFAULT_BIZFINDER_API_URL
+            ).strip(),
             (
                 company.bizfinder_access_token
                 or _env_value(ENV_BIZFINDER_ACCESS_TOKEN)
