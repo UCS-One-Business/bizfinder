@@ -3,8 +3,8 @@
   <!-- Complete Swedish kommun catalogue (290 entries), seeded so the
        pickers work offline and installs need no API round trip. Names
        as Creditsafe ships them (INITCAP), natural key = SCB kommunkod.
-       The settings "Refresh catalogues" button remains the corrective
-       tool if the upstream list ever changes. -->
+       If the upstream list ever changes, ship the change here plus a
+       data migration (these records are noupdate). -->
   <record id="community_se_0114" model="bizfinder.community"><field name="kommunkod">114</field><field name="community_code">14</field><field name="name">Upplands Väsby</field><field name="region_id" ref="region_se_01"/></record>
   <record id="community_se_0115" model="bizfinder.community"><field name="kommunkod">115</field><field name="community_code">15</field><field name="name">Vallentuna</field><field name="region_id" ref="region_se_01"/></record>
   <record id="community_se_0117" model="bizfinder.community"><field name="kommunkod">117</field><field name="community_code">17</field><field name="name">Österåker</field><field name="region_id" ref="region_se_01"/></record>

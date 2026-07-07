@@ -18,11 +18,6 @@
             <button name="action_bizfinder_test_connection"
                     string="Test connection" type="object" class="btn-secondary"/>
           </setting>
-          <setting id="bizfinder_sync_setting" string="Catalogues"
-                   help="Refresh kommun, SNI, bucket and legal-form lookup tables from the API.">
-            <button name="action_bizfinder_sync_catalogues"
-                    string="Refresh catalogues" type="object" class="btn-primary"/>
-          </setting>
         </block>
       </xpath>
     </field>

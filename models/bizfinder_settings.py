@@ -28,23 +28,6 @@ class BizfinderSettings(models.TransientModel):
         readonly=False,
     )
 
-    def action_bizfinder_sync_catalogues(self):
-        """Pull kommun / SNI / bucket / legal-form catalogues from the
-        API. Exposed as a settings button so admins can recover if the
-        post-migration seed call failed (e.g. API unreachable at install)."""
-        self.ensure_one()
-        self.env['bizfinder.client'].sync_catalogues()
-        return {
-            'type': 'ir.actions.client',
-            'tag': 'display_notification',
-            'params': {
-                'title': 'Bizfinder',
-                'message': _('Catalogues refreshed from the API.'),
-                'type': 'success',
-                'sticky': False,
-            },
-        }
-
     def action_bizfinder_test_connection(self):
         self.ensure_one()
         self.env['bizfinder.client'].validate()

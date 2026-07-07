@@ -5,8 +5,8 @@
 preset carries the same filter fields as the search wizard, so decode any
 existing blob into those fields. Then seed the 15 API segments as managed
 presets (idempotent). Both steps are best-effort — the API may be unreachable
-at upgrade time, in which case the built-ins can be seeded later from
-Settings -> Refresh catalogues.
+at upgrade time, in which case the built-ins can be seeded by a later data
+migration (the seeding is create-if-missing).
 """
 
 import json
@@ -44,4 +44,4 @@ def migrate(cr, version):
     except Exception as exc:
         _logger.warning(
             "bizfinder: built-in presets not seeded (API unreachable?): %s. "
-            "Run Settings -> Refresh catalogues to seed them.", exc)
+            "Seed them via a data migration once the API is reachable.", exc)
