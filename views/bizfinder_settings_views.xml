@@ -9,8 +9,8 @@
         <block title="Bizfinder" name="bizfinder_api"
                help="Creditsafe-backed lead generation. The service URL is built in; only the access token issued to your company is needed.">
           <!-- The service URL is built in (DEFAULT_BIZFINDER_API_URL);
-               customers only paste their access token. The per-company
-               URL field still exists as a hidden dev/test override. -->
+               customers only paste their access token. Dev/test may
+               override the URL via the BIZFINDER_API_URL env var. -->
           <setting id="bizfinder_access_token_setting" string="Access Token">
             <field name="bizfinder_access_token" password="True"/>
           </setting>

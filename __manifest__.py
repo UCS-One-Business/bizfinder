@@ -11,7 +11,7 @@ prospects into crm.lead records.
     'author': 'UCS OneDo AB',
     'website': 'https://www.ucsonedo.se',
     'category': 'Sales/CRM',
-    'version': '19.0.1.0.38',
+    'version': '19.0.1.0.39',
     'depends': ['base', 'web', 'crm', 'utm'],
     'data': [
         'security/ir.model.access.csv',

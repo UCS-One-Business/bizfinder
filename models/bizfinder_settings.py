@@ -9,8 +9,10 @@ ENV_BIZFINDER_API_URL = 'BIZFINDER_API_URL'
 ENV_BIZFINDER_ACCESS_TOKEN = 'BIZFINDER_ACCESS_TOKEN'
 
 # Production service URL, built in so customer setup is only the access
-# token. Dev/test overrides stay possible via the (UI-hidden) per-company
-# field or the BIZFINDER_API_URL env var — see get_bizfinder_credentials.
+# token. The only override is the BIZFINDER_API_URL env var (dev/test):
+# it is explicit deployment config that cannot silently persist in a
+# customer database, unlike the removed per-company URL field, whose
+# stale value once sent a bearer token to the wrong host.
 DEFAULT_BIZFINDER_API_URL = 'https://bizfinder.se'
 
 
@@ -21,10 +23,6 @@ def _env_value(name: str) -> str:
 class BizfinderSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
-    bizfinder_api_url = fields.Char(
-        related='company_id.bizfinder_api_url',
-        readonly=False,
-    )
     bizfinder_access_token = fields.Char(
         related='company_id.bizfinder_access_token',
         readonly=False,
@@ -66,8 +64,7 @@ class BizfinderSettings(models.TransientModel):
         company = self.env.company.sudo()
         return (
             (
-                company.bizfinder_api_url
-                or _env_value(ENV_BIZFINDER_API_URL)
+                _env_value(ENV_BIZFINDER_API_URL)
                 or DEFAULT_BIZFINDER_API_URL
             ).strip(),
             (
