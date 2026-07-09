@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.0+e-20260619\n"
+"Project-Id-Version: Odoo Server 19.0+e-20260630\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-02 14:13+0000\n"
-"PO-Revision-Date: 2026-07-02 14:13+0000\n"
+"POT-Creation-Date: 2026-07-09 11:50+0000\n"
+"PO-Revision-Date: 2026-07-09 11:50+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -34,6 +34,56 @@ msgid "(unknown)"
 msgstr ""
 
 #. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_00
+msgid "00 Okänd huvudnäring"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_01
+msgid "01 Jordbruk och jakt samt service i anslutning härtill"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_02
+msgid "02 Skogsbruk"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_03
+msgid "03 Fiske och vattenbruk"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_05
+msgid "05 Kolutvinning"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_06
+msgid "06 Utvinning av råpetroleum och naturgas"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_07
+msgid "07 Utvinning av metallmalmer"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_08
+msgid "08 Annan utvinning av mineral"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_09
+msgid "09 Service till utvinning"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_10
+msgid "10 Livsmedelsframställning"
+msgstr ""
+
+#. module: bizfinder
 #: model:bizfinder.magnitude,name:bizfinder.magnitude_net_sales_100m_1b
 msgid "100 Mkr – 1 Mdr"
 msgstr ""
@@ -44,8 +94,409 @@ msgid "10–100 Mkr"
 msgstr ""
 
 #. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_11
+msgid "11 Framställning av drycker"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_12
+msgid "12 Tobaksvarutillverkning"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_13
+msgid "13 Tillverkning av textilier"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_14
+msgid "14 Tillverkning av kläder"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_15
+msgid "15 Tillverkning av läder, läder- och skinnvaror m.m."
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_16
+msgid "16 Tillverkning av trä och varor av trä och kork, utom möbler"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_17
+msgid "17 Pappers- och pappersvarutillverkning"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_18
+msgid "18 Grafisk produktion och reproduktion av inspelningar"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_19
+msgid ""
+"19 Tillverkning av stenkolsprodukter och raffinerade petroleumprodukter"
+msgstr ""
+
+#. module: bizfinder
 #: model:bizfinder.magnitude,name:bizfinder.magnitude_net_sales_1_10m
 msgid "1–10 Mkr"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_20
+msgid "20 Tillverkning av kemikalier och kemiska produkter"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_21
+msgid "21 Tillverkning av farmaceutiska basprodukter och läkemedel"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_22
+msgid "22 Tillverkning av gummi- och plastvaror"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_23
+msgid "23 Tillverkning av andra icke-metalliska mineraliska produkter"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_24
+msgid "24 Stål- och metallframställning"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_25
+msgid "25 Tillverkning av metallvaror utom maskiner och apparater"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_26
+msgid "26 Tillverkning av datorer, elektronikvaror och optik"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_27
+msgid "27 Tillverkning av elapparatur"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_28
+msgid "28 Tillverkning av övriga maskiner"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_29
+msgid "29 Tillverkning av motorfordon, släpfordon och påhängsvagnar"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_30
+msgid "30 Tillverkning av andra transportmedel"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_31
+msgid "31 Tillverkning av möbler"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_32
+msgid "32 Annan tillverkning"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_33
+msgid "33 Reparation och installation av maskiner och apparater"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_35
+msgid "35 Försörjning av el, gas, värme och kyla"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_36
+msgid "36 Vattenförsörjning"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_37
+msgid "37 Avloppsrening"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_38
+msgid "38 Avfallshantering och återvinning"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_39
+msgid ""
+"39 Sanering, efterbehandling av jord och vatten samt annan verksamhet för "
+"föroreningsbekämpning"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_41
+msgid "41 Byggande av hus"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_42
+msgid "42 Anläggningsarbeten"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_43
+msgid "43 Specialiserad bygg- och anläggningsverksamhet"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_45
+msgid "45 Handel samt reparation av motorfordon och motorcyklar"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_46
+msgid "46 Parti- och provisionshandel utom med motorfordon"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_47
+msgid "47 Detaljhandel utom med motorfordon och motorcyklar"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_49
+msgid "49 Landtransport; transport i rörsystem"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_50
+msgid "50 Sjötransport"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_51
+msgid "51 Lufttransport"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_52
+msgid "52 Magasinering och stödtjänster till transport"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_53
+msgid "53 Post- och kurirverksamhet"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_55
+msgid "55 Hotell- och logiverksamhet"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_56
+msgid "56 Restaurang-, catering- och barverksamhet"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_58
+msgid "58 Förlagsverksamhet"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_59
+msgid "59 Film-, video- och tv-programverksamhet, ljudinspelningar m.m."
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_60
+msgid "60 Planering och sändning av program"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_61
+msgid "61 Telekommunikation"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_62
+msgid "62 Dataprogrammering, datakonsultverksamhet o.d."
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_63
+msgid "63 Informationstjänster"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_64
+msgid "64 Finansiella tjänster utom försäkring och pensionsfondsverksamhet"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_65
+msgid "65 Försäkring, återförsäkring och pensionsfondsverksamhet"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_66
+msgid "66 Stödtjänster till finansiella tjänster och försäkring"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_68
+msgid "68 Fastighetsverksamhet"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_69
+msgid "69 Juridisk och ekonomisk konsultverksamhet"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_70
+msgid ""
+"70 Verksamheter som utövas av huvudkontor; konsulttjänster till företag"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_71
+msgid ""
+"71 Arkitekt- och teknisk konsultverksamhet; teknisk provning och analys"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_72
+msgid "72 Vetenskaplig forskning och utveckling"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_73
+msgid "73 Reklam och marknadsundersökning"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_74
+msgid "74 Annan verksamhet inom juridik, ekonomi, vetenskap och teknik"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_75
+msgid "75 Veterinärverksamhet"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_77
+msgid "77 Uthyrning och leasing"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_78
+msgid "78 Arbetsförmedling, bemanning och andra personalrelaterade tjänster"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_79
+msgid "79 Resebyrå- och researrangörsverksamhet och andra resetjänster"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_80
+msgid "80 Säkerhets- och bevakningsverksamhet"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_81
+msgid "81 Fastighetsservice samt skötsel och underhåll av grönytor"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_82
+msgid "82 Kontorstjänster och andra företagstjänster"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_84
+msgid "84 Offentlig förvaltning och försvar; obligatorisk socialförsäkring"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_85
+msgid "85 Utbildning"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_86
+msgid "86 Hälso- och sjukvård"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_87
+msgid "87 Vård och omsorg med boende"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_88
+msgid "88 Öppna sociala insatser"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_90
+msgid "90 Konstnärlig och kulturell verksamhet samt underhållning"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_91
+msgid "91 Biblioteks-, arkiv- och museiverksamhet m.m."
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_92
+msgid "92 Spel- och vadhållningsverksamhet"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_93
+msgid "93 Sport-, fritids- och nöjesverksamhet"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_94
+msgid "94 Intressebevakning; religiös verksamhet"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_95
+msgid "95 Reparation av datorer, hushållsartiklar och personliga artiklar"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_96
+msgid "96 Andra konsumenttjänster"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_97
+msgid "97 Förvärvsarbete i hushåll"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_98
+msgid "98 Hushållens produktion av varor och tjänster för eget bruk"
+msgstr ""
+
+#. module: bizfinder
+#: model:bizfinder.industry,name:bizfinder.industry_sni_99
+msgid ""
+"99 Verksamhet vid internationella organisationer och utländska ambassader"
 msgstr ""
 
 #. module: bizfinder
@@ -78,11 +529,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_preset_form
 #: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_search_form
 msgid "AB, EF..."
-msgstr ""
-
-#. module: bizfinder
-#: model_terms:ir.ui.view,arch_db:bizfinder.res_config_settings_view_form_bizfinder
-msgid "API URL"
 msgstr ""
 
 #. module: bizfinder
@@ -197,12 +643,6 @@ msgid "Auditor reservation to"
 msgstr ""
 
 #. module: bizfinder
-#: model:ir.model.fields,help:bizfinder.field_res_company__bizfinder_api_url
-#: model:ir.model.fields,help:bizfinder.field_res_config_settings__bizfinder_api_url
-msgid "Base URL for the Bizfinder service used by this company."
-msgstr ""
-
-#. module: bizfinder
 #: model:ir.model.fields,field_description:bizfinder.field_bizfinder_reveal_confirm__reveal_count
 msgid "Billable reveals"
 msgstr ""
@@ -216,11 +656,6 @@ msgid "Bizfinder"
 msgstr ""
 
 #. module: bizfinder
-#: model_terms:ir.ui.view,arch_db:bizfinder.res_config_settings_view_form_bizfinder
-msgid "Bizfinder API"
-msgstr ""
-
-#. module: bizfinder
 #. odoo-python
 #: code:addons/bizfinder/models/bizfinder_client.py:0
 msgid "Bizfinder API %(method)s %(url)s failed: %(status)s %(detail)s"
@@ -229,12 +664,6 @@ msgstr ""
 #. module: bizfinder
 #: model:ir.model,name:bizfinder.model_bizfinder_client
 msgid "Bizfinder API Client"
-msgstr ""
-
-#. module: bizfinder
-#: model:ir.model.fields,field_description:bizfinder.field_res_company__bizfinder_api_url
-#: model:ir.model.fields,field_description:bizfinder.field_res_config_settings__bizfinder_api_url
-msgid "Bizfinder API URL"
 msgstr ""
 
 #. module: bizfinder
@@ -340,17 +769,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/bizfinder/wizards/bizfinder_search.py:0
 msgid "Cash and bank (tkr)"
-msgstr ""
-
-#. module: bizfinder
-#: model_terms:ir.ui.view,arch_db:bizfinder.res_config_settings_view_form_bizfinder
-msgid "Catalogues"
-msgstr ""
-
-#. module: bizfinder
-#. odoo-python
-#: code:addons/bizfinder/models/bizfinder_settings.py:0
-msgid "Catalogues refreshed from the API."
 msgstr ""
 
 #. module: bizfinder
@@ -510,6 +928,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:bizfinder.field_bizfinder_search__create_date
 #: model:ir.model.fields,field_description:bizfinder.field_bizfinder_usage__create_date
 msgid "Created on"
+msgstr ""
+
+#. module: bizfinder
+#: model_terms:ir.ui.view,arch_db:bizfinder.res_config_settings_view_form_bizfinder
+msgid ""
+"Creditsafe-backed lead generation. The service URL is built in; only the "
+"access token issued to your company is needed."
 msgstr ""
 
 #. module: bizfinder
@@ -1293,16 +1718,6 @@ msgstr ""
 #. module: bizfinder
 #: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_usage_form
 msgid "Refresh"
-msgstr ""
-
-#. module: bizfinder
-#: model_terms:ir.ui.view,arch_db:bizfinder.res_config_settings_view_form_bizfinder
-msgid "Refresh catalogues"
-msgstr ""
-
-#. module: bizfinder
-#: model_terms:ir.ui.view,arch_db:bizfinder.res_config_settings_view_form_bizfinder
-msgid "Refresh kommun, SNI, bucket and legal-form lookup tables from the API."
 msgstr ""
 
 #. module: bizfinder
