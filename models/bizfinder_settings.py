@@ -1,12 +1,10 @@
-# -*- coding: utf-8 -*-
 
 import os
 
 from odoo import _, api, fields, models
 
-
 ENV_BIZFINDER_API_URL = 'BIZFINDER_API_URL'
-ENV_BIZFINDER_ACCESS_TOKEN = 'BIZFINDER_ACCESS_TOKEN'
+ENV_BIZFINDER_ACCESS_TOKEN = 'BIZFINDER_ACCESS_TOKEN'  # noqa: S105 - env var name, not a secret
 
 # Production service URL, built in so customer setup is only the access
 # token. The only override is the BIZFINDER_API_URL env var (dev/test):

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Move presets onto real filter fields and seed the built-in segments.
 
 1.0.24 stored a preset's filters as a ``filters_json`` blob. From 1.0.25 a
@@ -35,7 +34,7 @@ def migrate(cr, version):
             filters = json.loads(blob)
             preset = Preset.browse(pid)
             preset.write(preset._resolve_filters_to_vals(filters))
-        except Exception as exc:
+        except Exception as exc:  # noqa: PERF203 - per-preset error isolation in a migration
             _logger.warning("bizfinder: could not convert preset %s: %s", pid, exc)
 
     # Seed the built-in segments as managed presets.

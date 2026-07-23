@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Drop the old server-action entry point.
 
 The menu entry point changes from an ir.actions.server (returning an ad-hoc

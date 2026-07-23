@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Back-fill Source + the Bizfinder flag onto leads created before 1.0.24.
 
 Leads created by older Bizfinder versions had no Source set and predate the

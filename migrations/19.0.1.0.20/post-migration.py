@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Reset stale ``today - 20 years`` floor dates on existing wizards.
 
 The 19.0.1.0.19 migration filled the ``*_from`` columns with a rolling

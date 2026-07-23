@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 
 """Tests for the manager-only "This month" billing-usage stat shown in the
 search results toolbar -- the contextual replacement for the old standalone
@@ -10,10 +9,9 @@ failure (must not abort the search), and the toolbar "Details" action that opens
 the full usage form as a dialog.
 """
 
+from odoo.addons.bizfinder.tests.common import BizfinderTestCommon
 from odoo.exceptions import AccessError
 from odoo.tests import tagged
-
-from odoo.addons.bizfinder.tests.common import BizfinderTestCommon
 
 
 @tagged('post_install', '-at_install')
@@ -98,6 +96,5 @@ class TestBizfinderMonthUsage(BizfinderTestCommon):
 
     def test_open_month_usage_blocked_for_non_manager(self):
         wizard = self._wizard_as(self.salesman)
-        with self.mock_client():
-            with self.assertRaises(AccessError):
-                wizard.action_open_month_usage()
+        with self.mock_client(), self.assertRaises(AccessError):
+            wizard.action_open_month_usage()

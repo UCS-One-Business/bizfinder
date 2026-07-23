@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 
 """Preset-lifecycle behaviour of the Bizfinder search wizard.
 
@@ -27,9 +26,8 @@ tags.
 """
 
 import psycopg2
-
-from odoo.tests import Form, tagged
 from odoo.exceptions import UserError
+from odoo.tests import Form, tagged
 from odoo.tools import mute_logger
 
 from .common import BizfinderTestCommon
@@ -202,10 +200,9 @@ class TestPresetLifecycle(BizfinderTestCommon):
         # The collision surfaces at flush; wrap in a savepoint so the failed
         # flush does not poison the test cursor, and mute the SQL logger.
         with self.assertRaises(psycopg2.IntegrityError), \
-                mute_logger('odoo.sql_db'):
-            with self.env.cr.savepoint():
-                save.action_save()
-                self.env.flush_all()
+                mute_logger('odoo.sql_db'), self.env.cr.savepoint():
+            save.action_save()
+            self.env.flush_all()
 
         # The savepoint rolled the partial work back without committing the
         # cache; drop it before asserting on the persisted state.

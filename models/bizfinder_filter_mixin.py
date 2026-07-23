@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 
 import logging
 
@@ -56,7 +55,7 @@ class BizfinderFilterMixin(models.AbstractModel):
     )
     registration_date_to = fields.Date(
         string='Registered to',
-        default=lambda self: fields.Date.context_today(self),
+        default=fields.Date.context_today,
     )
     status_date_from = fields.Date(
         string='Status changed from',
@@ -64,7 +63,7 @@ class BizfinderFilterMixin(models.AbstractModel):
     )
     status_date_to = fields.Date(
         string='Status changed to',
-        default=lambda self: fields.Date.context_today(self),
+        default=fields.Date.context_today,
     )
     reservation_date_from = fields.Date(
         string='Auditor reservation from',
@@ -72,7 +71,7 @@ class BizfinderFilterMixin(models.AbstractModel):
     )
     reservation_date_to = fields.Date(
         string='Auditor reservation to',
-        default=lambda self: fields.Date.context_today(self),
+        default=fields.Date.context_today,
     )
 
     # Trimmed to the handful of ranges sales actually filters on. Leaving an
@@ -107,15 +106,14 @@ class BizfinderFilterMixin(models.AbstractModel):
         # are easier to read but would otherwise blow up int()/float().
         raw = str(value).strip().replace(',', '.').replace(' ', '').replace(' ', '')
         try:
-            if kind == 'range_int':
-                parsed = int(raw)
-            else:
-                parsed = float(raw)
+            parsed = int(raw) if kind == 'range_int' else float(raw)
         except ValueError as exc:
             field = self._fields[field_name]
             raise UserError(
-                _("'%(value)s' is not a valid number for %(field)s.")
-                % {'value': value, 'field': field.string}
+                _(
+                    "'%(value)s' is not a valid number for %(field)s.",
+                    value=value, field=field.string,
+                )
             ) from exc
         return parsed
 
@@ -252,7 +250,7 @@ class BizfinderFilterMixin(models.AbstractModel):
     def _reset_filters(self) -> dict:
         """Return a vals dict that clears every server-mapped filter."""
         vals: dict = {}
-        for filter_cat, (target, kind) in self._filter_to_field_map.items():
+        for target, kind in self._filter_to_field_map.values():
             zero = self._zero(kind)
             if isinstance(target, tuple):
                 for f in target:
@@ -298,7 +296,8 @@ class BizfinderFilterMixin(models.AbstractModel):
                 opts = [str(o) for o in (f.get('SelectOption') or []) if str(o)]
                 if not opts:
                     continue
-                industries = self.env['bizfinder.industry'].search([])
+                # Industry catalogue is small; prefix matching needs it all.
+                industries = self.env['bizfinder.industry'].search([])  # pylint: disable=no-search-all
                 wanted = set(opts)
                 matched = industries.filtered(
                     lambda i: wanted.intersection(set(i.expand_prefixes()))

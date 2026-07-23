@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Drop the old hand-curated industries (10 entries).
 
 They used multi-prefix sni_prefixes values that clash with the 1:1

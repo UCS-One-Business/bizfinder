@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 
 from odoo import fields, models
 
@@ -11,8 +10,8 @@ class BizfinderLegalForm(models.Model):
     _order = 'sequence, code'
     _rec_name = 'name'
 
-    code = fields.Char(string='Code', required=True, index=True)
-    name = fields.Char(string='Name', required=True, translate=False)
+    code = fields.Char(required=True, index=True)
+    name = fields.Char(required=True, translate=False)
     sequence = fields.Integer(default=10)
 
     _code_uniq = models.Constraint(

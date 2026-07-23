@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 
 """Shared test scaffolding for the Bizfinder search wizard.
 
@@ -22,13 +21,12 @@ import copy
 from contextlib import ExitStack, contextmanager
 from unittest.mock import patch
 
-from odoo.tests import TransactionCase, tagged
-
 # Patch target for the external HTTP client. Patching the methods on this class
 # is the documented mock pattern: the wizard resolves ``self.env['bizfinder.client']``
 # whose registry class inherits these methods, so a ``patch.object`` here is
 # seen by the wizard at call time.
 from odoo.addons.bizfinder.models.bizfinder_client import BizfinderClient
+from odoo.tests import TransactionCase, tagged
 
 _UNSET = object()
 

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Drop the legacy act_window action.
 
 The CRM > Prospect menu was originally wired to

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 
 from odoo import fields, models
 
@@ -15,7 +14,7 @@ class BizfinderRegion(models.Model):
     _rec_name = 'name'
 
     code = fields.Integer(string='Region code', required=True, index=True)
-    name = fields.Char(string='Name', required=True, translate=False)
+    name = fields.Char(required=True, translate=False)
 
     _code_uniq = models.Constraint(
         'unique(code)',

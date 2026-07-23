@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Backfill the new range defaults into existing ``bizfinder.search``
 rows.
 

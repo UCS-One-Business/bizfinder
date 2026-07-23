@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Backfill Swedish translations on the built-in segment presets.
 
 From 1.0.34 ``bizfinder.preset`` name/description are translatable and the

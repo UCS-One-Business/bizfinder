@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Drop CSV columns replaced by m2m lookups on ``bizfinder.search``.
 
 The wizard moved off free-text comma-joined inputs for buckets, legal

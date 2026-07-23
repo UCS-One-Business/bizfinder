@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Drop the obsolete ``show_advanced`` column on ``bizfinder.search``.
 
 The advanced-filters toggle is now pure client-side ``<details>``/``<summary>``

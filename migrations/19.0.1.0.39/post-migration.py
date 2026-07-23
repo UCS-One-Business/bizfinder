@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Drop the per-company Bizfinder API URL override.
 
 The service URL is built into the module (DEFAULT_BIZFINDER_API_URL); a

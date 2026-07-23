@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Drop ``units_min`` / ``units_max`` and the now-removed
 ``industry_preset`` selection column on ``bizfinder.search``.
 

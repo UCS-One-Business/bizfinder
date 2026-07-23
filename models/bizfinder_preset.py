@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 
 import logging
 
@@ -138,7 +137,6 @@ class BizfinderPreset(models.Model):
     key = fields.Char(string='Built-in key', readonly=True, copy=False)
     company_id = fields.Many2one(
         'res.company',
-        string='Company',
         default=lambda self: self.env.company,
         ondelete='cascade',
     )
@@ -235,7 +233,8 @@ class BizfinderPreset(models.Model):
         segment payload (``{lang_code: {'name': .., 'description': ..}}``)
         onto a freshly seeded preset. Languages not active in this database
         are skipped. Returns the number of languages written."""
-        active = set(self.env['res.lang'].search([]).mapped('code'))
+        # Active languages only — a handful of records at most.
+        active = set(self.env['res.lang'].search([]).mapped('code'))  # pylint: disable=no-search-all
         written = 0
         for lang, texts in (i18n or {}).items():
             if lang not in active or not isinstance(texts, dict):

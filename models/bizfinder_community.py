@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 
 from odoo import api, fields, models
 
@@ -19,8 +18,8 @@ class BizfinderCommunity(models.Model):
 
     kommunkod = fields.Integer(string='SCB kommunkod', required=True, index=True)
     community_code = fields.Integer(string='Community code', required=True)
-    name = fields.Char(string='Name', required=True, translate=False)
-    region_id = fields.Many2one('bizfinder.region', string='Region', ondelete='set null')
+    name = fields.Char(required=True, translate=False)
+    region_id = fields.Many2one('bizfinder.region', ondelete='set null')
     display_name = fields.Char(compute='_compute_display_name', store=True)
 
     _kommunkod_uniq = models.Constraint(

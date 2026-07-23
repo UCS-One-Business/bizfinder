@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 
 """Browser tour over the bizfinder search wizard's custom frontend.
 
@@ -21,9 +20,8 @@ shared fixtures, so ``_creds()`` / ``_request()`` are never reached -- no token,
 URL or network call is needed.
 """
 
-from odoo.tests import HttpCase, tagged
-
 from odoo.addons.bizfinder.tests.common import BizfinderTestCommon
+from odoo.tests import HttpCase, tagged
 
 
 @tagged('-at_install', 'post_install')

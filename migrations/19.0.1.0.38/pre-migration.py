@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Adopt API-synced catalogue rows into the new seeded XML IDs.
 
 19.0.1.0.38 ships the kommun / SNI / legal-form catalogues as noupdate
@@ -17,7 +16,7 @@ seeds already loaded) are skipped, so the migration is idempotent.
 
 def _bind(cr, model, table, name_sql, where_sql="TRUE"):
     cr.execute(
-        """
+        f"""
         INSERT INTO ir_model_data (module, name, model, res_id, noupdate)
         SELECT 'bizfinder', {name_sql}, %s, t.id, TRUE
         FROM {table} t
@@ -30,7 +29,7 @@ def _bind(cr, model, table, name_sql, where_sql="TRUE"):
             SELECT 1 FROM ir_model_data d
             WHERE d.model = %s AND d.res_id = t.id
         )
-        """.format(table=table, name_sql=name_sql, where_sql=where_sql),
+        """,
         (model, model),
     )
 

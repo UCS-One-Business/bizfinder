@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Drop the ``take`` column on ``bizfinder.search``.
 
 The result-page size was switched from a configurable wizard field to a

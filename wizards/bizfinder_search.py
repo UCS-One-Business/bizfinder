@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
 
 import logging
-from markupsafe import escape
 
+from markupsafe import escape
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
@@ -22,7 +21,7 @@ class BizfinderSearch(models.TransientModel):
             rec.display_name = "Bizfinder"
 
     # ------------------------------------------------------------------- preset
-    preset_id = fields.Many2one('bizfinder.preset', string='Preset')
+    preset_id = fields.Many2one('bizfinder.preset')
     preset_description = fields.Text(
         related='preset_id.description', string='Preset description', readonly=True)
 
@@ -164,7 +163,7 @@ class BizfinderSearch(models.TransientModel):
             'tag': 'display_notification',
             'params': {
                 'title': _('Preset updated'),
-                'message': _("'%s' now matches the current filters.") % self.preset_id.name,
+                'message': _("'%s' now matches the current filters.", self.preset_id.name),
                 'type': 'success',
                 'sticky': False,
             },
@@ -681,7 +680,7 @@ class BizfinderPresetSave(models.TransientModel):
 
     wizard_id = fields.Many2one('bizfinder.search', required=True, ondelete='cascade')
     name = fields.Char(string='Preset name', required=True)
-    description = fields.Text(string='Description')
+    description = fields.Text()
 
     def action_save(self):
         self.ensure_one()

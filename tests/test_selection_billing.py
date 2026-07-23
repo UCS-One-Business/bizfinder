@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 
 """Selection + billing-estimate behaviour of the Bizfinder search wizard.
 

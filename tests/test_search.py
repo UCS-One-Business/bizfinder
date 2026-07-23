@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 
 """Tests for ``bizfinder.search.action_search`` (the "action_search" cluster).
 

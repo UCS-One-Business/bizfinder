@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Reshape ``bizfinder.community`` to key on the composite SCB kommunkod.
 
 The previous unique-on-``code`` schema treated Creditsafe's

@@ -1,14 +1,15 @@
-# -*- coding: utf-8 -*-
 
-from . import bizfinder_region
-from . import bizfinder_community
-from . import bizfinder_legal_form
-from . import bizfinder_magnitude
-from . import bizfinder_industry
-from . import bizfinder_filter_mixin
-from . import bizfinder_preset
-from . import res_company
-from . import bizfinder_settings
-from . import bizfinder_client
-from . import bizfinder_usage
-from . import crm_lead
+from . import (
+    bizfinder_client,
+    bizfinder_community,
+    bizfinder_filter_mixin,
+    bizfinder_industry,
+    bizfinder_legal_form,
+    bizfinder_magnitude,
+    bizfinder_preset,
+    bizfinder_region,
+    bizfinder_settings,
+    bizfinder_usage,
+    crm_lead,
+    res_company,
+)

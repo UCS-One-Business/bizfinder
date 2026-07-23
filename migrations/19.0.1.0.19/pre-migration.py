@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Drop the Formed date filter — it was redundant with Registered
 for the use cases users actually run."""
 

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Drop the redundant ``bizfinder.sni`` model and its m2m relation.
 
 The Industries picker (``bizfinder.industry``) is now the single

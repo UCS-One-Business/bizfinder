@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
 
 import logging
 
 import requests
-
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
@@ -45,24 +43,25 @@ class BizfinderClient(models.AbstractModel):
             except Exception:
                 detail = response.text
             raise UserError(
-                _("Bizfinder API %(method)s %(url)s failed: %(status)s %(detail)s")
-                % {
-                    'method': response.request.method,
-                    'url': response.request.url,
-                    'status': response.status_code,
-                    'detail': detail,
-                }
+                _(
+                    "Bizfinder API %(method)s %(url)s failed: %(status)s %(detail)s",
+                    method=response.request.method,
+                    url=response.request.url,
+                    status=response.status_code,
+                    detail=detail,
+                )
             )
 
     @api.model
     def _request(self, method: str, path: str, **kwargs) -> requests.Response:
         url, headers = self._creds()
         try:
-            return requests.request(method, f"{url}{path}", headers=headers, **kwargs)
+            # Every caller passes timeout=_TIMEOUT via **kwargs.
+            return requests.request(  # noqa: S113  pylint: disable=external-request-timeout
+                method, f"{url}{path}", headers=headers, **kwargs)
         except requests.RequestException as exc:
             raise UserError(
-                _("Could not reach Bizfinder API %(url)s: %(error)s")
-                % {'url': url, 'error': exc}
+                _("Could not reach Bizfinder API %(url)s: %(error)s", url=url, error=exc)
             ) from exc
 
     @api.model

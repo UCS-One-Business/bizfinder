@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 
 """Behavioural tests for ``bizfinder.search.action_create_leads``.
 
@@ -17,8 +16,8 @@ never touch the network.
 
 from datetime import date
 
-from odoo.tests import tagged
 from odoo.exceptions import UserError
+from odoo.tests import tagged
 
 from .common import BizfinderTestCommon
 

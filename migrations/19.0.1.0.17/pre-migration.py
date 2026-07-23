@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Collapse buckets + zip fields on ``bizfinder.search``.
 
 The fine-grained ``employee_bucket_ids`` / ``turnover_bucket_ids``

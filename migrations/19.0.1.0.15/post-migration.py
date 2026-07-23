@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Move legacy global Bizfinder credentials onto companies."""
 
 

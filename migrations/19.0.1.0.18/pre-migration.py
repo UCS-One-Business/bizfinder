@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Drop old month-based date columns + the separate alt-address pickers.
 
 The wizard now exposes real Date pickers (registration_date_from/to,
