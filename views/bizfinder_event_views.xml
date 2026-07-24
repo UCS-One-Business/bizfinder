@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <record id="view_bizfinder_company_event_list" model="ir.ui.view">
+    <field name="name">bizfinder.company.event.list</field>
+    <field name="model">bizfinder.company.event</field>
+    <field name="arch" type="xml">
+      <list create="false" edit="false" delete="false">
+        <field name="detected_at"/>
+        <field name="partner_id"/>
+        <field name="org_number"/>
+        <field name="company_name" optional="hide"/>
+        <field name="event_type_label" string="Event"/>
+        <field name="old_value"/>
+        <field name="new_value"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_bizfinder_company_event_form" model="ir.ui.view">
+    <field name="name">bizfinder.company.event.form</field>
+    <field name="model">bizfinder.company.event</field>
+    <field name="arch" type="xml">
+      <form create="false" edit="false" delete="false">
+        <sheet>
+          <group>
+            <group>
+              <field name="partner_id"/>
+              <field name="org_number"/>
+              <field name="company_name"/>
+            </group>
+            <group>
+              <field name="event_type_label" string="Event"/>
+              <field name="event_type"/>
+              <field name="detected_at"/>
+            </group>
+          </group>
+          <group>
+            <field name="old_value"/>
+            <field name="new_value"/>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_bizfinder_company_event_search" model="ir.ui.view">
+    <field name="name">bizfinder.company.event.search</field>
+    <field name="model">bizfinder.company.event</field>
+    <field name="arch" type="xml">
+      <search>
+        <field name="partner_id"/>
+        <field name="org_number"/>
+        <field name="event_type"/>
+        <group name="group_by">
+          <filter name="group_partner" string="Company" context="{'group_by': 'partner_id'}"/>
+          <filter name="group_event_type" string="Event type" context="{'group_by': 'event_type'}"/>
+        </group>
+      </search>
+    </field>
+  </record>
+
+  <record id="action_bizfinder_company_event" model="ir.actions.act_window">
+    <field name="name">Company Events</field>
+    <field name="res_model">bizfinder.company.event</field>
+    <field name="view_mode">list,form</field>
+    <field name="help" type="html">
+      <p class="o_view_nocontent_smiling_face">No Bizfinder events yet</p>
+      <p>Mark customers as "Monitored by Bizfinder" on the contact form; the
+         daily sync then records registry changes here and on each company's
+         chatter.</p>
+    </field>
+  </record>
+</odoo>

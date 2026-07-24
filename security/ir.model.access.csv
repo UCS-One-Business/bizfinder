@@ -15,3 +15,7 @@ access_bizfinder_magnitude_user,bizfinder.magnitude user,model_bizfinder_magnitu
 access_bizfinder_magnitude_admin,bizfinder.magnitude admin,model_bizfinder_magnitude,base.group_system,1,1,1,1
 access_bizfinder_industry_user,bizfinder.industry user,model_bizfinder_industry,sales_team.group_sale_salesman,1,0,0,0
 access_bizfinder_industry_admin,bizfinder.industry admin,model_bizfinder_industry,base.group_system,1,1,1,1
+access_bizfinder_company_event_user,bizfinder.company.event user,model_bizfinder_company_event,sales_team.group_sale_salesman,1,0,0,0
+access_bizfinder_company_event_admin,bizfinder.company.event admin,model_bizfinder_company_event,base.group_system,1,1,1,1
+access_bizfinder_partner_lookup_user,bizfinder.partner.lookup user,model_bizfinder_partner_lookup,sales_team.group_sale_salesman,1,1,1,1
+access_bizfinder_partner_lookup_line_user,bizfinder.partner.lookup.line user,model_bizfinder_partner_lookup_line,sales_team.group_sale_salesman,1,1,1,1

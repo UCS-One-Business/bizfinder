@@ -1,10 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
+  <!-- CRM > Bizfinder section. Keeps its historical XML id (it used to be a
+       leaf pointing straight at the search wizard); it now fans out to the
+       search and the monitoring event log. -->
   <menuitem id="menu_bizfinder_search"
             name="Bizfinder"
             parent="crm.crm_menu_root"
-            action="action_bizfinder_search"
             sequence="50"
+            groups="sales_team.group_sale_salesman"/>
+  <menuitem id="menu_bizfinder_search_wizard"
+            name="Search"
+            parent="menu_bizfinder_search"
+            action="action_bizfinder_search"
+            sequence="10"
+            groups="sales_team.group_sale_salesman"/>
+  <menuitem id="menu_bizfinder_company_events"
+            name="Company Events"
+            parent="menu_bizfinder_search"
+            action="action_bizfinder_company_event"
+            sequence="20"
             groups="sales_team.group_sale_salesman"/>
   <!-- Billing usage is no longer a top-level menu: managers reach it from the
        "This month … Details" link in the search results toolbar

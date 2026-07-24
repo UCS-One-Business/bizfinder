@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+  <!-- Daily monitoring sync. Active by default but guarded: the entrypoint
+       returns immediately when no company partner is opted into monitoring,
+       so an idle install never calls the API. -->
+  <record id="ir_cron_bizfinder_monitoring" model="ir.cron">
+    <field name="name">Bizfinder: monitor customer base</field>
+    <field name="model_id" ref="model_bizfinder_company_event"/>
+    <field name="state">code</field>
+    <field name="code">model.cron_sync_monitoring()</field>
+    <field name="interval_number">1</field>
+    <field name="interval_type">days</field>
+    <field name="active">True</field>
+  </record>
+
+  <!-- Daily preset auto-delivery. Guarded the same way: returns immediately
+       when no preset has auto_deliver enabled. -->
+  <record id="ir_cron_bizfinder_auto_deliver" model="ir.cron">
+    <field name="name">Bizfinder: auto-deliver preset leads</field>
+    <field name="model_id" ref="model_bizfinder_preset"/>
+    <field name="state">code</field>
+    <field name="code">model.cron_auto_deliver()</field>
+    <field name="interval_number">1</field>
+    <field name="interval_type">days</field>
+    <field name="active">True</field>
+  </record>
+</odoo>

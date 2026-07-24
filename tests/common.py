@@ -295,6 +295,104 @@ class BizfinderTestCommon(TransactionCase):
         },
     ]
 
+    # Sample COMPANY-STATUS rows -- camelCase keys exactly as the
+    # /api/v1/insight/company-status endpoint returns them and as
+    # ``res.partner._bizfinder_status_vals`` reads them. Same org numbers as
+    # SEARCH_ROWS so partner fixtures can share them.
+    COMPANY_STATUS_ROWS = [
+        {
+            'orgNumber': '5566778899',
+            'name': 'Nordfält Bygg AB',
+            'statusCode': 100,
+            'statusText': 'Aktivt',
+            'fTax': True,
+            'moms': True,
+            'sniCode': '41200',
+            'sniText': 'Byggande av bostadshus och andra byggnader',
+            'legalEntity': 'AB',
+            'legalEntityText': 'Aktiebolag',
+            'employees': '10-19 anställda',
+            'city': 'Stockholm',
+            'regionName': 'Stockholms län',
+            'communityName': 'Stockholm',
+            'registrationDate': '2011-03-14',
+            'netSales': 42150.0,
+            'solidityPct': 47.2,
+            'growthPct': 18.4,
+            'profitMarginPct': 5.9,
+            'quickRatioPct': 132.0,
+            'operatingMarginPct': 7.4,
+            'accountDateTo': '2025-12-31',
+            'accountMonths': 12,
+        },
+        {
+            'orgNumber': '5560123456',
+            'name': 'Tjänstebolaget Väst AB',
+            'statusCode': 100,
+            'statusText': 'Aktivt',
+            'fTax': True,
+            'moms': True,
+            'sniCode': '62010',
+            'sniText': 'Dataprogrammering',
+            'legalEntity': 'AB',
+            'legalEntityText': 'Aktiebolag',
+            'employees': '20-49 anställda',
+            'city': 'Göteborg',
+            'regionName': 'Västra Götalands län',
+            'communityName': 'Göteborg',
+            'registrationDate': '2005-09-01',
+            'netSales': 78900.0,
+            'solidityPct': 61.0,
+            'growthPct': 9.1,
+            'profitMarginPct': 8.9,
+            'quickRatioPct': 188.0,
+            'operatingMarginPct': 11.5,
+            'accountDateTo': '2025-12-31',
+            'accountMonths': 12,
+        },
+    ]
+
+    # Sample EVENTS rows -- /api/v1/insight/events shape, detectedAt asc.
+    EVENT_ROWS = [
+        {
+            'orgNumber': '5566778899',
+            'companyName': 'Nordfält Bygg AB',
+            'eventType': 'ADDRESS_CHANGED',
+            'oldValue': 'Storgatan 1',
+            'newValue': 'Nygatan 2',
+            'detectedAt': '2025-08-01T08:00:00Z',
+        },
+        {
+            'orgNumber': '5566778899',
+            'companyName': 'Nordfält Bygg AB',
+            'eventType': 'F_TAX_LOST',
+            'oldValue': 'true',
+            'newValue': 'false',
+            'detectedAt': '2025-08-02T09:30:00Z',
+        },
+    ]
+
+    # Sample LOOKUP rows -- /api/v1/insight/lookup shape (redacted tier: no
+    # street/phone by contract).
+    LOOKUP_ROWS = [
+        {
+            'name': 'Nordfält Bygg AB',
+            'organisationNumber': '5566778899',
+            'city': 'Stockholm',
+            'legalEntityText': 'Aktiebolag',
+            'sniText': 'Byggande av bostadshus och andra byggnader',
+            'employees': '10-19 anställda',
+        },
+        {
+            'name': 'Nordfält Fastigheter AB',
+            'organisationNumber': '5566001122',
+            'city': 'Uppsala',
+            'legalEntityText': 'Aktiebolag',
+            'sniText': 'Förvaltning av egna fastigheter',
+            'employees': '1-4 anställda',
+        },
+    ]
+
     # Billing pricing payload, shape matching get_billing_pricing()
     # (keys: pricePerReveal, currency).
     PRICING = {'pricePerReveal': 9.5, 'currency': 'SEK'}
@@ -335,6 +433,21 @@ class BizfinderTestCommon(TransactionCase):
         return copy.deepcopy(cls.REVEAL_ROWS)
 
     @classmethod
+    def sample_company_status_rows(cls):
+        """Deep copy of COMPANY_STATUS_ROWS (see :meth:`sample_search_rows`)."""
+        return copy.deepcopy(cls.COMPANY_STATUS_ROWS)
+
+    @classmethod
+    def sample_event_rows(cls):
+        """Deep copy of EVENT_ROWS (see :meth:`sample_search_rows`)."""
+        return copy.deepcopy(cls.EVENT_ROWS)
+
+    @classmethod
+    def sample_lookup_rows(cls):
+        """Deep copy of LOOKUP_ROWS (see :meth:`sample_search_rows`)."""
+        return copy.deepcopy(cls.LOOKUP_ROWS)
+
+    @classmethod
     def sample_pricing(cls):
         """Fresh copy of the pricing payload."""
         return dict(cls.PRICING)
@@ -361,10 +474,11 @@ class BizfinderTestCommon(TransactionCase):
     # ------------------------------------------------------------- mocking
     @contextmanager
     def mock_client(self, search=_UNSET, preview=_UNSET, reveal=_UNSET,
-                    pricing=_UNSET, usage=_UNSET):
-        """Patch every external ``BizfinderClient`` method the wizard calls.
+                    pricing=_UNSET, usage=_UNSET, company_status=_UNSET,
+                    events=_UNSET, lookup=_UNSET):
+        """Patch every external ``BizfinderClient`` method the module calls.
 
-        All five are always patched so a test can never reach the network.
+        All eight are always patched so a test can never reach the network.
         Each argument may be a literal return value or a
         ``callable(client_recordset, *args, **kwargs)``; omitted arguments fall
         back to the shared sample fixtures.
@@ -387,6 +501,12 @@ class BizfinderTestCommon(TransactionCase):
             pricing = self.sample_pricing()
         if usage is _UNSET:
             usage = self.sample_usage()
+        if company_status is _UNSET:
+            company_status = self.sample_company_status_rows()
+        if events is _UNSET:
+            events = self.sample_event_rows()
+        if lookup is _UNSET:
+            lookup = self.sample_lookup_rows()
 
         def _stub(value):
             # Plain function bound as the model method; ``_model`` is the
@@ -411,6 +531,13 @@ class BizfinderTestCommon(TransactionCase):
             stack.enter_context(
                 patch.object(BizfinderClient, 'get_billing_usage',
                              _stub(usage)))
+            stack.enter_context(
+                patch.object(BizfinderClient, 'company_status',
+                             _stub(company_status)))
+            stack.enter_context(
+                patch.object(BizfinderClient, 'events', _stub(events)))
+            stack.enter_context(
+                patch.object(BizfinderClient, 'lookup', _stub(lookup)))
             yield
 
     # ------------------------------------------------------ flow shortcuts

@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <!-- Bizfinder notebook page on company partners: registry status, health
+       badge, key financials, monitoring toggle and a "Sync now" button. Only
+       shown for companies with a Company ID (org number source of truth). -->
+  <record id="view_partner_form_bizfinder" model="ir.ui.view">
+    <field name="name">res.partner.form.bizfinder</field>
+    <field name="model">res.partner</field>
+    <field name="inherit_id" ref="base.view_partner_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//div[@name='button_box']" position="inside">
+        <button name="action_bizfinder_view_events" type="object"
+                class="oe_stat_button" icon="fa-rss"
+                invisible="not is_company or not company_registry"
+                groups="sales_team.group_sale_salesman">
+          <field name="bizfinder_event_count" widget="statinfo" string="Bizfinder Events"/>
+        </button>
+      </xpath>
+      <xpath expr="//field[@name='vat']" position="after">
+        <button name="action_bizfinder_open_lookup" type="object"
+                string="Fetch from Bizfinder" icon="fa-search"
+                class="oe_edit_only btn-link text-nowrap"
+                invisible="not is_company"
+                groups="sales_team.group_sale_salesman"/>
+      </xpath>
+      <xpath expr="//notebook" position="inside">
+        <page string="Bizfinder" name="bizfinder"
+              invisible="not is_company or not company_registry"
+              groups="sales_team.group_sale_salesman">
+          <div class="mb-2">
+            <button name="action_bizfinder_sync" type="object"
+                    string="Sync now" class="btn-primary"/>
+          </div>
+          <group>
+            <group string="Registry status">
+              <field name="bizfinder_health" widget="badge"
+                     decoration-success="bizfinder_health == 'good'"
+                     decoration-warning="bizfinder_health == 'warning'"
+                     decoration-danger="bizfinder_health == 'critical'"/>
+              <field name="bizfinder_status_text"/>
+              <field name="bizfinder_status_code"/>
+              <field name="bizfinder_active"/>
+              <field name="bizfinder_f_tax"/>
+              <field name="bizfinder_moms"/>
+            </group>
+            <group string="Key figures (latest statement)">
+              <field name="bizfinder_net_sales"/>
+              <field name="bizfinder_solidity_pct"/>
+              <field name="bizfinder_growth_pct"/>
+              <field name="bizfinder_profit_margin_pct"/>
+              <field name="bizfinder_quick_ratio_pct"/>
+              <field name="bizfinder_employees"/>
+              <field name="bizfinder_account_date_to"/>
+            </group>
+          </group>
+          <group>
+            <group string="Monitoring">
+              <field name="bizfinder_monitored" readonly="0"/>
+              <field name="bizfinder_last_sync"/>
+            </group>
+          </group>
+        </page>
+      </xpath>
+    </field>
+  </record>
+
+  <!-- Optional health column on the partner list. -->
+  <record id="view_partner_tree_bizfinder" model="ir.ui.view">
+    <field name="name">res.partner.list.bizfinder</field>
+    <field name="model">res.partner</field>
+    <field name="inherit_id" ref="base.view_partner_tree"/>
+    <field name="arch" type="xml">
+      <xpath expr="//field[@name='country_id']" position="after">
+        <field name="bizfinder_health" optional="hide" widget="badge"
+               decoration-success="bizfinder_health == 'good'"
+               decoration-warning="bizfinder_health == 'warning'"
+               decoration-danger="bizfinder_health == 'critical'"/>
+      </xpath>
+    </field>
+  </record>
+
+  <!-- Search filters: monitored companies + health severity. -->
+  <record id="view_res_partner_filter_bizfinder" model="ir.ui.view">
+    <field name="name">res.partner.select.bizfinder</field>
+    <field name="model">res.partner</field>
+    <field name="inherit_id" ref="base.view_res_partner_filter"/>
+    <field name="arch" type="xml">
+      <xpath expr="//filter[@name='inactive']" position="after">
+        <separator/>
+        <filter string="Monitored by Bizfinder" name="bizfinder_monitored"
+                domain="[('bizfinder_monitored', '=', True)]"/>
+        <filter string="Health: Critical" name="bizfinder_health_critical"
+                domain="[('bizfinder_health', '=', 'critical')]"/>
+        <filter string="Health: Warning" name="bizfinder_health_warning"
+                domain="[('bizfinder_health', '=', 'warning')]"/>
+      </xpath>
+    </field>
+  </record>
+
+  <!-- "Monitor with Bizfinder" on the contacts list action menu (sales
+       managers): opt selected companies with a Company ID into monitoring. -->
+  <record id="action_bizfinder_monitor_partners" model="ir.actions.server">
+    <field name="name">Monitor with Bizfinder</field>
+    <field name="model_id" ref="base.model_res_partner"/>
+    <field name="binding_model_id" ref="base.model_res_partner"/>
+    <field name="binding_view_types">list</field>
+    <field name="group_ids" eval="[(4, ref('sales_team.group_sale_manager'))]"/>
+    <field name="state">code</field>
+    <field name="code">action = records.action_bizfinder_monitor()</field>
+  </record>
+
+  <!-- Lookup wizard: search + pick. Lookup rows are redacted tier — the API
+       returns no street/phone here; the follow-up sync fills status and
+       financials instead. -->
+  <record id="view_bizfinder_partner_lookup_form" model="ir.ui.view">
+    <field name="name">bizfinder.partner.lookup.form</field>
+    <field name="model">bizfinder.partner.lookup</field>
+    <field name="arch" type="xml">
+      <form string="Fetch from Bizfinder">
+        <group>
+          <field name="partner_id" invisible="1"/>
+          <field name="query" placeholder="e.g. Nordfält Bygg or 556677"/>
+        </group>
+        <div class="text-muted mb-2">
+          Search by company name or organisation number, then pick a result.
+          The pick links the company (organisation number) and syncs status
+          and financials from Bizfinder. Lookup results carry no street or
+          phone — existing contact details are never overwritten.
+        </div>
+        <field name="line_ids">
+          <list create="false" delete="false" editable="bottom">
+            <field name="name"/>
+            <field name="organisation_number"/>
+            <field name="city"/>
+            <field name="legal_entity_text"/>
+            <field name="sni_text" optional="show"/>
+            <field name="employees" optional="show"/>
+            <button name="action_pick" type="object" string="Pick" icon="fa-check"/>
+          </list>
+        </field>
+        <footer>
+          <button name="action_search" type="object" string="Search" class="btn-primary"/>
+          <button string="Close" class="btn-secondary" special="cancel"/>
+        </footer>
+      </form>
+    </field>
+  </record>
+
+  <record id="action_bizfinder_partner_lookup" model="ir.actions.act_window">
+    <field name="name">Fetch from Bizfinder</field>
+    <field name="res_model">bizfinder.partner.lookup</field>
+    <field name="view_mode">form</field>
+    <field name="target">new</field>
+    <field name="binding_model_id" ref="base.model_res_partner"/>
+    <field name="binding_view_types">list</field>
+    <field name="group_ids" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+  </record>
+</odoo>

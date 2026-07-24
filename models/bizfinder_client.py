@@ -118,6 +118,50 @@ class BizfinderClient(models.AbstractModel):
         return r.json()
 
     @api.model
+    def company_status(self, org_numbers: list[str]) -> list[dict]:
+        """Fetch current registry status + key financials for the given org
+        numbers (max 5000 per call). Free (not billed), no contact fields."""
+        if not org_numbers:
+            return []
+        r = self._request(
+            'POST',
+            "/api/v1/insight/company-status",
+            json={'orgNumbers': list(org_numbers)},
+            timeout=_TIMEOUT * 2,
+        )
+        self._check(r)
+        return r.json()
+
+    @api.model
+    def events(self, org_numbers: list[str], since: str | None = None) -> list[dict]:
+        """Fetch change events for the given org numbers (max 5000 per call),
+        ordered by detectedAt asc. ``since`` is an ISO datetime string or None
+        for no lower bound. Free (not billed)."""
+        if not org_numbers:
+            return []
+        r = self._request(
+            'POST',
+            "/api/v1/insight/events",
+            json={'orgNumbers': list(org_numbers), 'since': since},
+            timeout=_TIMEOUT * 2,
+        )
+        self._check(r)
+        return r.json()
+
+    @api.model
+    def lookup(self, query: str, take: int = 10) -> list[dict]:
+        """Autocomplete-style company lookup (digits match orgnr prefix, text
+        matches name). Free (not billed), redacted tier: no street/phone."""
+        r = self._request(
+            'GET',
+            "/api/v1/insight/lookup",
+            params={'q': query, 'take': take},
+            timeout=_TIMEOUT,
+        )
+        self._check(r)
+        return r.json()
+
+    @api.model
     def reveal(self, org_numbers: list[str]) -> list[dict]:
         """Fetch un-redacted contact info for the given org numbers.
         Each call is billed server-side (one row in reveal_log per org)."""

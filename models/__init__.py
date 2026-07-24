@@ -6,10 +6,12 @@ from . import (
     bizfinder_industry,
     bizfinder_legal_form,
     bizfinder_magnitude,
+    bizfinder_monitoring,
     bizfinder_preset,
     bizfinder_region,
     bizfinder_settings,
     bizfinder_usage,
     crm_lead,
     res_company,
+    res_partner,
 )
