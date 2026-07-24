@@ -6,6 +6,11 @@ from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
+# Upper bound on the number of org numbers sent to the API as an
+# EXCLUDE_ORG_NUMBERS suppression filter. Beyond this the payload gets
+# unreasonable; the user should disable the exclude toggles instead.
+SUPPRESSION_MAX = 50_000
+
 
 class BizfinderFilterMixin(models.AbstractModel):
     """Shared company-search filter set + filter logic.
@@ -30,6 +35,23 @@ class BizfinderFilterMixin(models.AbstractModel):
     def _default_legal_form_ids(self):
         ab = self.env['bizfinder.legal.form'].search([('code', '=', 'AB')], limit=1)
         return [(6, 0, ab.ids)] if ab else False
+
+    # Suppression toggles: exclude companies this database already knows
+    # about from prospect results. Applied server-side (before the API
+    # call) as an EXCLUDE_ORG_NUMBERS machine filter, so excluded
+    # companies don't consume result-page slots either.
+    exclude_crm_leads = fields.Boolean(
+        string='Exclude companies already in CRM',
+        default=True,
+        help="Skip companies that already exist as CRM leads or "
+             "opportunities (matched on organisation number).",
+    )
+    exclude_partners = fields.Boolean(
+        string='Exclude existing contacts',
+        default=True,
+        help="Skip companies that already exist as contacts (matched on "
+             "the contact's Company ID / organisation number).",
+    )
 
     zip_prefixes = fields.Char(
         string='Postkoder',
@@ -88,6 +110,60 @@ class BizfinderFilterMixin(models.AbstractModel):
     employees_max = fields.Char(string='Max employees (exact)', default='100 000')
 
     # --------------------------------------------------------------- helpers
+
+    # Filter fields that are preferences about *this* database rather than
+    # API filter categories: copied verbatim between wizard and preset
+    # instead of round-tripping through _build_values().
+    FILTER_FLAG_FIELDS = ('exclude_crm_leads', 'exclude_partners')
+
+    def _filter_flag_vals(self) -> dict:
+        self.ensure_one()
+        return {fname: self[fname] for fname in self.FILTER_FLAG_FIELDS}
+
+    def _suppression_org_numbers(self) -> list[int]:
+        """Org numbers to exclude from prospect results, according to the
+        exclude_* toggles: org numbers of existing CRM leads and/or company
+        contacts. Raises when the set is too large to send to the API."""
+        self.ensure_one()
+        orgs: set[int] = set()
+        if self.exclude_crm_leads:
+            for rec in self.env['crm.lead'].sudo().search_read(
+                [('company_organisation_number', '!=', False)],
+                ['company_organisation_number'],
+            ):
+                digits = ''.join(
+                    ch for ch in rec['company_organisation_number'] if ch.isdigit())
+                if digits:
+                    orgs.add(int(digits))
+        if self.exclude_partners:
+            for rec in self.env['res.partner'].sudo().search_read(
+                [('is_company', '=', True), ('company_registry', '!=', False)],
+                ['company_registry'],
+            ):
+                digits = ''.join(ch for ch in rec['company_registry'] if ch.isdigit())
+                if digits:
+                    orgs.add(int(digits))
+        if len(orgs) > SUPPRESSION_MAX:
+            raise UserError(
+                _(
+                    "Too many companies to exclude (%(count)s; the limit is "
+                    "%(limit)s). Disable the exclude toggles and rely on "
+                    "result-page deduplication instead.",
+                    count=len(orgs), limit=SUPPRESSION_MAX,
+                )
+            )
+        return sorted(orgs)
+
+    def _apply_suppression(self, values: list) -> list:
+        """Append the EXCLUDE_ORG_NUMBERS machine filter to an API filter
+        payload (in place) when the exclude toggles yield any org numbers."""
+        suppressed = self._suppression_org_numbers()
+        if suppressed:
+            values.append({
+                'filterCategory': 'EXCLUDE_ORG_NUMBERS',
+                'SelectOption': suppressed,
+            })
+        return values
 
     @staticmethod
     def _split_csv(value) -> list:
@@ -166,6 +242,8 @@ class BizfinderFilterMixin(models.AbstractModel):
         if self.accountant_obligation and self.accountant_obligation != 'any':
             values.append({'filterCategory': 'ACCOUNTANT_OBLIGATION',
                            'SelectOption': [self.accountant_obligation]})
+        today = fields.Date.context_today(self)
+        floor = fields.Date.to_date(self.DATE_FLOOR)
         for key, lo_f, hi_f in [
             ('REGISTERED_DATE', 'registration_date_from', 'registration_date_to'),
             ('STATUS_CHANGED_DATE', 'status_date_from', 'status_date_to'),
@@ -173,6 +251,12 @@ class BizfinderFilterMixin(models.AbstractModel):
         ]:
             lo, hi = self[lo_f], self[hi_f]
             if not lo and not hi:
+                continue
+            # The untouched default envelope (1900-01-01 → today) means "any
+            # date, unknown included". Sending it would silently exclude every
+            # company whose date column is NULL (a BETWEEN never matches NULL),
+            # so it is treated as "no filter".
+            if lo and hi and lo <= floor and hi >= today:
                 continue
             r = {}
             if lo:
@@ -234,6 +318,13 @@ class BizfinderFilterMixin(models.AbstractModel):
         'm2m_legal_form', 'm2m_magnitude_by_key',
     })
 
+    # Machine filter categories injected at call time (suppression,
+    # first-seen windows). They are dynamic, never persisted on a preset,
+    # so decoding skips them silently rather than warning.
+    _IGNORED_FILTER_CATEGORIES = frozenset({
+        'EXCLUDE_ORG_NUMBERS', 'FIRST_SEEN_SINCE',
+    })
+
     @classmethod
     def _zero(cls, kind: str):
         if kind in cls._M2M_KINDS:
@@ -270,6 +361,8 @@ class BizfinderFilterMixin(models.AbstractModel):
         vals = self._reset_filters()
         for f in filters or []:
             cat = f.get('filterCategory')
+            if cat in self._IGNORED_FILTER_CATEGORIES:
+                continue
             entry = self._filter_to_field_map.get(cat)
             if not entry:
                 _logger.info("bizfinder preset ignores unsupported filter %s", cat)

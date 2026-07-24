@@ -1,5 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
+  <!-- "Lookalike search" on the CRM lead list: opens a Bizfinder search
+       pre-filled from the selected leads' company profile (employee /
+       turnover bands, legal forms), with the exclude-known-companies
+       toggles on. With no selection it derives from all Won opportunities. -->
+  <record id="action_bizfinder_lookalike" model="ir.actions.server">
+    <field name="name">Bizfinder: Lookalike Search</field>
+    <field name="model_id" ref="crm.model_crm_lead"/>
+    <field name="binding_model_id" ref="crm.model_crm_lead"/>
+    <field name="binding_view_types">list</field>
+    <field name="group_ids" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+    <field name="state">code</field>
+    <field name="code">action = env['bizfinder.search'].action_lookalike_from_leads(records)</field>
+  </record>
   <!-- Leads sourced from Bizfinder get their own tab holding the structured
        company facts and the full imported information, so the data lives
        alongside the lead but out of the generic "Notes" tab. The tab only

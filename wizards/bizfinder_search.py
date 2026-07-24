@@ -134,6 +134,7 @@ class BizfinderSearch(models.TransientModel):
         if not self.preset_id:
             return
         vals = self._resolve_filters_to_vals(self.preset_id._build_values())
+        vals.update(self.preset_id._filter_flag_vals())
         for fname, value in vals.items():
             self[fname] = value
 
@@ -156,8 +157,10 @@ class BizfinderSearch(models.TransientModel):
         self.ensure_one()
         if not self.preset_id:
             raise UserError(_("Select a preset first, then update it."))
-        self.preset_id.write(
-            self.preset_id._resolve_filters_to_vals(self._build_values()))
+        self.preset_id.write({
+            **self.preset_id._resolve_filters_to_vals(self._build_values()),
+            **self._filter_flag_vals(),
+        })
         return {
             'type': 'ir.actions.client',
             'tag': 'display_notification',
@@ -202,6 +205,11 @@ class BizfinderSearch(models.TransientModel):
         self._refresh_billing_pricing(client)
         self._refresh_month_usage(client)
         values = self._build_values()
+        # Suppress companies this database already knows (existing CRM
+        # leads / contacts) server-side so they don't consume result-page
+        # slots. The post-fetch dedup below stays as a safety net for leads
+        # created between the two calls.
+        self._apply_suppression(values)
         # Fetch the true total alongside the result page so the user sees
         # both "what was returned" and "what's available".
         total = client.preview(values)
@@ -328,6 +336,55 @@ class BizfinderSearch(models.TransientModel):
         action = self.env['bizfinder.usage'].action_open_usage()
         action['target'] = 'new'
         return action
+
+    # ------------------------------------------------------------ lookalike
+
+    @api.model
+    def action_lookalike_from_leads(self, leads):
+        """Open a search wizard pre-filled from the company profile of the
+        given CRM leads: employee/turnover bands and legal forms derived
+        from the leads' stored Bizfinder company data, with both exclude
+        toggles on. "More like these, minus the ones we already know."
+
+        Called from the CRM list-view server action; with no selection it
+        falls back to all Won opportunities."""
+        if not leads:
+            leads = self.env['crm.lead'].search([
+                '|', ('probability', '=', 100), ('stage_id.is_won', '=', True),
+            ])
+        emp_buckets = set(leads.mapped('company_employees')) - {False, ''}
+        turnover_buckets = set(leads.mapped('company_turnover')) - {False, ''}
+        legal_texts = set(leads.mapped('company_legal_entity')) - {False, ''}
+        if not emp_buckets and not turnover_buckets and not legal_texts:
+            raise UserError(_(
+                "None of these leads carries Bizfinder company data. "
+                "Lookalike search needs leads created by Bizfinder."))
+
+        Magnitude = self.env['bizfinder.magnitude']
+        employee_mags = Magnitude.search([('kind', '=', 'employees')]).filtered(
+            lambda m: emp_buckets.intersection(m.expand_keys()))
+        turnover_mags = Magnitude.search([('kind', '=', 'net_sales')]).filtered(
+            lambda m: turnover_buckets.intersection(m.expand_keys()))
+        # Legal-form catalogue is four rows; match on either name or code.
+        legal_forms = self.env['bizfinder.legal.form'].search([]).filtered(  # pylint: disable=no-search-all
+            lambda lf: lf.name in legal_texts or lf.code in legal_texts)
+
+        wizard = self.create({
+            'employee_magnitude_ids': [(6, 0, employee_mags.ids)],
+            'net_sales_magnitude_ids': [(6, 0, turnover_mags.ids)],
+            'legal_form_ids': [(6, 0, legal_forms.ids)],
+            'exclude_crm_leads': True,
+            'exclude_partners': True,
+        })
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Bizfinder — Lookalike Search'),
+            'res_model': 'bizfinder.search',
+            'res_id': wizard.id,
+            'view_mode': 'form',
+            'views': [(False, 'form')],
+            'target': 'current',
+        }
 
     # ---------------------------------------------------------------- leads
 
@@ -689,7 +746,10 @@ class BizfinderPresetSave(models.TransientModel):
             'description': self.description or False,
         })
         # Snapshot the wizard's current filters onto the new preset's fields.
-        preset.write(preset._resolve_filters_to_vals(self.wizard_id._build_values()))
+        preset.write({
+            **preset._resolve_filters_to_vals(self.wizard_id._build_values()),
+            **self.wizard_id._filter_flag_vals(),
+        })
         self.wizard_id.preset_id = preset
         return {
             'type': 'ir.actions.act_window',

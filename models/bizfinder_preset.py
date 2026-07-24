@@ -1,9 +1,15 @@
 
 import logging
+from datetime import timedelta
 
-from odoo import api, fields, models
+from markupsafe import escape
+from odoo import _, api, fields, models
 
 _logger = logging.getLogger(__name__)
+
+# First auto-delivery run for a preset with "new companies only" looks back
+# this many days for FIRST_SEEN_SINCE.
+AUTO_DELIVER_FIRST_LOOKBACK_DAYS = 7
 
 # Swedish texts for the built-in API segments, keyed by segment key. The API
 # serves segment name/description in English only, so the Swedish side is
@@ -189,6 +195,30 @@ class BizfinderPreset(models.Model):
         string='Legal forms',
     )
 
+    # ------------------------------------------------------- auto-delivery
+    auto_deliver = fields.Boolean(
+        string='Auto-deliver leads',
+        default=False,
+        help="A daily job runs this preset and creates CRM leads from new "
+             "matches. Leads are created from the redacted preview — no "
+             "billable reveals.",
+    )
+    auto_deliver_user_id = fields.Many2one(
+        'res.users', string='Deliver to',
+        default=lambda self: self.env.user,
+        help="Salesperson the auto-delivered leads are assigned to.",
+    )
+    auto_deliver_max = fields.Integer(
+        string='Max leads per run', default=25,
+        help="Upper bound on leads created per nightly run.",
+    )
+    auto_deliver_new_only = fields.Boolean(
+        string='New companies only', default=True,
+        help="Only deliver companies that entered the registry since the "
+             "last run (first run: the last 7 days).",
+    )
+    auto_deliver_last_run = fields.Datetime(string='Last delivery run', readonly=True)
+
     _name_company_uniq = models.Constraint(
         'unique(name, company_id)',
         'A preset with this name already exists for this company.',
@@ -278,3 +308,96 @@ class BizfinderPreset(models.Model):
             })
             updated += 1
         return updated
+
+    # ------------------------------------------------------- auto-delivery
+
+    @api.model
+    def cron_auto_deliver(self):
+        """Daily auto-delivery: run every subscribed preset and create CRM
+        leads from its new (redacted) matches.
+
+        Never calls reveal(): auto-delivered leads carry no phone/street and
+        bill nothing. Per-preset failures are logged and the rest still run;
+        if every preset failed the last error is re-raised so the cron shows
+        up red (AGENTS.md: loud failures)."""
+        presets = self.sudo().search([('auto_deliver', '=', True)])
+        if not presets:
+            return
+        failures, successes = [], 0
+        for preset in presets:
+            try:
+                preset._auto_deliver_run()
+                successes += 1
+            except Exception as exc:  # noqa: PERF203 - per-preset error isolation is intentional
+                _logger.exception(
+                    "bizfinder: auto-delivery failed for preset %r", preset.name)
+                failures.append(exc)
+        if failures and not successes:
+            raise failures[-1]
+
+    def _auto_deliver_run(self):
+        self.ensure_one()
+        now = fields.Datetime.now()
+        values = self._build_values()
+        self._apply_suppression(values)
+        if self.auto_deliver_new_only:
+            since = self.auto_deliver_last_run or (
+                now - timedelta(days=AUTO_DELIVER_FIRST_LOOKBACK_DAYS))
+            values.append({
+                'filterCategory': 'FIRST_SEEN_SINCE',
+                'SelectRange': {'min': since.strftime('%Y-%m-%dT%H:%M:%SZ')},
+            })
+        take = max(1, self.auto_deliver_max or 25)
+        rows = self.env['bizfinder.client'].search(values, skip=0, take=take)
+        created = self._auto_deliver_create_leads(rows)
+        self.write({'auto_deliver_last_run': now})
+        _logger.info(
+            "bizfinder: preset %r auto-delivered %d lead(s)",
+            self.name, len(created))
+
+    def _auto_deliver_create_leads(self, rows: list):
+        """crm.lead records from redacted prospect rows: company facts only,
+        no contact details (those would require a billable reveal)."""
+        Lead = self.env['crm.lead'].sudo()
+        org_numbers = [r.get('organisationNumber') for r in rows if r.get('organisationNumber')]
+        existing = set()
+        if org_numbers:
+            existing = set(Lead.search([
+                ('company_organisation_number', 'in', org_numbers),
+            ]).mapped('company_organisation_number'))
+        source = self.env.ref('bizfinder.utm_source_bizfinder', raise_if_not_found=False)
+        note = (
+            "<p><i>%s</i></p>" % escape(_(
+                "Auto-delivered by preset '%(preset)s'. Contact details not "
+                "revealed — no reveal billed.", preset=self.name))
+        )
+        created = Lead
+        for r in rows:
+            org = r.get('organisationNumber')
+            if not org or org in existing:
+                continue
+            existing.add(org)
+            created |= Lead.create({
+                'name': r.get('name') or _('(unknown)'),
+                'partner_name': r.get('name') or False,
+                'zip': r.get('postCode') or False,
+                'city': r.get('city') or False,
+                'source_id': source.id if source else False,
+                'user_id': self.auto_deliver_user_id.id or False,
+                'bizfinder_data': note,
+                'company_organisation_number': org,
+                'company_vat_number': r.get('vatNumber') or False,
+                'company_employees': r.get('employees') or False,
+                'company_turnover': r.get('turnOver') or False,
+                'company_legal_entity': (
+                    r.get('legalEntityText') or r.get('legalEntity') or False),
+                'company_post_community': r.get('postCommunity') or False,
+                'company_number_of_units': r.get('numberOfUnits') or 0,
+                'company_net_sales': r.get('netSales') or 0.0,
+                'company_operating_result': r.get('operatingResult') or 0.0,
+                'company_net_profit_loss': r.get('netProfitLoss') or 0.0,
+                'company_account_date_to': r.get('accountDateTo') or False,
+                'company_solidity_pct': r.get('solidityPct') or 0.0,
+                'company_growth_pct': r.get('growthPct') or 0.0,
+            })
+        return created

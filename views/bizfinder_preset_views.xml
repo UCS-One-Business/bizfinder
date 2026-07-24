@@ -51,6 +51,20 @@
               <field name="employee_magnitude_ids" widget="many2many_tags"
                      options="{'no_create': True, 'no_quick_create': True}"
                      placeholder="Pick employee bands..."/>
+              <field name="exclude_crm_leads"/>
+              <field name="exclude_partners"/>
+            </group>
+          </group>
+
+          <group string="Auto-delivery" name="auto_delivery">
+            <group>
+              <field name="auto_deliver"/>
+              <field name="auto_deliver_user_id" invisible="not auto_deliver"/>
+              <field name="auto_deliver_max" invisible="not auto_deliver"/>
+            </group>
+            <group>
+              <field name="auto_deliver_new_only" invisible="not auto_deliver"/>
+              <field name="auto_deliver_last_run" invisible="not auto_deliver"/>
             </group>
           </group>
 
