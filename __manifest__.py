@@ -1,10 +1,11 @@
 {
     'name': 'Bizfinder',
-    'summary': 'Creditsafe-backed lead generation wizard (PoC).',
+    'summary': 'Swedish company prospecting and lead generation, built into Odoo CRM.',
     'author': 'UCS OneDo AB',
     'website': 'https://www.ucsonedo.se',
+    'support': 'info@ucsonedo.se',
     'category': 'Sales/CRM',
-    'version': '19.0.3.0.1',
+    'version': '19.0.3.1.0',
     'depends': ['base', 'web', 'crm', 'utm'],
     'data': [
         'security/ir.model.access.csv',
@@ -34,6 +35,7 @@
             'bizfinder/static/tests/tours/bizfinder_search_tour.js',
         ],
     },
+    'images': ['static/description/bizfinder_results.png'],
     'license': 'OPL-1',
     'application': True,
     'installable': True,
