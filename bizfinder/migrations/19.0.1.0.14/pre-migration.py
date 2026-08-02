@@ -11,8 +11,12 @@ the old column + constraint and let the ORM (re)create the new shape.
 The post-update sync_catalogues() call then repopulates it.
 """
 
+from odoo.tools.sql import table_exists
+
 
 def migrate(cr, version):
+    if not table_exists(cr, "bizfinder_community"):
+        return
     cr.execute(
         "ALTER TABLE bizfinder_community "
         "DROP CONSTRAINT IF EXISTS bizfinder_community_code_uniq;"

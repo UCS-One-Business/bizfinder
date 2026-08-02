@@ -6,8 +6,9 @@ needed. Per AGENTS.md, removing a field requires an explicit DDL drop;
 the ORM does not clean up unused columns on upgrade.
 """
 
+from odoo.tools.sql import column_exists
+
 
 def migrate(cr, version):
-    cr.execute(
-        "ALTER TABLE bizfinder_search DROP COLUMN IF EXISTS show_advanced;"
-    )
+    if column_exists(cr, "bizfinder_search", "show_advanced"):
+        cr.execute("ALTER TABLE bizfinder_search DROP COLUMN show_advanced;")

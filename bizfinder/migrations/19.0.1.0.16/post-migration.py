@@ -6,6 +6,9 @@ SNI-division catalogue. The rows are repopulated by the seed data files
 upgrade loads module data.
 """
 
+from odoo.tools.sql import table_exists
+
 
 def migrate(cr, version):
-    cr.execute("DELETE FROM bizfinder_industry;")
+    if table_exists(cr, "bizfinder_industry"):
+        cr.execute("DELETE FROM bizfinder_industry;")

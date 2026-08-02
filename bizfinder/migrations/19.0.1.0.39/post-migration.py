@@ -6,9 +6,10 @@ to the wrong host. The ORM does not drop columns for removed fields, so do
 it here on both the company table and the transient settings table.
 """
 
+from odoo.tools.sql import column_exists
+
 
 def migrate(cr, version):
-    cr.execute("ALTER TABLE res_company DROP COLUMN IF EXISTS bizfinder_api_url")
-    cr.execute(
-        "ALTER TABLE res_config_settings DROP COLUMN IF EXISTS bizfinder_api_url"
-    )
+    for table in ("res_company", "res_config_settings"):
+        if column_exists(cr, table, "bizfinder_api_url"):
+            cr.execute(f"ALTER TABLE {table} DROP COLUMN bizfinder_api_url")

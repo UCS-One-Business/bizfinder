@@ -5,6 +5,9 @@ hardcoded constant in :py:meth:`BizfinderSearch.action_search`. Per
 AGENTS.md, removing a field requires an explicit DDL drop.
 """
 
+from odoo.tools.sql import column_exists
+
 
 def migrate(cr, version):
-    cr.execute("ALTER TABLE bizfinder_search DROP COLUMN IF EXISTS take;")
+    if column_exists(cr, "bizfinder_search", "take"):
+        cr.execute("ALTER TABLE bizfinder_search DROP COLUMN take;")

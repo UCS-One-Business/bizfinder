@@ -28,7 +28,10 @@ def migrate(cr, version):
     for tbl in _REL_TABLES:
         cr.execute(f"DROP TABLE IF EXISTS {tbl} CASCADE;")
     cr.execute("DROP TABLE IF EXISTS bizfinder_bucket CASCADE;")
+    # migration-lint: allow-unguarded -- ir_model/ir_model_data are core Odoo
+    # tables, always present when a migration runs.
     cr.execute("DELETE FROM ir_model WHERE model = 'bizfinder.bucket';")
+    # migration-lint: allow-unguarded -- core table, see above.
     cr.execute(
         "DELETE FROM ir_model_data WHERE model = 'ir.model' "
         "AND name = 'model_bizfinder_bucket';"

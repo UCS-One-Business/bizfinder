@@ -12,6 +12,7 @@ import json
 import logging
 
 from odoo import SUPERUSER_ID, api
+from odoo.tools.sql import column_exists
 
 _logger = logging.getLogger(__name__)
 
@@ -21,26 +22,25 @@ def migrate(cr, version):
     Preset = env['bizfinder.preset']
 
     # Decode legacy filters_json (column left behind by Odoo) into fields.
-    try:
+    rows = []
+    if column_exists(cr, "bizfinder_preset", "filters_json"):
         cr.execute("""
             SELECT id, filters_json FROM bizfinder_preset
              WHERE filters_json IS NOT NULL AND filters_json NOT IN ('', '[]')
         """)
         rows = cr.fetchall()
-    except Exception:  # column absent (fresh table) - nothing to convert
-        rows = []
     for pid, blob in rows:
         try:
             filters = json.loads(blob)
             preset = Preset.browse(pid)
             preset.write(preset._resolve_filters_to_vals(filters))
-        except Exception as exc:  # noqa: PERF203 - per-preset error isolation in a migration
+        except Exception as exc:  # noqa: BLE001, PERF203 - per-preset error isolation in a migration
             _logger.warning("bizfinder: could not convert preset %s: %s", pid, exc)
 
     # Seed the built-in segments as managed presets.
     try:
         Preset._seed_builtin_presets()
-    except Exception as exc:
+    except Exception as exc:  # noqa: BLE001 - best-effort, the API may be unreachable
         _logger.warning(
             "bizfinder: built-in presets not seeded (API unreachable?): %s. "
             "Seed them via a data migration once the API is reachable.", exc)

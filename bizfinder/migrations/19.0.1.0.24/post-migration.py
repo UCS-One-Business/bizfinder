@@ -18,6 +18,8 @@ def migrate(cr, version):
     if not row:
         return
     source_id = row[0]
+    # migration-lint: allow-unguarded -- crm_lead is created by the crm
+    # dependency, and is_bizfinder_lead by the ORM before post-migration.
     cr.execute(
         """
         UPDATE crm_lead

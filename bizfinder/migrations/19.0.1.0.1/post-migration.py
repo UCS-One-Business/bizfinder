@@ -11,6 +11,8 @@ entry so the database matches the source.
 
 
 def migrate(cr, version):
+    # migration-lint: allow-unguarded -- ir_act_window/ir_model_data are core
+    # Odoo tables, always present when a migration runs.
     cr.execute(
         """
         DELETE FROM ir_act_window
@@ -22,6 +24,7 @@ def migrate(cr, version):
          );
         """
     )
+    # migration-lint: allow-unguarded -- core table, see above.
     cr.execute(
         """
         DELETE FROM ir_model_data

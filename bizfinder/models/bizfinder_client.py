@@ -40,7 +40,7 @@ class BizfinderClient(models.AbstractModel):
         if not response.ok:
             try:
                 detail = response.json()
-            except Exception:
+            except ValueError:  # requests' JSONDecodeError subclasses ValueError
                 detail = response.text
             raise UserError(
                 _(
