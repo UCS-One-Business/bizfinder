@@ -77,7 +77,7 @@ class BizfinderPartnerLookupLine(models.TransientModel):
         Lookup results are redacted-tier: no street/phone. Only the org
         number, name and city come from the lookup; status and financials
         come from the follow-up sync. Existing partner values are never
-        overwritten — only empty fields are filled.
+        overwritten - only empty fields are filled.
         """
         self.ensure_one()
         partner = self.wizard_id.partner_id

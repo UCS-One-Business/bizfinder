@@ -3,7 +3,7 @@
 19.0.1.0.38 ships the kommun / SNI / legal-form catalogues as noupdate
 module data (data/bizfinder_*_data.xml) instead of requiring an API
 sync at install. Databases upgraded from earlier versions already hold
-those rows — created by sync_catalogues() and therefore WITHOUT XML
+those rows - created by sync_catalogues() and therefore WITHOUT XML
 IDs. Loading the data files against them would try to create duplicates
 and crash on the unique constraints (kommunkod / legal-form code).
 

@@ -179,7 +179,7 @@ class BizfinderSearch(models.TransientModel):
 
     def action_manage_presets(self):
         """Open the preset list to add / edit / delete presets. Returns the
-        stored act_window (fully resolved, with `views`) — a bare dict without
+        stored act_window (fully resolved, with `views`) - a bare dict without
         `views` makes the web client's action preprocessing crash on
         `action.views.map`."""
         self.ensure_one()
@@ -300,7 +300,7 @@ class BizfinderSearch(models.TransientModel):
     def _refresh_month_usage(self, client=None):
         """Manager-only, best-effort: pull this calendar month's reveal usage so
         the results toolbar can show spend-to-date beside the per-search
-        estimate. This is a secondary, informational readout — a usage hiccup
+        estimate. This is a secondary, informational readout - a usage hiccup
         must never abort the search the user actually asked for, so a failure is
         logged and leaves the stat hidden rather than raising."""
         self.ensure_one()
@@ -378,7 +378,7 @@ class BizfinderSearch(models.TransientModel):
         })
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Bizfinder — Lookalike Search'),
+            'name': _('Bizfinder - Lookalike Search'),
             'res_model': 'bizfinder.search',
             'res_id': wizard.id,
             'view_mode': 'form',
@@ -576,7 +576,7 @@ class BizfinderSearch(models.TransientModel):
                 'target': 'new',
             }
 
-        # Reveal full contact info server-side. This is the metered call —
+        # Reveal full contact info server-side. This is the metered call -
         # one reveal_log row gets written per org_number on the API side.
         revealed = {r.get('organisationNumber'): r for r in client.reveal(org_numbers)}
 

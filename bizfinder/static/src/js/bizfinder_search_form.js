@@ -87,7 +87,7 @@ class BizfinderSearchFormController extends FormController {
         // Inject a "select all" checkbox into the results list's Select column
         // header. Toggling it delegates to the wizard's action_select_all /
         // action_deselect_all (a single server-side write over every result
-        // line — reliable across list pages), then reloads.
+        // line - reliable across list pages), then reloads.
         const syncSelectAllCheckbox = () => {
             const form = document.querySelector(".o_form_view.o_bizfinder_search_form");
             const listEl = form?.querySelector("[name='result_line_ids']");

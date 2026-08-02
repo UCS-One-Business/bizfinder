@@ -4,7 +4,7 @@ Leads created by older Bizfinder versions had no Source set and predate the
 ``is_bizfinder_lead`` flag that drives the new dedicated tab. They are
 identifiable by ``company_organisation_number`` (only Bizfinder writes it),
 so tag them with the Bizfinder UTM source and light up the flag. We leave the
-old leads' notes (``description``) untouched — only new leads route their
+old leads' notes (``description``) untouched - only new leads route their
 imported data into the dedicated ``bizfinder_data`` field/tab.
 """
 

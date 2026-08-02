@@ -10,7 +10,7 @@ reopen the wizard from the menu.
 """
 
 # (column, default_value). Mirrors the field-level defaults in
-# bizfinder_search.py. Strings include thin / regular spaces — the
+# bizfinder_search.py. Strings include thin / regular spaces - the
 # _range_value parser already strips them.
 _RANGE_DEFAULTS = [
     ("net_sales_min", "-10 000 000"),

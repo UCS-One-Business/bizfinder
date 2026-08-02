@@ -109,7 +109,7 @@
     <field name="code">action = records.action_bizfinder_monitor()</field>
   </record>
 
-  <!-- Lookup wizard: search + pick. Lookup rows are redacted tier — the API
+  <!-- Lookup wizard: search + pick. Lookup rows are redacted tier - the API
        returns no street/phone here; the follow-up sync fills status and
        financials instead. -->
   <record id="view_bizfinder_partner_lookup_form" model="ir.ui.view">
@@ -125,7 +125,7 @@
           Search by company name or organisation number, then pick a result.
           The pick links the company (organisation number) and syncs status
           and financials from Bizfinder. Lookup results carry no street or
-          phone — existing contact details are never overwritten.
+          phone - existing contact details are never overwritten.
         </div>
         <field name="line_ids">
           <list create="false" delete="false" editable="bottom">

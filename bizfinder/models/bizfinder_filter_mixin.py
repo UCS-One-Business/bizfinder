@@ -20,7 +20,7 @@ class BizfinderFilterMixin(models.AbstractModel):
     filter fields and all the encode/decode logic live here and are reused by
     both. The Many2many filter fields are NOT defined here: two of them point
     at the same comodel (community / magnitude), so they need distinct relation
-    tables per concrete model — each model declares them with its own relation
+    tables per concrete model - each model declares them with its own relation
     name. The methods below reference those m2m field names, which exist on
     every concrete model that uses this mixin.
     """
@@ -178,7 +178,7 @@ class BizfinderFilterMixin(models.AbstractModel):
     def _range_value(self, field_name: str, value, kind: str):
         if not self._is_set(value):
             return None
-        # Strip thin / regular spaces too — defaults like "10 000 000"
+        # Strip thin / regular spaces too - defaults like "10 000 000"
         # are easier to read but would otherwise blow up int()/float().
         raw = str(value).strip().replace(',', '.').replace(' ', '').replace(' ', '')
         try:

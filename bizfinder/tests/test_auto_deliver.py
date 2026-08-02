@@ -1,6 +1,6 @@
 
 """Preset auto-delivery: the nightly cron runs subscribed presets and creates
-CRM leads from redacted prospect rows — never calling reveal(), so nothing is
+CRM leads from redacted prospect rows - never calling reveal(), so nothing is
 billed."""
 
 from odoo.addons.bizfinder.tests.common import BizfinderTestCommon

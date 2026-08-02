@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo noupdate="1">
   <!-- Full SNI 2007 division taxonomy, mirrored from the service's own
-       SNI_DIVISIONS constant (bizfinder_api/filters.py) — the API /sni
+       SNI_DIVISIONS constant (bizfinder_api/filters.py) - the API /sni
        endpoint intersects the same list with the ingested data. Name
        format "NN Name" matches what sync_catalogues writes. -->
   <record id="industry_sni_00" model="bizfinder.industry"><field name="name">00 Okänd huvudnäring</field><field name="sequence">10</field><field name="sni_prefixes">00</field></record>

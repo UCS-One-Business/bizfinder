@@ -3,7 +3,7 @@
 1.0.24 stored a preset's filters as a ``filters_json`` blob. From 1.0.25 a
 preset carries the same filter fields as the search wizard, so decode any
 existing blob into those fields. Then seed the 15 API segments as managed
-presets (idempotent). Both steps are best-effort — the API may be unreachable
+presets (idempotent). Both steps are best-effort - the API may be unreachable
 at upgrade time, in which case the built-ins can be seeded by a later data
 migration (the seeding is create-if-missing).
 """
@@ -27,7 +27,7 @@ def migrate(cr, version):
              WHERE filters_json IS NOT NULL AND filters_json NOT IN ('', '[]')
         """)
         rows = cr.fetchall()
-    except Exception:  # column absent (fresh table) — nothing to convert
+    except Exception:  # column absent (fresh table) - nothing to convert
         rows = []
     for pid, blob in rows:
         try:

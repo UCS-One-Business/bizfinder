@@ -8,7 +8,7 @@ class BizfinderCommunity(models.Model):
     The ``community_code`` value Creditsafe ships is only the
     kommun-within-län part of the SCB kommunkod, so it repeats across
     län. The unique natural key is therefore the composite
-    ``kommunkod = region_code * 100 + community_code`` — which is the
+    ``kommunkod = region_code * 100 + community_code`` - which is the
     full SCB code most lookup tables already use.
     """
     _name = 'bizfinder.community'

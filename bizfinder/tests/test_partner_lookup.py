@@ -1,7 +1,7 @@
 
 """Tests for the bizfinder.partner.lookup wizard: search fills lines, the
 query-length guard, and picking a line enriches an existing partner without
-clobbering its name — or creates a new company partner when none is bound."""
+clobbering its name - or creates a new company partner when none is bound."""
 
 from odoo.addons.bizfinder.tests.common import BizfinderTestCommon
 from odoo.exceptions import UserError

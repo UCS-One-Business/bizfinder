@@ -1,7 +1,7 @@
 """Drop CSV columns replaced by m2m lookups on ``bizfinder.search``.
 
 The wizard moved off free-text comma-joined inputs for buckets, legal
-forms, SNI prefixes and municipalities — each became a Many2many to a
+forms, SNI prefixes and municipalities - each became a Many2many to a
 proper lookup model. Per AGENTS.md, the corresponding column drops are
 explicit DDL here so we don't leave orphaned columns on the transient
 table.

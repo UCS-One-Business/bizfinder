@@ -159,8 +159,8 @@
           <notebook>
             <page string="Results" name="results">
               <!-- Action row above the list. The js_class controller relocates
-                   the list's pager (.o_cp_pager) into this row — see
-                   bizfinder_search_form.js — so the Create-lead button, the
+                   the list's pager (.o_cp_pager) into this row - see
+                   bizfinder_search_form.js - so the Create-lead button, the
                    billing estimate and the pager read as a single toolbar. -->
               <div class="o_bizfinder_results_actions d-flex align-items-center mt-2"
                    invisible="not result_line_ids">

@@ -18,7 +18,7 @@ def migrate(cr, version):
         "DROP CONSTRAINT IF EXISTS bizfinder_community_code_uniq;"
     )
     cr.execute("ALTER TABLE bizfinder_community DROP COLUMN IF EXISTS code;")
-    # Clear stale rows from the prior schema — kommunkod cannot be
+    # Clear stale rows from the prior schema - kommunkod cannot be
     # backfilled without region info, and the API call in the
     # post-migration will repopulate cleanly.
     cr.execute("DELETE FROM bizfinder_community;")

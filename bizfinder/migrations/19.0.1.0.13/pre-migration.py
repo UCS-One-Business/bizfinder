@@ -1,7 +1,7 @@
 """Drop ``units_min`` / ``units_max`` and the now-removed
 ``industry_preset`` selection column on ``bizfinder.search``.
 
-The "number of units" range filter was dropped from the UI — it never
+The "number of units" range filter was dropped from the UI - it never
 mapped to anything users actually wanted to slice on. ``industry_preset``
 was replaced by the new ``industry_ids`` Many2many.
 """

@@ -54,7 +54,7 @@ BUILTIN_SEGMENT_SV = {
         'en': 'Past first year',
         'name': 'Klarat första året',
         'description': "Aktiebolag bildade för 12–24 månader sedan, med F-skatt. Förbi "
-                       "startup-smekmånaden — köper riktiga verktyg nu.",
+                       "startup-smekmånaden - köper riktiga verktyg nu.",
     },
     'distressed_operating': {
         'en': 'Distressed but operating',
@@ -68,13 +68,13 @@ BUILTIN_SEGMENT_SV = {
         'name': 'Återhämtningskandidater',
         'description': "Aktiebolag med omsättningstillväxt mellan -25 % och -5 %, soliditet "
                        "≥ 20 %, fortfarande positivt eget kapital. Negativ tillväxt men "
-                       "solventa — turnaround-rådgivning och kostnadsbesparande verktyg.",
+                       "solventa - turnaround-rådgivning och kostnadsbesparande verktyg.",
     },
     'it_growers': {
         'en': 'IT consulting growers',
         'name': 'Växande IT-konsulter',
         'description': "Aktiebolag inom SNI 62 (programmering/IT-konsult), omsättningstillväxt "
-                       "≥ 15 %, personaltillväxt ≥ 10 %, 5–199 anställda. Branschpreset — "
+                       "≥ 15 %, personaltillväxt ≥ 10 %, 5–199 anställda. Branschpreset - "
                        "klona för andra branscher.",
     },
     'construction_sme': {
@@ -88,33 +88,33 @@ BUILTIN_SEGMENT_SV = {
         'en': 'Scaleups',
         'name': 'Scaleups',
         'description': "Aktiebolag med omsättningstillväxt ≥ 25 %, personaltillväxt ≥ 10 %, "
-                       "5–49 anställda, med F-skatt. Bolag som faktiskt skalar — kombinera "
+                       "5–49 anställda, med F-skatt. Bolag som faktiskt skalar - kombinera "
                        "med länsfältet för territoriebearbetning.",
     },
     'high_dividend': {
         'en': 'Dividend payers',
         'name': 'Utdelningsbolag',
         'description': "Aktiebolag med utdelning ≥ 500 tkr senaste året, soliditet ≥ 30 %. "
-                       "Ägaruttagna vinster — förmögenhetsförvaltning, skatterådgivning, "
+                       "Ägaruttagna vinster - förmögenhetsförvaltning, skatterådgivning, "
                        "generationsskifte.",
     },
     'multi_unit_ops': {
         'en': 'Multi-location operations',
         'name': 'Verksamhet på flera orter',
         'description': "Aktiebolag med 3+ arbetsställen. Franchise, butikskedjor, "
-                       "servicenätverk — kassasystem, logistik, multi-site-hantering.",
+                       "servicenätverk - kassasystem, logistik, multi-site-hantering.",
     },
     'enterprise_candidates': {
         'en': 'Enterprise candidates',
         'name': 'Enterprise-kandidater',
         'description': "Aktiebolag med nettoomsättning ≥ 50 Mkr, 100+ anställda, med F-skatt. "
-                       "Storaffärssegmentet — långa säljcykler, höga kontraktsvärden.",
+                       "Storaffärssegmentet - långa säljcykler, höga kontraktsvärden.",
     },
     'equity_rich': {
         'en': 'Equity-rich AB',
         'name': 'Kapitalstarka AB',
         'description': "Aktiebolag med eget kapital ≥ 5 Mkr och soliditet ≥ 50 %. Kapital "
-                       "redo för investeringar — capex, M&A-rådgivning, kapitalförvaltning.",
+                       "redo för investeringar - capex, M&A-rådgivning, kapitalförvaltning.",
     },
 }
 
@@ -147,7 +147,7 @@ class BizfinderPreset(models.Model):
         ondelete='cascade',
     )
 
-    # Own relation tables (distinct from bizfinder.search's) — see the mixin
+    # Own relation tables (distinct from bizfinder.search's) - see the mixin
     # docstring for why these aren't declared on the abstract model.
     region_ids = fields.Many2many(
         'bizfinder.region',
@@ -200,7 +200,7 @@ class BizfinderPreset(models.Model):
         string='Auto-deliver leads',
         default=False,
         help="A daily job runs this preset and creates CRM leads from new "
-             "matches. Leads are created from the redacted preview — no "
+             "matches. Leads are created from the redacted preview - no "
              "billable reveals.",
     )
     auto_deliver_user_id = fields.Many2one(
@@ -263,7 +263,7 @@ class BizfinderPreset(models.Model):
         segment payload (``{lang_code: {'name': .., 'description': ..}}``)
         onto a freshly seeded preset. Languages not active in this database
         are skipped. Returns the number of languages written."""
-        # Active languages only — a handful of records at most.
+        # Active languages only - a handful of records at most.
         active = set(self.env['res.lang'].search([]).mapped('code'))  # pylint: disable=no-search-all
         written = 0
         for lang, texts in (i18n or {}).items():
@@ -369,7 +369,7 @@ class BizfinderPreset(models.Model):
         note = (
             "<p><i>%s</i></p>" % escape(_(
                 "Auto-delivered by preset '%(preset)s'. Contact details not "
-                "revealed — no reveal billed.", preset=self.name))
+                "revealed - no reveal billed.", preset=self.name))
         )
         created = Lead
         for r in rows:

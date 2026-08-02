@@ -179,7 +179,7 @@ class BizfinderCompanyEvent(models.Model):
         label = self._event_type_label(self.event_type)
         if self.old_value or self.new_value:
             body = _(
-                "Bizfinder: %(label)s — %(old)s → %(new)s",
+                "Bizfinder: %(label)s - %(old)s → %(new)s",
                 label=label,
                 old=self.old_value or _('(none)'),
                 new=self.new_value or _('(none)'),
