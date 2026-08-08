@@ -1,0 +1,14 @@
+{
+  "roles": [
+    {
+      "name": "Bizfinder Monitoring",
+      "groups": [
+        "bizfinder.group_bizfinder_monitoring",
+        "sales_team.group_sale_salesman"
+      ],
+      "view_modules": [
+        "bizfinder"
+      ]
+    }
+  ]
+}

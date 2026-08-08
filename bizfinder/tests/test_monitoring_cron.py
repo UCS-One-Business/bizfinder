@@ -14,6 +14,12 @@ class TestBizfinderMonitoringCron(BizfinderTestCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        # Turn the monitoring feature toggle on, the way the settings
+        # checkbox does: imply the feature group to the salesman group.
+        cls.monitoring_group = cls.env.ref('bizfinder.group_bizfinder_monitoring')
+        cls.env.ref('sales_team.group_sale_salesman').write({
+            'implied_ids': [(4, cls.monitoring_group.id)],
+        })
         cls.salesman = cls.env['res.users'].create({
             'name': 'Bizfinder Salesman',
             'login': 'bizfinder_cron_salesman',
@@ -45,6 +51,20 @@ class TestBizfinderMonitoringCron(BizfinderTestCommon):
 
     def _status_only_first(self):
         return [self.sample_company_status_rows()[0]]
+
+    def test_cron_noop_when_feature_disabled(self):
+        self.env.ref('sales_team.group_sale_salesman').write({
+            'implied_ids': [(3, self.monitoring_group.id)],
+        })
+        called = []
+
+        def fake_status(_model, *args, **kwargs):
+            called.append(True)
+            return []
+
+        self._run_cron(company_status=fake_status, events=fake_status)
+        self.assertFalse(called)
+        self.assertFalse(self._partner_events())
 
     def test_cron_noop_without_monitored_partners(self):
         self.partner.bizfinder_monitored = False

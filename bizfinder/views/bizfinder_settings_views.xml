@@ -18,6 +18,10 @@
             <button name="action_bizfinder_test_connection"
                     string="Test connection" type="object" class="btn-secondary"/>
           </setting>
+          <setting id="bizfinder_monitoring_setting"
+                   help="Daily registry sync of monitored companies: status, financial health badge and change events (F-tax, VAT, status) on company contacts.">
+            <field name="group_bizfinder_monitoring"/>
+          </setting>
         </block>
       </xpath>
     </field>

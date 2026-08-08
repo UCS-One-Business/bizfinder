@@ -695,6 +695,11 @@ msgid "Bizfinder Filter Mixin"
 msgstr ""
 
 #. module: bizfinder
+#: model:res.groups,name:bizfinder.group_bizfinder_monitoring
+msgid "Bizfinder Monitoring"
+msgstr ""
+
+#. module: bizfinder
 #: model:ir.model,name:bizfinder.model_bizfinder_preset
 msgid "Bizfinder Preset"
 msgstr ""
@@ -830,6 +835,11 @@ msgid "Companies"
 msgstr ""
 
 #. module: bizfinder
+#: model_terms:ir.ui.view,arch_db:bizfinder.res_config_settings_view_form_bizfinder
+msgid "Daily registry sync of monitored companies: status, financial health badge and change events (F-tax, VAT, status) on company contacts."
+msgstr ""
+
+#. module: bizfinder
 #. odoo-python
 #: code:addons/bizfinder/wizards/bizfinder_search.py:0
 #: model:ir.model.fields,field_description:bizfinder.field_bizfinder_preset__company_id
@@ -838,6 +848,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_search_form
 #: model_terms:ir.ui.view,arch_db:bizfinder.view_crm_lead_form_bizfinder
 msgid "Company"
+msgstr ""
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_res_config_settings__group_bizfinder_monitoring
+msgid "Company Monitoring"
 msgstr ""
 
 #. module: bizfinder

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo noupdate="1">
-  <!-- Daily monitoring sync. Active by default but guarded: the entrypoint
-       returns immediately when no company partner is opted into monitoring,
-       so an idle install never calls the API. -->
+  <!-- Daily monitoring sync. Active by default but guarded twice: the
+       entrypoint returns immediately unless the Company Monitoring feature
+       toggle (settings) is on, and again when no company partner is opted
+       into monitoring, so an idle install never calls the API. -->
   <record id="ir_cron_bizfinder_monitoring" model="ir.cron">
     <field name="name">Bizfinder: monitor customer base</field>
     <field name="model_id" ref="model_bizfinder_company_event"/>

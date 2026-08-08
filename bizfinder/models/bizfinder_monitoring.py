@@ -64,6 +64,17 @@ class BizfinderCompanyEvent(models.Model):
 
     # ------------------------------------------------------------------ cron
     @api.model
+    def _monitoring_enabled(self) -> bool:
+        """The monitoring feature toggle: the settings checkbox implies
+        group_bizfinder_monitoring to the salesman group. Off means the UI
+        is hidden and the cron must not call the API."""
+        group = self.env.ref(
+            'bizfinder.group_bizfinder_monitoring', raise_if_not_found=False)
+        salesman = self.env.ref(
+            'sales_team.group_sale_salesman', raise_if_not_found=False)
+        return bool(group and salesman) and group in salesman.sudo().all_implied_ids
+
+    @api.model
     def cron_sync_monitoring(self):
         """Daily monitoring sync: refresh registry status/financials for the
         monitored customer base, then pull change events and surface them as
@@ -73,6 +84,8 @@ class BizfinderCompanyEvent(models.Model):
         if every batch failed the last error is re-raised so the cron shows up
         red instead of silently doing nothing (AGENTS.md: loud failures).
         """
+        if not self._monitoring_enabled():
+            return
         Partner = self.env['res.partner'].sudo()
         monitored = Partner.search([
             ('bizfinder_monitored', '=', True),

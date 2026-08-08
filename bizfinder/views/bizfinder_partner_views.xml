@@ -12,7 +12,7 @@
         <button name="action_bizfinder_view_events" type="object"
                 class="oe_stat_button" icon="fa-rss"
                 invisible="not is_company or not company_registry"
-                groups="sales_team.group_sale_salesman">
+                groups="bizfinder.group_bizfinder_monitoring">
           <field name="bizfinder_event_count" widget="statinfo" string="Bizfinder Events"/>
         </button>
       </xpath>
@@ -21,12 +21,12 @@
                 string="Fetch from Bizfinder" icon="fa-search"
                 class="oe_edit_only btn-link text-nowrap"
                 invisible="not is_company"
-                groups="sales_team.group_sale_salesman"/>
+                groups="bizfinder.group_bizfinder_monitoring"/>
       </xpath>
       <xpath expr="//notebook" position="inside">
         <page string="Bizfinder" name="bizfinder"
               invisible="not is_company or not company_registry"
-              groups="sales_team.group_sale_salesman">
+              groups="bizfinder.group_bizfinder_monitoring">
           <div class="mb-2">
             <button name="action_bizfinder_sync" type="object"
                     string="Sync now" class="btn-primary"/>
@@ -72,6 +72,7 @@
     <field name="arch" type="xml">
       <xpath expr="//field[@name='country_id']" position="after">
         <field name="bizfinder_health" optional="hide" widget="badge"
+               groups="bizfinder.group_bizfinder_monitoring"
                decoration-success="bizfinder_health == 'good'"
                decoration-warning="bizfinder_health == 'warning'"
                decoration-danger="bizfinder_health == 'critical'"/>
@@ -86,25 +87,31 @@
     <field name="inherit_id" ref="base.view_res_partner_filter"/>
     <field name="arch" type="xml">
       <xpath expr="//filter[@name='inactive']" position="after">
-        <separator/>
+        <separator groups="bizfinder.group_bizfinder_monitoring"/>
         <filter string="Monitored by Bizfinder" name="bizfinder_monitored"
+                groups="bizfinder.group_bizfinder_monitoring"
                 domain="[('bizfinder_monitored', '=', True)]"/>
         <filter string="Health: Critical" name="bizfinder_health_critical"
+                groups="bizfinder.group_bizfinder_monitoring"
                 domain="[('bizfinder_health', '=', 'critical')]"/>
         <filter string="Health: Warning" name="bizfinder_health_warning"
+                groups="bizfinder.group_bizfinder_monitoring"
                 domain="[('bizfinder_health', '=', 'warning')]"/>
       </xpath>
     </field>
   </record>
 
-  <!-- "Monitor with Bizfinder" on the contacts list action menu (sales
-       managers): opt selected companies with a Company ID into monitoring. -->
+  <!-- "Monitor with Bizfinder" on the contacts list action menu: opt
+       selected companies with a Company ID into monitoring. Gated on the
+       feature-toggle group (binding groups are OR-combined, so the old
+       manager-only group cannot be kept alongside it; the per-partner
+       toggle on the form page was salesman-level already). -->
   <record id="action_bizfinder_monitor_partners" model="ir.actions.server">
     <field name="name">Monitor with Bizfinder</field>
     <field name="model_id" ref="base.model_res_partner"/>
     <field name="binding_model_id" ref="base.model_res_partner"/>
     <field name="binding_view_types">list</field>
-    <field name="group_ids" eval="[(4, ref('sales_team.group_sale_manager'))]"/>
+    <field name="group_ids" eval="[(4, ref('bizfinder.group_bizfinder_monitoring'))]"/>
     <field name="state">code</field>
     <field name="code">action = records.action_bizfinder_monitor()</field>
   </record>
@@ -153,6 +160,6 @@
     <field name="target">new</field>
     <field name="binding_model_id" ref="base.model_res_partner"/>
     <field name="binding_view_types">list</field>
-    <field name="group_ids" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+    <field name="group_ids" eval="[(4, ref('bizfinder.group_bizfinder_monitoring'))]"/>
   </record>
 </odoo>

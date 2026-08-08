@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <!-- Feature-toggle group for the monitoring part (registry status sync,
+       health badge, company events, partner lookup). Nobody has it by
+       default: the "Company Monitoring" checkbox in Settings implies it to
+       the salesman group, which both reveals the monitoring UI and arms the
+       daily cron (cron_sync_monitoring no-ops while the group is unimplied). -->
+  <record id="group_bizfinder_monitoring" model="res.groups">
+    <field name="name">Bizfinder Monitoring</field>
+  </record>
+</odoo>
