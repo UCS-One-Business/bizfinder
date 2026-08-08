@@ -1,18 +1,17 @@
 
 """Suppression of already-known companies in the prospect search.
 
-With the exclude toggles on (the wizard default), ``action_search`` collects
-the org numbers of existing CRM leads and company contacts and sends them to
-the API as an EXCLUDE_ORG_NUMBERS machine filter, so known companies never
-consume result-page slots. The toggles are independent; an oversized
-suppression set raises instead of silently truncating.
+``action_search`` always collects the org numbers of existing CRM leads and
+company contacts and sends them to the API as an EXCLUDE_ORG_NUMBERS machine
+filter, so known companies never consume result-page slots. An oversized
+suppression set skips the server-side filter (falling back to result-page
+deduplication) instead of blocking the search.
 """
 
 from unittest.mock import patch
 
 from odoo.addons.bizfinder.models import bizfinder_filter_mixin
 from odoo.addons.bizfinder.tests.common import BizfinderTestCommon
-from odoo.exceptions import UserError
 from odoo.tests import tagged
 
 
@@ -56,10 +55,8 @@ class TestSuppression(BizfinderTestCommon):
             None,
         )
 
-    def test_toggles_on_send_exclusions(self):
+    def test_search_sends_exclusions(self):
         wizard = self._new_wizard()
-        self.assertTrue(wizard.exclude_crm_leads)
-        self.assertTrue(wizard.exclude_partners)
         captured = self._search_payloads(wizard)
         for key in ('preview', 'search'):
             entry = self._exclude_entry(captured[key])
@@ -68,38 +65,11 @@ class TestSuppression(BizfinderTestCommon):
             # Partner org number is normalized (hyphen stripped).
             self.assertIn(5566778899, entry['SelectOption'])
 
-    def test_lead_toggle_only(self):
-        wizard = self._new_wizard(exclude_partners=False)
-        entry = self._exclude_entry(self._search_payloads(wizard)['search'])
-        self.assertIn(5511122233, entry['SelectOption'])
-        self.assertNotIn(5566778899, entry['SelectOption'])
-
-    def test_toggles_off_send_no_exclusions(self):
-        wizard = self._new_wizard(exclude_crm_leads=False, exclude_partners=False)
-        captured = self._search_payloads(wizard)
+    def test_oversized_suppression_falls_back(self):
+        """Beyond the payload limit the search still runs, just without the
+        server-side filter; the result-page dedup is the safety net."""
+        wizard = self._new_wizard()
+        with patch.object(bizfinder_filter_mixin, 'SUPPRESSION_MAX', 1):
+            captured = self._search_payloads(wizard)
         self.assertIsNone(self._exclude_entry(captured['preview']))
         self.assertIsNone(self._exclude_entry(captured['search']))
-
-    def test_oversized_suppression_raises(self):
-        wizard = self._new_wizard()
-        with patch.object(bizfinder_filter_mixin, 'SUPPRESSION_MAX', 1), \
-                self.mock_client(), self.assertRaises(UserError):
-            wizard.action_search()
-
-    def test_preset_carries_toggles(self):
-        """Saving a preset snapshots the toggles; applying it restores them."""
-        wizard = self._new_wizard(exclude_crm_leads=False, exclude_partners=False)
-        save = self.env['bizfinder.preset.save'].create({
-            'wizard_id': wizard.id,
-            'name': 'No suppression',
-        })
-        save.action_save()
-        preset = wizard.preset_id
-        self.assertFalse(preset.exclude_crm_leads)
-        self.assertFalse(preset.exclude_partners)
-
-        other = self._new_wizard()
-        other.preset_id = preset
-        other._onchange_preset_id()
-        self.assertFalse(other.exclude_crm_leads)
-        self.assertFalse(other.exclude_partners)

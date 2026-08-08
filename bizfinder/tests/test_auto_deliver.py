@@ -29,8 +29,6 @@ class TestAutoDeliver(BizfinderTestCommon):
             'auto_deliver_user_id': cls.salesperson.id,
             'auto_deliver_max': 2,
             'auto_deliver_new_only': True,
-            'exclude_crm_leads': False,
-            'exclude_partners': False,
         })
 
     def _run_cron(self, **mock_kwargs):

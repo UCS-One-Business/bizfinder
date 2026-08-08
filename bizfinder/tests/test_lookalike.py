@@ -37,8 +37,6 @@ class TestLookalike(BizfinderTestCommon):
         # 5000 - 9999 tkr sits in the 1–10 Mkr band.
         self.assertIn('1–10 Mkr', set(wizard.net_sales_magnitude_ids.mapped('name')))
         self.assertIn('AB', set(wizard.legal_form_ids.mapped('code')))
-        self.assertTrue(wizard.exclude_crm_leads)
-        self.assertTrue(wizard.exclude_partners)
 
     def test_lookalike_without_data_raises(self):
         leads = self._make_lead(name='Manual lead, no company data')

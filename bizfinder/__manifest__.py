@@ -5,7 +5,7 @@
     'website': 'https://www.ucsonedo.se',
     'support': 'info@ucsonedo.se',
     'category': 'Sales/CRM',
-    'version': '19.0.3.1.2',
+    'version': '19.0.3.2.0',
     'depends': ['base', 'web', 'crm', 'utm'],
     'data': [
         'security/ir.model.access.csv',

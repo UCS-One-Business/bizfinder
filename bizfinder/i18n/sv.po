@@ -17,6 +17,12 @@ msgstr ""
 
 #. module: bizfinder
 #. odoo-python
+#: code:addons/bizfinder/wizards/bizfinder_search.py:0
+msgid "%(reveals)s reveals · %(amount).2f %(currency)s"
+msgstr "%(reveals)s upplåsningar · %(amount).2f %(currency)s"
+
+#. module: bizfinder
+#. odoo-python
 #: code:addons/bizfinder/models/bizfinder_filter_mixin.py:0
 msgid "'%(value)s' is not a valid number for %(field)s."
 msgstr "'%(value)s' är inte ett giltigt tal för %(field)s."

@@ -8,7 +8,8 @@ _logger = logging.getLogger(__name__)
 
 # Upper bound on the number of org numbers sent to the API as an
 # EXCLUDE_ORG_NUMBERS suppression filter. Beyond this the payload gets
-# unreasonable; the user should disable the exclude toggles instead.
+# unreasonable; suppression is skipped and the result-page dedup acts
+# as the safety net.
 SUPPRESSION_MAX = 50_000
 
 
@@ -35,23 +36,6 @@ class BizfinderFilterMixin(models.AbstractModel):
     def _default_legal_form_ids(self):
         ab = self.env['bizfinder.legal.form'].search([('code', '=', 'AB')], limit=1)
         return [(6, 0, ab.ids)] if ab else False
-
-    # Suppression toggles: exclude companies this database already knows
-    # about from prospect results. Applied server-side (before the API
-    # call) as an EXCLUDE_ORG_NUMBERS machine filter, so excluded
-    # companies don't consume result-page slots either.
-    exclude_crm_leads = fields.Boolean(
-        string='Exclude companies already in CRM',
-        default=True,
-        help="Skip companies that already exist as CRM leads or "
-             "opportunities (matched on organisation number).",
-    )
-    exclude_partners = fields.Boolean(
-        string='Exclude existing contacts',
-        default=True,
-        help="Skip companies that already exist as contacts (matched on "
-             "the contact's Company ID / organisation number).",
-    )
 
     zip_prefixes = fields.Char(
         string='Postkoder',
@@ -114,44 +98,34 @@ class BizfinderFilterMixin(models.AbstractModel):
     # Filter fields that are preferences about *this* database rather than
     # API filter categories: copied verbatim between wizard and preset
     # instead of round-tripping through _build_values().
-    FILTER_FLAG_FIELDS = ('exclude_crm_leads', 'exclude_partners')
-
-    def _filter_flag_vals(self) -> dict:
-        self.ensure_one()
-        return {fname: self[fname] for fname in self.FILTER_FLAG_FIELDS}
-
     def _suppression_org_numbers(self) -> list[int]:
-        """Org numbers to exclude from prospect results, according to the
-        exclude_* toggles: org numbers of existing CRM leads and/or company
-        contacts. Raises when the set is too large to send to the API."""
+        """Org numbers to exclude from prospect results: org numbers of
+        existing CRM leads and company contacts. Returns an empty list when
+        the set is too large to send to the API; the result-page dedup then
+        acts as the safety net."""
         self.ensure_one()
         orgs: set[int] = set()
-        if self.exclude_crm_leads:
-            for rec in self.env['crm.lead'].sudo().search_read(
-                [('company_organisation_number', '!=', False)],
-                ['company_organisation_number'],
-            ):
-                digits = ''.join(
-                    ch for ch in rec['company_organisation_number'] if ch.isdigit())
-                if digits:
-                    orgs.add(int(digits))
-        if self.exclude_partners:
-            for rec in self.env['res.partner'].sudo().search_read(
-                [('is_company', '=', True), ('company_registry', '!=', False)],
-                ['company_registry'],
-            ):
-                digits = ''.join(ch for ch in rec['company_registry'] if ch.isdigit())
-                if digits:
-                    orgs.add(int(digits))
+        for rec in self.env['crm.lead'].sudo().search_read(
+            [('company_organisation_number', '!=', False)],
+            ['company_organisation_number'],
+        ):
+            digits = ''.join(
+                ch for ch in rec['company_organisation_number'] if ch.isdigit())
+            if digits:
+                orgs.add(int(digits))
+        for rec in self.env['res.partner'].sudo().search_read(
+            [('is_company', '=', True), ('company_registry', '!=', False)],
+            ['company_registry'],
+        ):
+            digits = ''.join(ch for ch in rec['company_registry'] if ch.isdigit())
+            if digits:
+                orgs.add(int(digits))
         if len(orgs) > SUPPRESSION_MAX:
-            raise UserError(
-                _(
-                    "Too many companies to exclude (%(count)s; the limit is "
-                    "%(limit)s). Disable the exclude toggles and rely on "
-                    "result-page deduplication instead.",
-                    count=len(orgs), limit=SUPPRESSION_MAX,
-                )
-            )
+            _logger.warning(
+                "bizfinder: %d known org numbers exceed the suppression "
+                "limit of %d; skipping server-side suppression and relying "
+                "on result-page deduplication.", len(orgs), SUPPRESSION_MAX)
+            return []
         return sorted(orgs)
 
     def _apply_suppression(self, values: list) -> list:

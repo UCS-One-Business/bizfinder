@@ -122,8 +122,12 @@ class BizfinderSearch(models.TransientModel):
             if not rec.month_usage_loaded:
                 rec.month_usage_display = ''
                 continue
-            rec.month_usage_display = "%s reveals · %.2f %s" % (
-                rec.month_reveals, rec.month_amount, rec.billing_currency or '')
+            rec.month_usage_display = rec.env._(
+                "%(reveals)s reveals · %(amount).2f %(currency)s",
+                reveals=rec.month_reveals,
+                amount=rec.month_amount,
+                currency=rec.billing_currency or '',
+            )
 
     # ------------------------------------------------------------------- preset
 
@@ -134,7 +138,6 @@ class BizfinderSearch(models.TransientModel):
         if not self.preset_id:
             return
         vals = self._resolve_filters_to_vals(self.preset_id._build_values())
-        vals.update(self.preset_id._filter_flag_vals())
         for fname, value in vals.items():
             self[fname] = value
 
@@ -157,10 +160,8 @@ class BizfinderSearch(models.TransientModel):
         self.ensure_one()
         if not self.preset_id:
             raise UserError(_("Select a preset first, then update it."))
-        self.preset_id.write({
-            **self.preset_id._resolve_filters_to_vals(self._build_values()),
-            **self._filter_flag_vals(),
-        })
+        self.preset_id.write(
+            self.preset_id._resolve_filters_to_vals(self._build_values()))
         return {
             'type': 'ir.actions.client',
             'tag': 'display_notification',
@@ -208,7 +209,8 @@ class BizfinderSearch(models.TransientModel):
         # Suppress companies this database already knows (existing CRM
         # leads / contacts) server-side so they don't consume result-page
         # slots. The post-fetch dedup below stays as a safety net for leads
-        # created between the two calls.
+        # created between the two calls and for databases whose known-company
+        # set exceeds the suppression payload limit.
         self._apply_suppression(values)
         # Fetch the true total alongside the result page so the user sees
         # both "what was returned" and "what's available".
@@ -373,8 +375,6 @@ class BizfinderSearch(models.TransientModel):
             'employee_magnitude_ids': [(6, 0, employee_mags.ids)],
             'net_sales_magnitude_ids': [(6, 0, turnover_mags.ids)],
             'legal_form_ids': [(6, 0, legal_forms.ids)],
-            'exclude_crm_leads': True,
-            'exclude_partners': True,
         })
         return {
             'type': 'ir.actions.act_window',
@@ -746,10 +746,8 @@ class BizfinderPresetSave(models.TransientModel):
             'description': self.description or False,
         })
         # Snapshot the wizard's current filters onto the new preset's fields.
-        preset.write({
-            **preset._resolve_filters_to_vals(self.wizard_id._build_values()),
-            **self.wizard_id._filter_flag_vals(),
-        })
+        preset.write(
+            preset._resolve_filters_to_vals(self.wizard_id._build_values()))
         self.wizard_id.preset_id = preset
         return {
             'type': 'ir.actions.act_window',

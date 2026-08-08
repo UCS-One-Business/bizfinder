@@ -51,8 +51,6 @@
               <field name="employee_magnitude_ids" widget="many2many_tags"
                      options="{'no_create': True, 'no_quick_create': True}"
                      placeholder="Pick employee bands..."/>
-              <field name="exclude_crm_leads"/>
-              <field name="exclude_partners"/>
             </group>
           </group>
 
