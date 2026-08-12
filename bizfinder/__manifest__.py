@@ -5,7 +5,7 @@
     'website': 'https://www.ucsonedo.se',
     'support': 'info@ucsonedo.se',
     'category': 'Sales/CRM',
-    'version': '19.0.3.3.0',
+    'version': '19.0.3.3.1',
     'depends': ['base', 'web', 'crm', 'utm'],
     'data': [
         'security/bizfinder_security.xml',

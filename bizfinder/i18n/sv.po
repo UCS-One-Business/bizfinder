@@ -2213,3 +2213,247 @@ msgstr "Postnr"
 #: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_preset_save_form
 msgid "e.g. Growing IT consultancies in Skåne"
 msgstr "t.ex. Växande IT-konsultbolag i Skåne"
+
+#. module: bizfinder
+msgid "%s companies are now monitored by Bizfinder."
+msgstr "%s företag bevakas nu av Bizfinder."
+
+#. module: bizfinder
+msgid "(none)"
+msgstr "(ingen)"
+
+#. module: bizfinder
+msgid "A daily job runs this preset and creates CRM leads from new matches. Leads are created from the redacted preview - no billable reveals."
+msgstr "Ett dagligt jobb kör den här förinställningen och skapar CRM-kundämnen från nya träffar. Kundämnen skapas från den maskerade förhandsgranskningen - inga debiterbara upplåsningar."
+
+#. module: bizfinder
+msgid "Active in registry"
+msgstr "Aktiv i registret"
+
+#. module: bizfinder
+msgid "Auto-deliver leads"
+msgstr "Leverera kundämnen automatiskt"
+
+#. module: bizfinder
+msgid "Auto-delivered by preset '%(preset)s'. Contact details not revealed - no reveal billed."
+msgstr "Automatiskt levererad av förinställningen '%(preset)s'. Kontaktuppgifter inte upplåsta - ingen upplåsning debiterad."
+
+#. module: bizfinder
+msgid "Auto-delivery"
+msgstr "Automatisk leverans"
+
+#. module: bizfinder
+msgid "Bizfinder - Lookalike Search"
+msgstr "Bizfinder - Lookalike-sökning"
+
+#. module: bizfinder
+msgid "Bizfinder Company Event"
+msgstr "Bizfinder-företagshändelse"
+
+#. module: bizfinder
+msgid "Bizfinder Events"
+msgstr "Bizfinder-händelser"
+
+#. module: bizfinder
+msgid "Bizfinder Partner Lookup"
+msgstr "Bizfinder-företagsuppslag"
+
+#. module: bizfinder
+msgid "Bizfinder Partner Lookup Result"
+msgstr "Resultat för Bizfinder-företagsuppslag"
+
+#. module: bizfinder
+msgid "Bizfinder alert: %(label)s"
+msgstr "Bizfinder-avisering: %(label)s"
+
+#. module: bizfinder
+msgid "Bizfinder events"
+msgstr "Bizfinder-händelser"
+
+#. module: bizfinder
+msgid "Bizfinder: %(label)s"
+msgstr "Bizfinder: %(label)s"
+
+#. module: bizfinder
+msgid "Bizfinder: %(label)s - %(old)s → %(new)s"
+msgstr "Bizfinder: %(label)s - %(old)s → %(new)s"
+
+#. module: bizfinder
+msgid "Bizfinder: Lookalike Search"
+msgstr "Bizfinder: Lookalike-sökning"
+
+#. module: bizfinder
+msgid "Close"
+msgstr "Stäng"
+
+#. module: bizfinder
+msgid "Company Events"
+msgstr "Företagshändelser"
+
+#. module: bizfinder
+msgid "Company data synced from Bizfinder."
+msgstr "Företagsdata synkade från Bizfinder."
+
+#. module: bizfinder
+msgid "Company name"
+msgstr "Företagsnamn"
+
+#. module: bizfinder
+msgid "Company name or org number"
+msgstr "Företagsnamn eller organisationsnummer"
+
+#. module: bizfinder
+msgid "Deliver to"
+msgstr "Leverera till"
+
+#. module: bizfinder
+msgid "Detected At"
+msgstr "Upptäckt"
+
+#. module: bizfinder
+msgid "Digits match an organisation-number prefix, anything else matches the company name."
+msgstr "Siffror matchar början av ett organisationsnummer, allt annat matchar företagsnamnet."
+
+#. module: bizfinder
+msgid "Event"
+msgstr "Händelse"
+
+#. module: bizfinder
+msgid "Event Type"
+msgstr "Händelsetyp"
+
+#. module: bizfinder
+msgid "Event Type Label"
+msgstr "Händelsetypsetikett"
+
+#. module: bizfinder
+msgid "Event type"
+msgstr "Händelsetyp"
+
+#. module: bizfinder
+msgid "Fetch from Bizfinder"
+msgstr "Hämta från Bizfinder"
+
+#. module: bizfinder
+msgid "Financial health"
+msgstr "Finansiell hälsa"
+
+#. module: bizfinder
+msgid "Health: Critical"
+msgstr "Hälsa: Kritisk"
+
+#. module: bizfinder
+msgid "Health: Warning"
+msgstr "Hälsa: Varning"
+
+#. module: bizfinder
+msgid "Key figures (latest statement)"
+msgstr "Nyckeltal (senaste bokslut)"
+
+#. module: bizfinder
+msgid "Last Bizfinder sync"
+msgstr "Senaste Bizfinder-synk"
+
+#. module: bizfinder
+msgid "Last delivery run"
+msgstr "Senaste leveranskörning"
+
+#. module: bizfinder
+msgid "Max leads per run"
+msgstr "Max kundämnen per körning"
+
+#. module: bizfinder
+msgid "Monitor with Bizfinder"
+msgstr "Bevaka med Bizfinder"
+
+#. module: bizfinder
+msgid "Monitored by Bizfinder"
+msgstr "Bevakas av Bizfinder"
+
+#. module: bizfinder
+msgid "Monitoring"
+msgstr "Bevakning"
+
+#. module: bizfinder
+msgid "New Value"
+msgstr "Nytt värde"
+
+#. module: bizfinder
+msgid "New companies only"
+msgstr "Endast nya företag"
+
+#. module: bizfinder
+msgid "No companies matched. Try a longer name or org number."
+msgstr "Inga företag matchade. Prova ett längre namn eller organisationsnummer."
+
+#. module: bizfinder
+msgid "None of the selected contacts is a company with a Company ID (organisation number)."
+msgstr "Ingen av de valda kontakterna är ett företag med företags-ID (organisationsnummer)."
+
+#. module: bizfinder
+msgid "None of these leads carries Bizfinder company data. Lookalike search needs leads created by Bizfinder."
+msgstr "Inget av dessa kundämnen har företagsdata från Bizfinder. Lookalike-sökning kräver kundämnen skapade av Bizfinder."
+
+#. module: bizfinder
+msgid "Old Value"
+msgstr "Tidigare värde"
+
+#. module: bizfinder
+msgid "Only deliver companies that entered the registry since the last run (first run: the last 7 days)."
+msgstr "Leverera endast företag som tillkommit i registret sedan förra körningen (första körningen: senaste 7 dagarna)."
+
+#. module: bizfinder
+msgid "Org number"
+msgstr "Organisationsnummer"
+
+#. module: bizfinder
+msgid "Partner to enrich"
+msgstr "Kontakt att berika"
+
+#. module: bizfinder
+msgid "Pick"
+msgstr "Välj"
+
+#. module: bizfinder
+msgid "Registry status"
+msgstr "Registerstatus"
+
+#. module: bizfinder
+msgid "Registry status code"
+msgstr "Registerstatuskod"
+
+#. module: bizfinder
+msgid "Salesperson the auto-delivered leads are assigned to."
+msgstr "Säljare som de automatiskt levererade kundämnena tilldelas."
+
+#. module: bizfinder
+msgid "Search by company name or organisation number, then pick a result. The pick links the company (organisation number) and syncs status and financials from Bizfinder. Lookup results carry no street or phone - existing contact details are never overwritten."
+msgstr "Sök på företagsnamn eller organisationsnummer och välj sedan ett resultat. Valet kopplar företaget (organisationsnummer) och synkar status och finansiell data från Bizfinder. Uppslagsresultat innehåller varken adress eller telefon - befintliga kontaktuppgifter skrivs aldrig över."
+
+#. module: bizfinder
+msgid "Set the Company ID (organisation number) on this company first, then sync."
+msgstr "Ange företags-ID (organisationsnummer) på företaget först och synka sedan."
+
+#. module: bizfinder
+msgid "Set when the wizard was opened from an existing company; the picked result enriches this partner instead of creating a new one."
+msgstr "Sätts när guiden öppnas från ett befintligt företag; det valda resultatet berikar den här kontakten i stället för att skapa en ny."
+
+#. module: bizfinder
+msgid "Sync now"
+msgstr "Synka nu"
+
+#. module: bizfinder
+msgid "Type at least two characters to search."
+msgstr "Skriv minst två tecken för att söka."
+
+#. module: bizfinder
+msgid "Upper bound on leads created per nightly run."
+msgstr "Övre gräns för antal kundämnen som skapas per nattlig körning."
+
+#. module: bizfinder
+msgid "VAT registered (moms)"
+msgstr "Momsregistrerad"
+
+#. module: bizfinder
+msgid "e.g. Nordfält Bygg or 556677"
+msgstr "t.ex. Nordfält Bygg eller 556677"

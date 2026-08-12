@@ -34,13 +34,13 @@ def migrate(cr, version):
             filters = json.loads(blob)
             preset = Preset.browse(pid)
             preset.write(preset._resolve_filters_to_vals(filters))
-        except Exception as exc:  # noqa: BLE001, PERF203 - per-preset error isolation in a migration
+        except Exception as exc:  # noqa: PERF203 - per-preset error isolation in a migration
             _logger.warning("bizfinder: could not convert preset %s: %s", pid, exc)
 
     # Seed the built-in segments as managed presets.
     try:
         Preset._seed_builtin_presets()
-    except Exception as exc:  # noqa: BLE001 - best-effort, the API may be unreachable
+    except Exception as exc:
         _logger.warning(
             "bizfinder: built-in presets not seeded (API unreachable?): %s. "
             "Seed them via a data migration once the API is reachable.", exc)
