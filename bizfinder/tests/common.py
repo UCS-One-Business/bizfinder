@@ -474,8 +474,8 @@ class BizfinderTestCommon(TransactionCase):
     # ------------------------------------------------------------- mocking
     @contextmanager
     def mock_client(self, search=_UNSET, preview=_UNSET, reveal=_UNSET,
-                    pricing=_UNSET, usage=_UNSET, company_status=_UNSET,
-                    events=_UNSET, lookup=_UNSET):
+                    pricing=_UNSET, usage=_UNSET, search_context=_UNSET,
+                    company_status=_UNSET, events=_UNSET, lookup=_UNSET):
         """Patch every external ``BizfinderClient`` method the module calls.
 
         All eight are always patched so a test can never reach the network.
@@ -501,6 +501,26 @@ class BizfinderTestCommon(TransactionCase):
             pricing = self.sample_pricing()
         if usage is _UNSET:
             usage = self.sample_usage()
+        if search_context is _UNSET:
+            def search_context(_model, values, **kwargs):
+                rows = (
+                    search(_model, values, skip=kwargs.get('skip', 0), take=kwargs.get('take', 200))
+                    if callable(search) else search
+                )
+                total = preview(_model, values) if callable(preview) else preview
+                price = pricing(_model) if callable(pricing) else pricing
+                monthly_usage = None
+                if kwargs.get('include_usage'):
+                    try:
+                        monthly_usage = usage(_model) if callable(usage) else usage
+                    except Exception:  # noqa: BLE001 - mirrors the API's best-effort usage fetch
+                        monthly_usage = None
+                return {
+                    'prospects': rows,
+                    'hitCount': total,
+                    'pricing': price,
+                    'usage': monthly_usage,
+                }
         if company_status is _UNSET:
             company_status = self.sample_company_status_rows()
         if events is _UNSET:
@@ -531,6 +551,9 @@ class BizfinderTestCommon(TransactionCase):
             stack.enter_context(
                 patch.object(BizfinderClient, 'get_billing_usage',
                              _stub(usage)))
+            stack.enter_context(
+                patch.object(BizfinderClient, 'search_context',
+                             _stub(search_context)))
             stack.enter_context(
                 patch.object(BizfinderClient, 'company_status',
                              _stub(company_status)))

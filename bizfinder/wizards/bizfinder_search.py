@@ -4,6 +4,7 @@ import logging
 from markupsafe import escape
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
 
@@ -202,9 +203,6 @@ class BizfinderSearch(models.TransientModel):
 
     def action_search(self):
         self.ensure_one()
-        client = self.env['bizfinder.client']
-        self._refresh_billing_pricing(client)
-        self._refresh_month_usage(client)
         values = self._build_values()
         # Suppress companies this database already knows (existing CRM
         # leads / contacts) server-side so they don't consume result-page
@@ -212,10 +210,21 @@ class BizfinderSearch(models.TransientModel):
         # created between the two calls and for databases whose known-company
         # set exceeds the suppression payload limit.
         self._apply_suppression(values)
-        # Fetch the true total alongside the result page so the user sees
-        # both "what was returned" and "what's available".
-        total = client.preview(values)
-        rows = client.search(values, skip=0, take=self.PAGE_SIZE)
+        is_manager = self.env.user.has_group('sales_team.group_sale_manager')
+        today = fields.Date.today()
+        context = self.env['bizfinder.client'].search_context(
+            values,
+            skip=0,
+            take=self.PAGE_SIZE,
+            include_usage=is_manager,
+            usage_from=fields.Date.start_of(today, 'month') if is_manager else None,
+            usage_to=fields.Date.end_of(today, 'month') if is_manager else None,
+        )
+        self._set_billing_pricing(context['pricing'])
+        if context.get('usage'):
+            self._set_month_usage(context['usage'])
+        total = int(context.get('hitCount') or 0)
+        rows = context.get('prospects') or []
 
         # Dedupe against companies that already exist as crm.lead records
         # in this database. The dedup key is `company_organisation_number`
@@ -293,11 +302,18 @@ class BizfinderSearch(models.TransientModel):
                 },
             }
 
-    def _refresh_billing_pricing(self, client=None):
-        client = client or self.env['bizfinder.client']
-        pricing = client.get_billing_pricing()
+    def _set_billing_pricing(self, pricing):
         self.price_per_reveal = float(pricing.get('pricePerReveal') or 0.0)
         self.billing_currency = pricing.get('currency') or ''
+
+    def _refresh_billing_pricing(self, client=None):
+        client = client or self.env['bizfinder.client']
+        self._set_billing_pricing(client.get_billing_pricing())
+
+    def _set_month_usage(self, usage):
+        self.month_reveals = int(usage.get('reveals') or 0)
+        self.month_amount = float(usage.get('amount') or 0.0)
+        self.month_usage_loaded = True
 
     def _refresh_month_usage(self, client=None):
         """Manager-only, best-effort: pull this calendar month's reveal usage so
@@ -321,13 +337,7 @@ class BizfinderSearch(models.TransientModel):
                 exc_info=True,
             )
             return
-        self.month_reveals = int(usage.get('reveals') or 0)
-        self.month_amount = float(usage.get('amount') or 0.0)
-        # The display reuses billing_currency (set from pricing just before this
-        # call). Deliberately not written here: usage carries its own currency,
-        # but billing_currency is the pricing/estimate currency and must reflect
-        # only what get_billing_pricing() returned.
-        self.month_usage_loaded = True
+        self._set_month_usage(usage)
 
     def action_open_month_usage(self):
         """Open the full Bizfinder usage form (defaults to the current month) in
@@ -640,15 +650,12 @@ class BizfinderSearch(models.TransientModel):
         if not created:
             raise UserError(_("No leads were created. The selected prospects could not be revealed."))
 
-        # Land on a focused CRM list containing only the records created by
-        # this action, so the user can review and assign them immediately.
+        # Return to the standard lead list, pre-filtered to all Bizfinder
+        # leads. This keeps the normal CRM navigation and list configuration
+        # instead of opening a one-off view of only this creation batch.
         action = self.env['ir.actions.act_window']._for_xml_id('crm.crm_lead_all_leads')
-        action['name'] = _('Created Bizfinder Leads')
-        action['domain'] = [('id', 'in', created.ids)]
-        action['context'] = {
-            'create': False,
-            'search_default_assigned_to_me': 0,
-        }
+        action['context'] = safe_eval(action['context'])
+        action['context']['search_default_bizfinder'] = 1
         return action
 
 

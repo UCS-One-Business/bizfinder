@@ -246,6 +246,43 @@ class TestBizfinderActionSearch(BizfinderTestCommon):
         self.assertEqual(len(wizard.result_line_ids), 3)
         self.assertFalse(result)  # rows exist -> no notification
 
+    def test_search_fetches_all_context_in_one_api_call(self):
+        """Pricing, usage, count and the first page must share one client call."""
+        calls = []
+
+        def context(_model, values, **kwargs):
+            calls.append((values, kwargs))
+            return {
+                'prospects': self.sample_search_rows(),
+                'hitCount': 3,
+                'pricing': self.sample_pricing(),
+                'usage': None,
+            }
+
+        def unexpected_request(_model, *args, **kwargs):
+            raise AssertionError("action_search called a legacy API endpoint")
+
+        wizard = self._new_wizard()
+        with self.mock_client(
+            search_context=context,
+            search=unexpected_request,
+            preview=unexpected_request,
+            pricing=unexpected_request,
+            usage=unexpected_request,
+        ):
+            wizard.action_search()
+
+        self.assertEqual(len(calls), 1)
+        _, kwargs = calls[0]
+        self.assertEqual(kwargs['skip'], 0)
+        self.assertEqual(kwargs['take'], wizard.PAGE_SIZE)
+        self.assertEqual(
+            kwargs['include_usage'],
+            wizard.env.user.has_group('sales_team.group_sale_manager'),
+        )
+        self.assertEqual(wizard.price_per_reveal, self.PRICING['pricePerReveal'])
+        self.assertEqual(wizard.hit_count, 3)
+
     def test_search_forwards_skip_zero_and_page_size_take(self):
         """action_search calls client.search(values, skip=0, take=PAGE_SIZE).
         Capture the call args and assert the paging contract (PAGE_SIZE == 200)

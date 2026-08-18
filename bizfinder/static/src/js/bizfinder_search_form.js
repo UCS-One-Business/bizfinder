@@ -71,6 +71,7 @@ class BizfinderSearchFormController extends FormController {
     setup() {
         super.setup();
         this.orm = useService("orm");
+        this._searchBlocked = false;
         const moveStatusbarIntoBreadcrumb = () => {
             const statusbar = document.querySelector(
                 ".o_form_view.o_bizfinder_search_form .o_form_statusbar"
@@ -157,6 +158,31 @@ class BizfinderSearchFormController extends FormController {
             syncSelectAllCheckbox();
             movePagerIntoActions();
         });
+    }
+
+    async beforeExecuteActionButton(clickParams) {
+        const isSearch = clickParams.name === "action_search";
+        if (isSearch) {
+            this._searchBlocked = true;
+            this.ui.block({ message: _t("Searching companies...") });
+        }
+        try {
+            return await super.beforeExecuteActionButton(clickParams);
+        } catch (error) {
+            if (this._searchBlocked) {
+                this.ui.unblock();
+                this._searchBlocked = false;
+            }
+            throw error;
+        }
+    }
+
+    async afterExecuteActionButton(clickParams) {
+        await super.afterExecuteActionButton(clickParams);
+        if (clickParams.name === "action_search" && this._searchBlocked) {
+            this.ui.unblock();
+            this._searchBlocked = false;
+        }
     }
 }
 

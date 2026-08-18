@@ -118,6 +118,31 @@ class BizfinderClient(models.AbstractModel):
         return r.json()
 
     @api.model
+    def search_context(self, values: list[dict], *, skip: int = 0, take: int = 200,
+                       include_usage: bool = False, usage_from=None, usage_to=None) -> dict:
+        """Fetch the initial result page and the wizard's billing context in a
+        single API request. The standalone methods remain for their dedicated
+        UI actions and backwards-compatible API consumers."""
+        params = {
+            'skip': skip,
+            'take': take,
+            'include_usage': include_usage,
+        }
+        if usage_from:
+            params['usage_from'] = fields.Date.to_string(usage_from)
+        if usage_to:
+            params['usage_to'] = fields.Date.to_string(usage_to)
+        r = self._request(
+            'POST',
+            "/api/v1/insight/search-context",
+            params=params,
+            json=values,
+            timeout=_TIMEOUT * 2,
+        )
+        self._check(r)
+        return r.json()
+
+    @api.model
     def company_status(self, org_numbers: list[str]) -> list[dict]:
         """Fetch current registry status + key financials for the given org
         numbers (max 5000 per call). Free (not billed), no contact fields."""
