@@ -18,6 +18,18 @@
        alongside the lead but out of the generic "Notes" tab. The tab only
        shows for Bizfinder leads (is_bizfinder_lead, derived from the UTM
        source set at creation). -->
+  <record id="view_crm_lead_search_bizfinder" model="ir.ui.view">
+    <field name="name">crm.lead.search.bizfinder</field>
+    <field name="model">crm.lead</field>
+    <field name="inherit_id" ref="crm.view_crm_case_leads_filter"/>
+    <field name="arch" type="xml">
+      <xpath expr="//filter[@name='unassigned_leads']" position="after">
+        <filter string="Bizfinder" name="bizfinder"
+                domain="[('is_bizfinder_lead', '=', True)]"/>
+      </xpath>
+    </field>
+  </record>
+
   <record id="view_crm_lead_form_bizfinder" model="ir.ui.view">
     <field name="name">crm.lead.form.bizfinder</field>
     <field name="model">crm.lead</field>

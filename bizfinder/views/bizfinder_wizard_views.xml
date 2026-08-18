@@ -26,9 +26,9 @@
                      placeholder="Pick a preset to auto-fill filters…"/>
             </div>
             <div class="text-muted small"
-                 style="min-height: 3em; line-height: 1.4;">
-              <field name="preset_description" nolabel="1" readonly="1"
-                     placeholder="Pick a preset to auto-fill filters, or use Save as preset to store the current ones."/>
+                 style="min-height: 3em; line-height: 1.4;"
+                 invisible="not preset_id">
+              <field name="preset_description" nolabel="1" readonly="1"/>
             </div>
           </div>
 

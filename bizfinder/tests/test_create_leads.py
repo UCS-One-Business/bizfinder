@@ -7,7 +7,7 @@ Covers the full create-leads pipeline of the Bizfinder search wizard:
 * the billing-confirmation gate that defers creation until the user confirms;
 * the reveal -> crm.lead field mapping and UTM source tagging;
 * skipping orgs the reveal endpoint dropped, and the "nothing revealed" guard;
-* the focused CRM act_window scoped to exactly the created lead ids.
+* the standard CRM lead action with the Bizfinder filter enabled.
 
 Every external ``bizfinder.client`` call is mocked through
 :class:`~odoo.addons.bizfinder.tests.common.BizfinderTestCommon` so the tests
@@ -111,7 +111,8 @@ class TestCreateLeads(BizfinderTestCommon):
 
         self.assertEqual(result['type'], 'ir.actions.act_window')
         self.assertEqual(result['res_model'], 'crm.lead')
-        self.assertEqual(result['name'], 'Created Bizfinder Leads')
+        self.assertEqual(result['name'], 'Leads')
+        self.assertEqual(result['context']['search_default_bizfinder'], 1)
 
     # ----------------------------------------------------- field mapping
 
@@ -185,11 +186,11 @@ class TestCreateLeads(BizfinderTestCommon):
         )
         self.assertFalse(self._leads_for_orgs(['5599887766']))
 
-        domain = action['domain']
-        self.assertEqual(domain[0][0], 'id')
-        self.assertEqual(domain[0][1], 'in')
-        self.assertEqual(len(domain[0][2]), 2)
-        self.assertEqual(set(domain[0][2]), set(leads.ids))
+        self.assertEqual(action['name'], 'Leads')
+        self.assertEqual(
+            action['context']['search_default_bizfinder'], 1,
+            "the standard lead list must open with the Bizfinder filter enabled",
+        )
 
     def test_create_leads_raises_when_nothing_revealed(self):
         """Reveal returns nothing -> every selected line is skipped and the
@@ -208,23 +209,18 @@ class TestCreateLeads(BizfinderTestCommon):
 
     # ------------------------------------------------- success action
 
-    def test_create_leads_returns_action_scoped_to_created_ids(self):
-        """The success act_window is the all-leads action narrowed to exactly
-        the freshly created lead ids, with creation disabled."""
+    def test_create_leads_returns_standard_action_with_bizfinder_filter(self):
+        """The success action is the ordinary CRM lead list with its named
+        Bizfinder filter enabled, rather than a one-off batch-specific list."""
         wizard = self._run_search()
         wizard.action_select_all()
         action = self._create_leads(wizard)
 
+        standard_action = self.env['ir.actions.act_window']._for_xml_id(
+            'crm.crm_lead_all_leads')
         self.assertEqual(action['type'], 'ir.actions.act_window')
         self.assertEqual(action['res_model'], 'crm.lead')
-        self.assertEqual(action['name'], 'Created Bizfinder Leads')
-
-        leads = self._leads_for_orgs()
-        self.assertEqual(len(leads), 3)
-
-        domain = action['domain']
-        self.assertEqual(domain[0][0], 'id')
-        self.assertEqual(domain[0][1], 'in')
-        self.assertEqual(set(domain[0][2]), set(leads.ids))
-
-        self.assertEqual(action['context']['create'], False)
+        self.assertEqual(action['name'], standard_action['name'])
+        self.assertEqual(action['domain'], standard_action['domain'])
+        self.assertEqual(action['context']['search_default_bizfinder'], 1)
+        self.assertEqual(action['context']['search_default_type'], 'lead')
