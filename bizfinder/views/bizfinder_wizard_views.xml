@@ -17,8 +17,10 @@
         <sheet>
           <!-- One preset picker across the top; the description below has a
                fixed-height muted region so the layout doesn't reflow as the
-               user cycles through presets. -->
-          <div class="mb-3">
+               user cycles through presets. The whole block is hidden when no
+               presets exist yet (the cog in the header can still create one). -->
+          <field name="has_presets" invisible="1"/>
+          <div class="mb-3" invisible="not has_presets">
             <label for="preset_id" string="Preset" class="o_form_label fw-bold d-block mb-1"/>
             <div class="mb-2">
               <field name="preset_id" nolabel="1" class="d-block"
@@ -201,22 +203,22 @@
                   <field name="post_community" optional="hide"/>
                   <field name="post_code" string="Zip" optional="hide"/>
                   <field name="description" string="SNI"/>
-                  <field name="turn_over" string="Turnover" optional="show"/>
-                  <field name="net_sales" optional="hide"/>
-                  <field name="net_profit_loss" optional="show"/>
+                  <field name="turn_over" string="Turnover (tkr)"/>
+                  <field name="net_sales" string="Net sales (tkr)" optional="hide"/>
+                  <field name="net_profit_loss" string="Net profit/loss (tkr)"/>
                   <field name="employees" optional="show"/>
                   <field name="growth_pct" string="Growth %"/>
                   <field name="solidity_pct" string="Solidity %"/>
                   <field name="director_name" optional="hide"/>
                   <field name="director_role" optional="hide"/>
-                  <field name="operating_result" optional="hide"/>
+                  <field name="operating_result" string="Operating result (tkr)" optional="hide"/>
                   <field name="headcount_change_pct" optional="hide"/>
                   <field name="operating_margin_pct" optional="hide"/>
                   <field name="profit_margin_pct" optional="hide"/>
                   <field name="quick_ratio_pct" optional="hide"/>
-                  <field name="cash_at_bank" optional="hide"/>
-                  <field name="total_assets" optional="hide"/>
-                  <field name="total_equity" optional="hide"/>
+                  <field name="cash_at_bank" string="Cash and bank (tkr)" optional="hide"/>
+                  <field name="total_assets" string="Assets (tkr)" optional="hide"/>
+                  <field name="total_equity" string="Equity (tkr)" optional="hide"/>
                   <field name="account_date_to" optional="hide"/>
                   <field name="registration_date" string="Reg." optional="hide"/>
                   <field name="company_formed_date" optional="hide"/>

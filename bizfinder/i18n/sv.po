@@ -615,6 +615,11 @@ msgid "Assets"
 msgstr "Tillgångar"
 
 #. module: bizfinder
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_search_form
+msgid "Assets (tkr)"
+msgstr "Tillgångar (tkr)"
+
+#. module: bizfinder
 #. odoo-python
 #: code:addons/bizfinder/wizards/bizfinder_search.py:0
 #: model:ir.model.fields,field_description:bizfinder.field_bizfinder_filter_mixin__accountant_obligation
@@ -1086,6 +1091,11 @@ msgid "Equity"
 msgstr "Eget kapital"
 
 #. module: bizfinder
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_search_form
+msgid "Equity (tkr)"
+msgstr "Eget kapital (tkr)"
+
+#. module: bizfinder
 #: model:ir.model.fields,field_description:bizfinder.field_bizfinder_search__estimated_reveal_total
 msgid "Estimated cost"
 msgstr "Beräknad kostnad"
@@ -1199,6 +1209,11 @@ msgstr "Tillväxt"
 #: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_search_form
 msgid "Growth %"
 msgstr "Tillväxt %"
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_search__has_presets
+msgid "Has Presets"
+msgstr "Har förinställningar"
 
 #. module: bizfinder
 #: model:ir.model.fields.selection,name:bizfinder.selection__bizfinder_filter_mixin__accountant_reservation__yes

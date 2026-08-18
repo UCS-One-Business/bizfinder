@@ -609,6 +609,11 @@ msgid "Assets"
 msgstr ""
 
 #. module: bizfinder
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_search_form
+msgid "Assets (tkr)"
+msgstr ""
+
+#. module: bizfinder
 #. odoo-python
 #: code:addons/bizfinder/wizards/bizfinder_search.py:0
 #: model:ir.model.fields,field_description:bizfinder.field_bizfinder_filter_mixin__accountant_obligation
@@ -1074,6 +1079,11 @@ msgid "Equity"
 msgstr ""
 
 #. module: bizfinder
+#: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_search_form
+msgid "Equity (tkr)"
+msgstr ""
+
+#. module: bizfinder
 #: model:ir.model.fields,field_description:bizfinder.field_bizfinder_search__estimated_reveal_total
 msgid "Estimated cost"
 msgstr ""
@@ -1177,6 +1187,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_preset_form
 #: model_terms:ir.ui.view,arch_db:bizfinder.view_bizfinder_search_form
 msgid "Growth %"
+msgstr ""
+
+#. module: bizfinder
+#: model:ir.model.fields,field_description:bizfinder.field_bizfinder_search__has_presets
+msgid "Has Presets"
 msgstr ""
 
 #. module: bizfinder

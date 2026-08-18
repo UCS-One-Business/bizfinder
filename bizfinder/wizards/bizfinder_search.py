@@ -25,6 +25,14 @@ class BizfinderSearch(models.TransientModel):
     preset_id = fields.Many2one('bizfinder.preset')
     preset_description = fields.Text(
         related='preset_id.description', string='Preset description', readonly=True)
+    has_presets = fields.Boolean(compute='_compute_has_presets')
+
+    def _compute_has_presets(self):
+        # Hides the preset picker entirely when there is nothing to pick.
+        # Recomputed on every read, so saving the first preset through the
+        # cog (which reloads the record) makes the picker appear.
+        self.has_presets = bool(
+            self.env['bizfinder.preset'].search_count([], limit=1))
 
     # ------------------------------------------------- m2m filters (own tables)
     region_ids = fields.Many2many(
