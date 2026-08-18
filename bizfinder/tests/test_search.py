@@ -306,3 +306,24 @@ class TestBizfinderActionSearch(BizfinderTestCommon):
         self.assertEqual(len(args), 1)
         self.assertIsNotNone(args[0])
         self.assertIsInstance(args[0], list)
+
+    def test_untouched_numeric_envelopes_are_not_sent(self):
+        """The default min/max envelopes mean "any value, unknown included".
+        Sending them would exclude every company without accounts data and
+        force the accounts join server-side, so they must stay out of the
+        payload until the user actually narrows a range."""
+        wizard = self._new_wizard()
+        categories = {v['filterCategory'] for v in wizard._build_values()}
+        for key in ('NET_SALES', 'NET_PROFIT_LOSS', 'GROWTH_PCT',
+                    'SOLIDITY_PCT', 'EMPLOYEES_EXACT'):
+            self.assertNotIn(key, categories)
+
+    def test_edited_numeric_range_is_sent(self):
+        wizard = self._new_wizard()
+        wizard.net_sales_min = '1 000'
+        ranges = [v for v in wizard._build_values()
+                  if v['filterCategory'] == 'NET_SALES']
+        self.assertEqual(ranges, [{
+            'filterCategory': 'NET_SALES',
+            'SelectRange': {'min': 1000.0, 'max': 100000000.0},
+        }])

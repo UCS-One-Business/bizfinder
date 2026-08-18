@@ -167,10 +167,23 @@ class BizfinderFilterMixin(models.AbstractModel):
             ) from exc
         return parsed
 
+    def _field_default_value(self, field_name: str, kind: str):
+        default = self._fields[field_name].default
+        if callable(default):
+            default = default(self)
+        return self._range_value(field_name, default, kind)
+
     def _append_range(self, values: list, key: str, lo_field: str, hi_field: str, kind: str):
         lo = self._range_value(lo_field, self[lo_field], kind)
         hi = self._range_value(hi_field, self[hi_field], kind)
         if lo is None and hi is None:
+            return
+        # The untouched default envelope means "any value, unknown included".
+        # Sending it would silently exclude every company without accounts
+        # data (a NULL never satisfies a range) and forces the accounts join
+        # on the API side - same reasoning as the date envelopes above.
+        if (lo == self._field_default_value(lo_field, kind)
+                and hi == self._field_default_value(hi_field, kind)):
             return
         r = {}
         if lo is not None:
