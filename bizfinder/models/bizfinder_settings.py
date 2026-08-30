@@ -28,9 +28,10 @@ class BizfinderSettings(models.TransientModel):
     # Feature toggle for the monitoring part. Checking it implies
     # group_bizfinder_monitoring to the salesman group, which reveals the
     # monitoring UI (partner page, events menu, lookup) and arms the daily
-    # cron; unchecking hides it all again and the cron no-ops.
+    # cron; unchecking hides it all again and the cron no-ops. The feature
+    # is experimental and ships off: nobody implies the group at install.
     group_bizfinder_monitoring = fields.Boolean(
-        string='Company Monitoring',
+        string='Company Monitoring (Experimental)',
         implied_group='bizfinder.group_bizfinder_monitoring',
         group='sales_team.group_sale_salesman',
     )

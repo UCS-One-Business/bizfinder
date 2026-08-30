@@ -851,8 +851,8 @@ msgstr "Företag"
 
 #. module: bizfinder
 #: model_terms:ir.ui.view,arch_db:bizfinder.res_config_settings_view_form_bizfinder
-msgid "Daily registry sync of monitored companies: status, financial health badge and change events (F-tax, VAT, status) on company contacts."
-msgstr "Daglig registersynk av bevakade företag: status, finansiell hälsobadge och ändringshändelser (F-skatt, moms, status) på företagskontakter."
+msgid "Experimental, off by default. Daily registry sync of monitored companies: status, financial health badge and change events (F-tax, VAT, status) on company contacts."
+msgstr "Experimentell, avslagen som standard. Daglig registersynk av bevakade företag: status, finansiell hälsobadge och ändringshändelser (F-skatt, moms, status) på företagskontakter."
 
 #. module: bizfinder
 #. odoo-python
@@ -867,8 +867,8 @@ msgstr "Företag"
 
 #. module: bizfinder
 #: model:ir.model.fields,field_description:bizfinder.field_res_config_settings__group_bizfinder_monitoring
-msgid "Company Monitoring"
-msgstr "Företagsbevakning"
+msgid "Company Monitoring (Experimental)"
+msgstr "Företagsbevakning (experimentell)"
 
 #. module: bizfinder
 #. odoo-python

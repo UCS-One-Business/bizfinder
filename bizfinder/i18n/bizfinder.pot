@@ -841,7 +841,7 @@ msgstr ""
 
 #. module: bizfinder
 #: model_terms:ir.ui.view,arch_db:bizfinder.res_config_settings_view_form_bizfinder
-msgid "Daily registry sync of monitored companies: status, financial health badge and change events (F-tax, VAT, status) on company contacts."
+msgid "Experimental, off by default. Daily registry sync of monitored companies: status, financial health badge and change events (F-tax, VAT, status) on company contacts."
 msgstr ""
 
 #. module: bizfinder
@@ -857,7 +857,7 @@ msgstr ""
 
 #. module: bizfinder
 #: model:ir.model.fields,field_description:bizfinder.field_res_config_settings__group_bizfinder_monitoring
-msgid "Company Monitoring"
+msgid "Company Monitoring (Experimental)"
 msgstr ""
 
 #. module: bizfinder
