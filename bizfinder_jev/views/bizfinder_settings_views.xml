@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <record id="res_config_settings_view_form_bizfinder_jev" model="ir.ui.view">
+    <field name="name">res.config.settings.view.form.bizfinder.jev</field>
+    <field name="model">res.config.settings</field>
+    <field name="inherit_id" ref="bizfinder.res_config_settings_view_form_bizfinder"/>
+    <field name="arch" type="xml">
+      <setting id="bizfinder_monitoring_setting" position="after">
+        <setting id="bizfinder_jev_triage_setting"
+                 string="AI Event Triage (under development)"
+                 company_dependent="1"
+                 invisible="not ucs_development_features or not group_bizfinder_monitoring"
+                 help="Jev sorts each non-severe event into opportunity, follow-up or informational and books an activity for the first two.">
+          <field name="bizfinder_jev_triage_enabled"/>
+        </setting>
+      </setting>
+    </field>
+  </record>
+</odoo>
