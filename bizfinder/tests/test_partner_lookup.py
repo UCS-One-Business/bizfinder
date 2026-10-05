@@ -89,3 +89,18 @@ class TestBizfinderPartnerLookup(BizfinderTestCommon):
         self.assertFalse(partner.street)
         self.assertFalse(partner.phone)
         self.assertEqual(partner.bizfinder_health, 'good')
+
+    def test_pick_fills_vat_for_registered_company(self):
+        partner = self.env['res.partner'].create({
+            'name': 'Kund AB',
+            'is_company': True,
+            'country_id': self.env.ref('base.se').id,
+        })
+        wizard = self._new_lookup(partner_id=partner.id)
+        lookup = [{'name': 'Register AB', 'organisationNumber': '559900-1236'}]
+        status = [{'orgNumber': '5599001236', 'statusCode': 100, 'moms': True}]
+        with self.mock_client(lookup=lookup, company_status=status):
+            wizard.action_search()
+            wizard.line_ids.action_pick()
+        self.assertEqual(partner.vat, 'SE559900123601')
+        self.assertEqual(partner.name, 'Kund AB')

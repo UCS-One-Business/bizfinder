@@ -126,7 +126,12 @@ class ResPartner(models.Model):
                         "bizfinder: company-status returned unknown org %s; skipping",
                         row.get('orgNumber'))
                     continue
-                partner.write(self._bizfinder_status_vals(row, now))
+                vals = self._bizfinder_status_vals(row, now)
+                if row.get('moms') is True and not partner.vat:
+                    org = self._bizfinder_normalize_org(partner.company_registry)
+                    if len(org) == 10 and org.isascii() and org.isdigit():
+                        vals['vat'] = f'SE{org}01'
+                partner.write(vals)
 
     @api.model
     def _bizfinder_status_vals(self, row: dict, sync_time) -> dict:
