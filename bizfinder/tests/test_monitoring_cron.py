@@ -3,7 +3,7 @@
 .cron_sync_monitoring): event-row creation, chatter posts, severe-only
 activities, idempotent re-runs and the events_last_pull config parameter."""
 
-from odoo.addons.bizfinder.models.bizfinder_monitoring import EVENTS_LAST_PULL_PARAM
+from odoo.addons.bizfinder.models.bizfinder_company_event import EVENTS_LAST_PULL_PARAM
 from odoo.addons.bizfinder.tests.common import BizfinderTestCommon
 from odoo.tests import tagged
 
