@@ -26,6 +26,16 @@ provider secrets in the addon or customer database. The Odoo token should be a
 revocable tenant token for your `bizfinder_api`, while the service keeps any
 Creditsafe credentials server-side.
 
+## Company contact enrichment
+
+With **Company Monitoring (Experimental)** enabled, use **Fetch from Bizfinder**
+on a company contact and **Pick** a result, or **Sync now** on its Bizfinder tab.
+Both fill an empty VAT number as `SE<10-digit organisation number>01` only when
+registry data confirms VAT registration. Spaces and hyphens are removed from
+the organisation number. An existing VAT number is never replaced; missing,
+unknown or negative VAT registration leaves an empty VAT number unchanged.
+The contact's country is not changed.
+
 ## Filter codes
 
 | Field | Examples |
